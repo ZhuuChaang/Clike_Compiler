@@ -1,6 +1,7 @@
 %{
 #include<string>
 #include "ast.h"
+_AST_H_
 
 %}
 
@@ -9,7 +10,8 @@
     double REAl_value;
     std::string String_value;
     char CHAR_value;
-    s
+    
+    std::string IDENTIFER_value;
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -27,6 +29,8 @@
 %token <REAL_value> REAL_VAR
 %token <STRING_value> STRING_VAR
 %token <CHAR_value> CHAR_VAR
+
+%token <IDENTIFER_value> IDENTIFER;
 
 
 

@@ -37,8 +37,17 @@
 #include <llvm/Target/TargetMachine.h>
 #include <llvm/Target/TargetOptions.h>
 
+#include "CodeGen.h"
+_CODEGEN_H_
+
 class Node;
-class Program;
+class Program; //the starting node of AST
+
+class Expression;
+
+class Statement;
+
+
 //all AST node structures
 
 
@@ -47,7 +56,7 @@ class Node{
 public:
     Node();
     ~Node();
-    virtual llvm::Value * CodeGen()=0;
+    virtual llvm::Value * CodeGen(CodeGenerator &Gen)=0;
 };
 
 class Program: public Node{
