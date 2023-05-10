@@ -8,7 +8,7 @@ _AST_H_
 %union{
     int INT_value;
     double REAl_value;
-    std::string String_value;
+    std::string STRING_value;
     char CHAR_value;
     
     std::string IDENTIFER_value;

@@ -105,6 +105,36 @@
                         return REAL_VAR;
                     }
 
+\/\/[^\n]*          {return;}
+/\*.*\*\/           {return;} 
+
+
+\".*\"              {
+                        std::string s(yytext);
+                        s=s.substr(1,s.length()-1);
+                        s=s.substr(0,s.length()-1);
+                        yylval.STRING_value=s;
+                        return STRING_VAR;
+                    }
+
+
+\'(.|\\.)\'         {
+                        std::string s(yytext);
+                        s=s.substr(1,s.length()-1);
+                        s=s.substr(0,s.length()-1);                        
+                        char c=s[0];
+                        yylval.CHAR_value=c;
+                        return CHAR_VAR;
+                    }
+
+
+[a-zA-Z_][a-zA-Z_0-9]* {
+                        std::string s(yytext);
+                        yylval.IDENTIFER_value=s;
+                        return IDENTIFER;
+                    }
+
+
 
 
 

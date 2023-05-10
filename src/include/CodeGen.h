@@ -4,8 +4,12 @@
 #include "ast.h"
 class CodeGenerator{
     llvm::Module * TheModule;
+    llvm::IRBuilder<> * TheBuilder;
+    llvm::LLVMContext CodeContent;
 
 public:
+    CodeGenerator();
+    ~CodeGenerator();
     void CodeGenerate(Node& root);
     int ObjGenerate();
 };

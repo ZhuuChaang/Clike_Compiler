@@ -1,5 +1,8 @@
+#include<stdio.h>
 void main(void)
 {
-    int a=10;
-    a=a+4;
+
+    /*printf("asdt
+            asdg"); 
+            */
 }
