@@ -89,6 +89,7 @@
 "{"                 {return LBRACE;}
 "}"                 {return RBRACE;}
 
+[ \t\n]             {;}
 
 0|([1-9][0-9]*)     {
                         int tmp=0;
@@ -105,8 +106,8 @@
                         return REAL_VAR;
                     }
 
-\/\/[^\n]*          {return;}
-/\*.*\*\/           {return;} 
+\/\/[^\n]*          {;}
+/\*.*\*\/           {;} 
 
 
 \".*\"              {
