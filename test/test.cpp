@@ -5,6 +5,11 @@ using namespace std;
 
 int  main(void)
 {
+    struct A
+    {
+        int a;
+    };
+    
     string c("\'\n\'");
     // c=c.substr(1,c.length()-1);
     // c=c.substr(0,c.length()-1);

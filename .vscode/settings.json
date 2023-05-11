@@ -1,6 +1,14 @@
 {
     "files.associations": {
         "ast.h": "c",
-        "dynamiclibrary.h": "c"
+        "dynamiclibrary.h": "c",
+        "function.h": "c",
+        "basicblock.h": "c",
+        "chrono": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "numeric": "cpp",
+        "*.tcc": "cpp",
+        "cmath": "cpp"
     }
 }
