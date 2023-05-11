@@ -8,10 +8,12 @@ _AST_H_
 %union{
     int INT_value;
     double REAl_value;
-    std::string STRING_value;
+    std::string* STRING_value;
     char CHAR_value;
-    
-    std::string IDENTIFER_value;
+    std::string* IDENTIFER_value;
+
+    Program* ProgramNode;
+    Expression* ExpressionNode;
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -31,6 +33,9 @@ _AST_H_
 %token <CHAR_value> CHAR_VAR
 
 %token <IDENTIFER_value> IDENTIFER;
+
+%type <ProgramNode> PROGRAM;
+%type <ExpressionNode> EXPRESSION;
 
 
 

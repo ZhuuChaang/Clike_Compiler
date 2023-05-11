@@ -114,7 +114,7 @@
                         std::string s(yytext);
                         s=s.substr(1,s.length()-1);
                         s=s.substr(0,s.length()-1);
-                        yylval.STRING_value=s;
+                        yylval.STRING_value=&s;
                         return STRING_VAR;
                     }
 
@@ -131,7 +131,7 @@
 
 [a-zA-Z_][a-zA-Z_0-9]* {
                         std::string s(yytext);
-                        yylval.IDENTIFER_value=s;
+                        yylval.IDENTIFER_value=&s;
                         return IDENTIFER;
                     }
 
