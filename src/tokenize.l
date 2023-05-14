@@ -94,7 +94,7 @@
 0|([1-9][0-9]*)     {
                         int tmp=0;
                         sscanf(yytext,"%d",&tmp);
-                        yylval.INT_value=tmp;
+                        yylval.INT_value=&tmp;
                         return INTEGER_VAR;
                     }
 
@@ -102,7 +102,7 @@
 [0-9]+.[0=9]+       {
                         double tmp=0;
                         sscanf(yytext,"%lf",&tmp);
-                        yylval.REAL_value=tmp;
+                        yylval.REAL_value=&tmp;
                         return REAL_VAR;
                     }
 
@@ -124,7 +124,7 @@
                         s=s.substr(1,s.length()-1);
                         s=s.substr(0,s.length()-1);                        
                         char c=s[0];
-                        yylval.CHAR_value=c;
+                        yylval.CHAR_value=&c;
                         return CHAR_VAR;
                     }
 

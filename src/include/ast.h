@@ -49,7 +49,7 @@ class Program: public Node{
 };
 
 class Function: public Node{
-
+    
 };
 
 #endif

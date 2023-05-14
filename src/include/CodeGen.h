@@ -2,6 +2,7 @@
 #define _CODEGEN_H_
 #include "LLVMlibs.h"
 #include "ast.h"
+#include <string>
 class CodeGenerator{
     llvm::Module * TheModule;
     llvm::IRBuilder<> * TheBuilder;
@@ -12,6 +13,8 @@ public:
     ~CodeGenerator();
     void CodeGenerate(Node& root);
     int ObjGenerate();
+
+    llvm::Value * Error(std::string error_info);
 };
 
 #endif

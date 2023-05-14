@@ -6,10 +6,10 @@ _AST_H_
 %}
 
 %union{
-    int INT_value;
-    double REAl_value;
+    int* INT_value;
+    double* REAl_value;
     std::string* STRING_value;
-    char CHAR_value;
+    char* CHAR_value;
     std::string* IDENTIFER_value;
 
     Program* ProgramNode;
