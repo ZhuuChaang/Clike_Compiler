@@ -1,5 +1,6 @@
 %{
 #include<string>
+#include<iostream>
 #include "ast.h"
 _AST_H_
 
@@ -11,9 +12,7 @@ _AST_H_
     std::string* STRING_value;
     char* CHAR_value;
     std::string* IDENTIFER_value;
-
-    Program* ProgramNode;
-    Expression* ExpressionNode;
+    Node* AST_value;
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -34,14 +33,106 @@ _AST_H_
 
 %token <IDENTIFER_value> IDENTIFER;
 
-%type <ProgramNode> PROGRAM;
-%type <ExpressionNode> EXPRESSION;
+%type <INT_value> Number;
+%type <AST_value> ;
 
 
 
 
 %%
-//rules
+Program:    Decls
+            ;
+Decls:      Decls Decl
+            |
+            ;
+Decl:       VarDecl
+            | FuncDecl
+            ;
+VarDecl:    VarType VarDefs SEMICOLON
+            ;
+VarDefs:    VarDefs COMMA VarDef
+            | VarDef
+            ;
+VarDef:     IDENTIFER
+            | IDENTIFER ASSIGN Expr
+            ;
+VarType:    BuildInType
+            | CONST BuildInType
+            ;
+BuildInType: CHAR
+            | SHORT
+            | INT
+            | LONG
+            | FLOAT
+            | DOUBLE
+            ;
+FuncDecl:   VarType IDENTIFER LPAREN FuncFParams RPAREN SEMICOLON
+            | VarType IDENTIFER LPAREN FuncFParams RPAREN Block
+            ;
+FuncFParams: FuncFParams COMMA FuncFParam
+            | FuncFParam
+            |
+            ;
+FuncFParam: VarType IDENTIFER
+            ;
+Block:      LBRACE Stmts RBRACE
+            ;
+Stmts:      Stmts Stmt
+            | Stmts VarDecl
+            |
+            ;
+Stmt:       Expr SEMICOLON
+            | AssignStmt
+            | IfStmt
+            | WhileStmt
+            | BreakStmt
+            | ContinueStmt
+            | ReturnStmt
+            | Block
+            | SEMICOLON
+            ;
+Expr:       OrExpr
+            ;
+PrimaryExpr: LPAREN Expr RPAREN
+            | Number
+            ;
+UnaryExpr:  PrimaryExpr
+            | IDENTIFER LPAREN FuncRParams RPAREN
+            | UnaryOp UnaryExpr
+            ;
+UnaryOp:    ADD | SUB | NOT
+            ;
+FuncRParams: FuncRParams COMMA Expr
+            | Expr
+            |
+            ;
+MulExpr:    UnaryExpr
+            | MulExpr MUL UnaryExpr;
+            | MulExpr DIV UnaryExpr;
+            | MulExpr MOD UnaryExpr;
+            ;
+AddExpr:    MulExpr
+            | AddExpr ADD MulExpr;
+            | AddExpr SUB MulExpr;
+            ;
+RelExpr:    AddExpr
+            | RelExpr LT AddExpr
+            | RelExpr GT AddExpr
+            | RelExpr LE AddExpr
+            | RelExpr GE AddExpr
+            ;
+EqExpr:     RelExpr
+            | RelExpr EQ EqExpr
+            | RelExpr NE EqExpr
+            ;
+AndExpr:    EqExpr
+            | AndExpr AND Expr
+            ;
+OrExpr:     AndExpr
+            | OrExpr OR AndExpr
+            ;
+
+
 
 
 
