@@ -9,11 +9,12 @@
           
           "args": [
               "-S",
-              ".",
+              "..",
               "-B",
-              "./build"
+              "."
           ]
       },
+
       {
           "label": "make",
           "command": "make",
