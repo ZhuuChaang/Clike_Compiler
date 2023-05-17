@@ -91,7 +91,7 @@
 
 [ \t\n]             {;}
 \/\/[^\n]*          {;}
-/\*.*\*\/           {;} 
+"\*".*"*/"           {;} 
 
 \'(.|\\.)\'         {
                         std::string s(yytext);
@@ -118,7 +118,7 @@
                         return IDENTIFER;
                     }
 
-[0-9]+.[0=9]+       {
+[0-9]+\.[0=9]+       {
                         double tmp=0;
                         sscanf(yytext,"%lf",&tmp);
                         yylval.REAL_value=&tmp;

@@ -1,3 +1,9 @@
+typedef struct a{
+    int height;
+    double weight;
+    char id[10];
+};
+
 void main(void)
 {
     int a10=1023;
