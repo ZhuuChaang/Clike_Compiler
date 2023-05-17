@@ -110,7 +110,7 @@ public:
     // void SetConst(void) {
 	// 	this->_isConst = true;
 	// }
-}
+};
 
 class VarDef :public Node {
 public:
@@ -121,7 +121,7 @@ public:
     VarDef(std::unique_ptr<std::string> ident, std::unique_ptr<Node> expr) :
         ident(ident), expr(expr) {}
 	~VarDef(void) {}
-}
+};
 
 class FuncDecl :public Decl {
 public:
@@ -137,7 +137,7 @@ public:
     std::unique_ptr<FuncFParams> func_params):
         return_type(return_type), ident(ident), func_params(func_params), block(NULL) {}
     ~FuncDecl(void) {}
-}
+};
 
 class FuncFParam :public Node {
 public:
@@ -146,14 +146,14 @@ public:
     FuncFParam(std::unique_ptr<Node> var_type, std::unique_ptr<std::string> ident):
         var_type(var_type), ident(ident) {}
     ~FuncFParam(void) {}
-}
+};
 
 class Block :public Stmt {
 public:
     std::unique_ptr<Stmts> stmts;
     Block(std::unique_ptr<Stmts> stmts): stmts(stmts) {}
     ~Block(void);
-}
+};
 
 class AssignStmt :public Stmt {
 public:

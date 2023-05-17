@@ -1,0 +1,31 @@
+{   
+  "version": "2.0.0",
+  "options": {"cwd": "${workspaceFolder}/build"},
+  "tasks": [
+      {
+          "type": "shell",
+          "label": "cmake",
+          "command": "cmake",
+          
+          "args": [
+              "-S",
+              ".",
+              "-B",
+              "./build"
+          ]
+      },
+      {
+          "label": "make",
+          "command": "make",
+      },
+      {
+          "label": "build",
+  		"dependsOrder": "sequence", // 按列出的顺序执行任务依赖项
+          "dependsOn":[
+              "cmake",
+              "make"
+          ],
+      }
+  ]
+
+}
