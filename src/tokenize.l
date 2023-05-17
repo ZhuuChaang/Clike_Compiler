@@ -1,6 +1,6 @@
 %{
 #include<string>
-#include<stdio>
+#include<stdio.h>
 #include "parser.h"
 %}
 
@@ -90,34 +90,8 @@
 "}"                 {return RBRACE;}
 
 [ \t\n]             {;}
-
-0|([1-9][0-9]*)     {
-                        int tmp=0;
-                        sscanf(yytext,"%d",&tmp);
-                        yylval.INT_value=&tmp;
-                        return INTEGER_VAR;
-                    }
-
-
-[0-9]+.[0=9]+       {
-                        double tmp=0;
-                        sscanf(yytext,"%lf",&tmp);
-                        yylval.REAL_value=&tmp;
-                        return REAL_VAR;
-                    }
-
 \/\/[^\n]*          {;}
 /\*.*\*\/           {;} 
-
-
-\".*\"              {
-                        std::string s(yytext);
-                        s=s.substr(1,s.length()-1);
-                        s=s.substr(0,s.length()-1);
-                        yylval.STRING_value=&s;
-                        return STRING_VAR;
-                    }
-
 
 \'(.|\\.)\'         {
                         std::string s(yytext);
@@ -129,13 +103,34 @@
                     }
 
 
+"\"".*"\""              {
+                        std::string s(yytext);
+                        s=s.substr(1,s.length()-1);
+                        s=s.substr(0,s.length()-1);
+                        yylval.STRING_value=&s;
+                        return STRING_VAR;
+                    }
+
+
 [a-zA-Z_][a-zA-Z_0-9]* {
                         std::string s(yytext);
                         yylval.IDENTIFER_value=&s;
                         return IDENTIFER;
                     }
 
+[0-9]+.[0=9]+       {
+                        double tmp=0;
+                        sscanf(yytext,"%lf",&tmp);
+                        yylval.REAL_value=&tmp;
+                        return REAL_VAR;
+                    }
 
+0|([1-9][0-9]*)     {
+                        int tmp=0;
+                        sscanf(yytext,"%d",&tmp);
+                        yylval.INT_value=&tmp;
+                        return INTEGER_VAR;
+                    }
 
 
 
