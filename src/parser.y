@@ -4,6 +4,15 @@
 #include "ast.h"
 _AST_H_
 
+void yyerror(const char *s) {
+    std::printf("Error: %s\n", s);
+    std::exit(1); 
+}
+
+int yylex(void);
+
+
+
 %}
 
 %union{
@@ -11,8 +20,11 @@ _AST_H_
     double* REAl_value;
     std::string* STRING_value;
     char* CHAR_value;
+
     std::string* IDENTIFER_value;
+
     Node* AST_NODE_value;
+    Constant* AST_CONSTANT_value; 
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -30,38 +42,32 @@ _AST_H_
 %token <REAL_value> REAL_VAR
 %token <STRING_value> STRING_VAR
 %token <CHAR_value> CHAR_VAR
-%token <IDENTIFER_value> IDENTIFER;
+%token <IDENTIFER_value> IDENTIFER
 
-%type <AST_NODE_value> PROGRAM;
-
-%type <> DNDs
+%type <AST_NODE_value> PROGRAM
 
 
-%type <> EXPR
-%type <> Decl
-%type <> Define
 
-%type <> STMT
-%type <> CtrlSTMT
+%type <AST_CONSTANT_value> CONSTANT
 
-%type <> BINOP
-%type <> UNAOP
-%type <> SUFOP
-%type <> CONSTANT
-%type <> TYPE
+%nonassoc IF
+%nonassoc ELSE
 
-%type <> FunDECL
-%type <> StructDECL
-%type <> UnionDECL
-
-%type <>  FunDEF
-%type <>  VarDEF
-%type <>  StructDEF
-%type <>  UnionDEF
-%type <>  EnumDEF
-%type <>  TypeDEF
-
-
+%left   COMMA
+%right  ASSIGN ADDAS SUBAS MULAS DIVAS MODAS SHLAS SHRAS BANDAS BORAS BXORAS
+%right  CONDITION COLON
+%left   OR
+%left   AND
+%left   BOR
+%left   BXOR
+%left   BAND
+%left   EQ NE
+%left   GE GT LE LT
+%left   SHL SHR
+%left   ADD SUB
+%left   MUL DIV MOD
+%left   INC DEC NOT BNOT SIZEOF
+%left   DOT ARROW
 
 %start PROGRAM
 
@@ -228,6 +234,7 @@ CaseLIST:   CaseLIST CaseSTMT
             |
             ;
 
+// statements
 CaseSTMT:   CASE EXPR COLON STMT BREAK SEMICOLON
             | CASE EXPR COLON STMT
             | DEFAULT EXPR COLON STMT BREAK SEMICOLON
@@ -240,7 +247,7 @@ CtrlSTMT:   STMT CtrlSTMT
             |
             ;
 
-// statements
+
 STMT:       STMT SEMICOLON STMT 
             | STMT SEMICOLON
             | CtrlFLOW
@@ -249,10 +256,13 @@ STMT:       STMT SEMICOLON STMT
             | TypeDEF
             | VarDEF
             | FieldDECL
+            | ReturnSTMT
             | 
             ;
 
-
+ReturnSTMT: RETURN SEMICOLON
+            | RETURN EXPR SEMICOLON
+            ;
 
 SUSTMT:     SUSTMT SEMICOLON SUSTMT
             | SUSTMT SEMICOLON
@@ -287,6 +297,8 @@ UNAOP       INC
             | BNOT
             | MUL 
             | BAND
+            | ADD
+            | SUB
             ;
 
 SUFOP       INC
@@ -325,14 +337,24 @@ BINOP       ADD
             | COMMA
             ;
 
+FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
+            ;
 
+CallArgLIST: _CallArgLIST COMMA EXPR
+            | EXPR 
+            |
+            ;
 
-CONSTANT:   TRUE
-            | FALSE
-            | CHAR_VAR
-            | INTEGER_VAR
-            | REAL_VAR
-            | STRING_VAR
+_CallArgLIST: _CallArgLIST COMMA EXPR
+            | EXPR
+            ;            
+
+CONSTANT:   TRUE    {enum Csttype t=cstty_bool; $$=new Constant(true,t);}
+            | FALSE {enum Csttype t=cstty_bool; $$=new Constant(false,t);}
+            | CHAR_VAR  {enum Csttype t=cstty_char; $$=new Constant(*($1),t);}
+            | INTEGER_VAR   {enum Csttype t=cstty_int; $$=new Constant(*($1),t);}
+            | REAL_VAR  {enum Csttype t=cstty_real; $$=new Constant(*($1),t);}
+            | STRING_VAR    {enum Csttype t=cstty_str; $$=new Constant(*($1),t);} 
             ;
 
 

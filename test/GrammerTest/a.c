@@ -33,6 +33,9 @@ int main(){
 
     }else;
 
+    int c[10]={};
+    int *b;
+    +1;
 
     for(int a=0;a<100;a++){
         break;
