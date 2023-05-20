@@ -126,13 +126,13 @@ FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN LBRACE STMT RBRACE
             ;
 
 ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER
-			| TYPE IDENTIFER
-			|
+            | TYPE IDENTIFER
+            |
 			;
 
 _ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER
-			| TYPE IDENTIFER
-			;
+            TYPE IDENTIFER
+            ;
 
 //variable define and declare
 FieldDECL:  FieldTYPE SEMICOLON
@@ -290,39 +290,39 @@ UNAOP       INC
             ;
 
 SUFOP       INC
-            |DEC            
+            | DEC            
             ;
 
 BINOP       ADD
-            |SUB
-            |MUL
-            |DIV
-            |MOD
-            |EQ
-            |NE
-            |GT
-            |LT
-            |GE
-            |LE
-            |AND
-            |OR
-            |BAND
-            |BOR
-            |BXOR
-            |SHL
-            |SHR
-            |ASSIGN
-            |ADDAS
-            |SUBAS
-            |MULAS
-            |DIVAS
-            |MODAS
-            |BANDAS
-            |BORAS
-            |BXORAS
-            |SHLAS
-            |SHRAS
-            |COMMA
+            | SUB
+            | MUL
+            | DIV
+            | MOD
+            | EQ
+            | NE
+            | GT
+            | LT
+            | GE
+            | LE
+            | AND
+            | OR
+            | BAND
+            | BOR
+            | BXOR
+            | SHL
+            | SHR
+            | ASSIGN
+            | ADDAS
+            | SUBAS
+            | MULAS
+            | DIVAS
+            | MODAS
+            | BANDAS
+            | BORAS
+            | BXORAS
+            | SHLAS
+            | SHRAS
+            | COMMA
             ;
 
 
