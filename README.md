@@ -16,5 +16,6 @@ a C like compiler for ZJU compile principle course
 
 # 一些值得注意的问题
 - 不允许多行注释
-- 可以在函数中定义新的结构/union/enum，允许使用typedef，但是不能在struct中定义函数，允许结构嵌套定义
+- 可以在函数中声明新的结构/union/enum，允许使用typedef，但是不能在struct中定义函数，允许结构嵌套定义
+- 不支持:(COLON)作为位域的用法
 
