@@ -268,78 +268,79 @@ SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->pushback($2);}
 
 //expr            
 
-EXPR:       IDENTIFER
-            | FUNCALL
-            | CONSTANT
-            | EXPR BINOP EXPR
-            | UNAOP EXPR
-            | EXPR SUFOP
-            | LPAREN EXPR RPAREN
-            | SIZEOF LPAREN EXPR RPAREN
-            | SIZEOF LPAREN TYPE RPAREN
-            | EXPR CONDITION EXPR COLON EXPR 
-            | LPAREN TYPE RPAREN EXPR
-            | EXPR LBRACKET EXPR RBRACKET
-            | EXPR ARROW IDENTIFER
-            | EXPR DOT IDENTIFER
+EXPR:       IDENTIFER                       {$$ = new Variable($1);}
+            | FUNCALL                       {$$ = $1;}
+            | CONSTANT                      {$$ = $1;}
+            | EXPR BINOP EXPR               {$$ = new BinopExpr($1, $2, $3);}
+            | UNAOP EXPR                    {$$ = new UnaopExpr($1, $2);}
+            | EXPR SUFOP                    {$$ = new SufopExpr($1, $2);}
+            | LPAREN EXPR RPAREN            {$$ = $2;}
+            | SIZEOF LPAREN EXPR RPAREN     {$$ = new SizeofExpr($3);}
+            | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofExpr($3);}
+            | EXPR CONDITION EXPR COLON EXPR {$$ = new TernaryCondition($1, $3, $5);}
+            | LPAREN TYPE RPAREN EXPR       {$$ = new TypeCast($2, $4);}
+            | EXPR LBRACKET EXPR RBRACKET   {$$ = new Subscript($1, $3);}
+            | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, $3);}
+            | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, $3);}
             ;  
 
-UNAOP       INC
-            | DEC
-            | NOT
-            | BNOT
-            | MUL 
-            | BAND
-            | ADD
-            | SUB
+UNAOP       INC     {$$ = $1;}
+            | DEC   {$$ = $1;}
+            | NOT   {$$ = $1;}
+            | BNOT  {$$ = $1;}
+            | MUL   {$$ = $1;}
+            | BAND  {$$ = $1;}
+            | ADD   {$$ = $1;}
+            | SUB   {$$ = $1;}
             ;
 
-SUFOP       INC
-            | DEC            
+SUFOP       INC     {$$ = $1;}
+            | DEC   {$$ = $1;}
             ;
 
-BINOP       ADD
-            | SUB
-            | MUL
-            | DIV
-            | MOD
-            | EQ
-            | NE
-            | GT
-            | LT
-            | GE
-            | LE
-            | AND
-            | OR
-            | BAND
-            | BOR
-            | BXOR
-            | SHL
-            | SHR
-            | ASSIGN
-            | ADDAS
-            | SUBAS
-            | MULAS
-            | DIVAS
-            | MODAS
-            | BANDAS
-            | BORAS
-            | BXORAS
-            | SHLAS
-            | SHRAS
-            | COMMA
+BINOP       ADD     {$$ = $1;}
+            | SUB   {$$ = $1;}
+            | MUL   {$$ = $1;}
+            | DIV   {$$ = $1;}
+            | MOD   {$$ = $1;}
+            | EQ    {$$ = $1;}
+            | NE    {$$ = $1;}
+            | GT    {$$ = $1;}
+            | LT    {$$ = $1;}
+            | GE    {$$ = $1;}
+            | LE    {$$ = $1;}
+            | AND   {$$ = $1;}
+            | OR    {$$ = $1;}
+            | BAND  {$$ = $1;}
+            | BOR   {$$ = $1;}
+            | BXOR  {$$ = $1;}
+            | SHL   {$$ = $1;}
+            | SHR   {$$ = $1;}
+            | ASSIGN {$$ = $1;}
+            | ADDAS {$$ = $1;}
+            | SUBAS {$$ = $1;}
+            | MULAS {$$ = $1;}
+            | DIVAS {$$ = $1;}
+            | MODAS {$$ = $1;}
+            | BANDAS {$$ = $1;}
+            | BORAS {$$ = $1;}
+            | BXORAS {$$ = $1;}
+            | SHLAS {$$ = $1;}
+            | SHRAS {$$ = $1;}
+            | COMMA {$$ = $1;}
             ;
 
 FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
+                {$$ = new FuncCall(*$1, $2);}
             ;
 
-CallArgLIST: _CallArgLIST COMMA EXPR
-            | EXPR 
-            |
+CallArgLIST: _CallArgLIST COMMA EXPR    {$$ = $1; $$->push_back($3);}
+            | EXPR                      {$$ = new CallArgList(); $$->push_back($1);}
+            |                           {$$ = new CallArgList();}
             ;
 
-_CallArgLIST: _CallArgLIST COMMA EXPR
-            | EXPR
+_CallArgLIST: _CallArgLIST COMMA EXPR   {$$ = $1; $$->push_back($3);}
+            | EXPR                      {$$ = new CallArgList(); $$->push_back($1);}
             ;            
 
 CONSTANT:   TRUE    {enum Csttype t=cstty_bool; $$=new Constant(true,t);}
