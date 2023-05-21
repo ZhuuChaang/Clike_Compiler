@@ -77,12 +77,12 @@ PROGRAM:    GlobalSTMT
 
 
 // top level statements of the program, including defines and declares of func and global var
-GlobalSTMT: GlobalSTMT FunDECL
-            | GlobalSTMT FunDEF
+GlobalSTMT: GlobalSTMT FunDECL 
+            | GlobalSTMT FunDEF 
             | GlobalSTMT TypeDEF
             | GlobalSTMT VarDEF
-            | GlobalSTMT FieldDECL
-            |
+            | GlobalSTMT FieldDECL  {}
+            |                       {$$=new Globalstmt();}
             ;
 
 //types
@@ -95,7 +95,7 @@ _TYPE:      BuiltinTYPE
             | FieldTYPE
             | _TYPE PTR
             | _TYPE ARRAY
-            | IDENTIFER
+            | IDENTIFER     {$$=new Definedtype($1);}
             ;
 
 
@@ -104,13 +104,13 @@ FieldTYPE:  STRUCT IDENTIFER LBRACE SUSTMT RBRACE
             | ENUM IDENTIFER LBRACE EnmLIST RBRACE
             ;
 
-BuiltinTYPE: CHAR
-            |DOUBLE
-            |FLOAT
-            |INT
-            |SHORT
-            |LONG
-            |VOID
+BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
+            |DOUBLE {$$=new Builtintype();$$->set_double();}
+            |FLOAT  {$$=new Builtintype();$$->set_float();}
+            |INT    {$$=new Builtintype();$$->set_int();}
+            |SHORT  {$$=new Builtintype();$$->set_short();}
+            |LONG   {$$=new Builtintype();$$->set_long();}
+            |VOID   {$$=new Builtintype();$$->set_void();}
             ;
 
 
@@ -186,7 +186,7 @@ Enm:        IDENTIFER
             ;
 
 //type defination
-TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON
+TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,$1);}
 
 
 
