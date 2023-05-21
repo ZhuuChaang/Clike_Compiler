@@ -24,6 +24,8 @@ int yylex(void);
     std::string* IDENTIFER_value;
 
     Node* AST_NODE_value;
+    Program* AST_PROG_value;
+    Type* AST_TYPE_value;
     Constant* AST_CONSTANT_value; 
 }
 
@@ -45,10 +47,11 @@ int yylex(void);
 %token <IDENTIFER_value> IDENTIFER
 
 %type <AST_NODE_value> PROGRAM
-
+%type <AST_TYPE_value> _TYPE TYPE FieldTYPE BuiltinTYPE
 
 
 %type <AST_CONSTANT_value> CONSTANT
+
 
 %nonassoc IF
 %nonassoc ELSE
@@ -86,22 +89,22 @@ GlobalSTMT: GlobalSTMT FunDECL
             ;
 
 //types
-TYPE:       _TYPE
-            | CONST _TYPE
-            | STATIC _TYPE
+TYPE:       _TYPE           {$$=$1;}
+            | CONST _TYPE   {$1->set_const();$$=$1;}
+            | STATIC _TYPE  {$1->set_static();$$=$1;}
             ;
 
 _TYPE:      BuiltinTYPE     {$$=$1;}
             | FieldTYPE     {$$=$1;}
             | _TYPE PTR     {$$=new Pointertype($1);}
             | _TYPE ARRAY   {$$=new Arraytype($1,*($2));}
-            | IDENTIFER     {$$=new Definedtype($1);}
+            | IDENTIFER     {$$=new Definedtype(*$1);}
             ;
 
 
-FieldTYPE:  STRUCT IDENTIFER LBRACE SUSTMT RBRACE
-            | UNION IDENTIFER LBRACE SUSTMT RBRACE
-            | ENUM IDENTIFER LBRACE EnmLIST RBRACE
+FieldTYPE:  STRUCT IDENTIFER LBRACE SUSTMT RBRACE   {$$=new Structtype(*$2,$4);}
+            | UNION IDENTIFER LBRACE SUSTMT RBRACE  {$$=new Uniontype(*$2,$4);}
+            | ENUM IDENTIFER LBRACE EnmLIST RBRACE  {$$=new Enumtype(*$2,$4);}
             ;
 
 BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
@@ -145,23 +148,16 @@ FieldDECL:  FieldTYPE SEMICOLON
 VarDEF:     TYPE InitIDList SEMICOLON
             ;
 
-SUVarDEF:   TYPE IdList SEMICOLON
+SUVarDEF:   TYPE IdList SEMICOLON   {$$=new SUmemdec($1,$2);}
             ;
 
 
-IdList      _IdList COMMA IDENTIFER
-            | IDENTIFER
+IdList      IdList COMMA IDENTIFER {$$=$1; $$->pushback(*$3);}
+            | IDENTIFER             {$$=new std::vector<std::string>(); $$->pushback(*$1);}
             ;
 
-_IdList     _IdList COMMA IDENTIFER
-            | IDENTIFER 
-            ;
 
 InitIDList: _InitIDList COMMA Init
-            | Init
-            ;
-
-_InitIDList: _InitIDList COMMA Init
             | Init
             ;
 
@@ -170,21 +166,21 @@ Init:       IDENTIFER
             ;
 
 
-EnmLIST:    _EnmLIST COMMA Enm
-            | Enm
-            |
+EnmLIST:    _EnmLIST COMMA Enm  {$1->pushback($3);$$=$1;}
+            | Enm               {$$->pushback($1);}
+            |                   {$$=new std::vector<Enum*>();}
             ;
 
-_EnmLIST:   _EnmLIST COMMA Enm
-            | Enm
+_EnmLIST:   _EnmLIST COMMA Enm  {$1->pushback($3);$$=$1;}
+            | Enm               {$$->pushback($1);}
             ;
 
-Enm:        IDENTIFER
-            | IDENTIFER ASSIGN INTEGER_VAR
+Enm:        IDENTIFER                       {$$=new Enum(*$1);}
+            | IDENTIFER ASSIGN INTEGER_VAR  {$$=new Enum(*$1,*$3);}
             ;
 
 //type defination
-TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,$1);}
+TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,*$3);}
 
 
 
@@ -262,10 +258,9 @@ ReturnSTMT: RETURN SEMICOLON
             | RETURN EXPR SEMICOLON
             ;
 
-SUSTMT:     SUSTMT SEMICOLON SUSTMT
-            | SUSTMT SEMICOLON
-            | SUVarDEF
-            |
+SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->pushback($2);}
+            | SUVarDEF SEMICOLON        {$$->pushback($1);}    
+            |                           {$$=new std::vector<SUmemdec*>(); }
             ;
 
 

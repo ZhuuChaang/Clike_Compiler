@@ -17,8 +17,11 @@ enum Csttype{
 };
 //all AST node structures definition
 class Node;
-class Program; //the starting node of AST
-class Globalstmt;
+    class Program; //the starting node of AST
+    class Globalstmt;
+
+    class Enum;
+    class SUmemdec;
 
 class Type;
     class Builtintype;
@@ -120,27 +123,92 @@ public:
 
 class Structtype: public Type{
     std::string structName;
-    std::map<Type*,std::string> structMembers;
+    std::map<std::string,Type*> structMembers;
 public:
-    
+    Structtype(std::string s,std::vector<SUmemdec*> *list): structName(s){
+        int size=list->size();
+        for(int i=0;i<size;i++){
+            Type* t=(*list)[i]->type;
+            int num=(*list)[i]->id->size();
+            for(int j=0;j<num;j++){
+                structMembers.insert(std::pair<std::string,Type*>((*(*list)[i]->id)[j],t));
+            }
+        }
+    }
+    ~Structtype(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();    
 };
 
 class Uniontype: public Type{
-    std::string structName;
-    std::map<Type*,std::string> unionMembers;
+    std::string UnionName;
+    std::map<std::string,Type*> unionMembers;
 public:
+    Uniontype(std::string s,std::vector<SUmemdec*> *list): UnionName(s){
+        int size=list->size();
+        for(int i=0;i<size;i++){
+            Type* t=(*list)[i]->type;
+            int num=(*list)[i]->id->size();
+            for(int j=0;j<num;j++){
+                unionMembers.insert(std::pair<std::string,Type*>((*(*list)[i]->id)[j],t));
+            }
+        }
+    }
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();    
+};
+
+
+class SUmemdec{
+public:
+    Type* type;
+    std::vector<std::string>* id;
+
+    SUmemdec(Type* t, std::vector<std::string>* i):type(t),id(i){}
+    ~SUmemdec(){}
 };
 
 class Enumtype: public Type{
+    std::string enumname;
     std::map<std::string,int> enumMembers;
+    
+public:
+    Enumtype(std::string s,std::vector<Enum*> List):enumname(s){
+        int present=0;
+        for(int i=0;i<List.size();i++){
+            if(List[i]->number!=-1){
+                present=List[i]->number;
+            }
+            enumMembers.insert(std::pair<std::string,int>(List[i]->name,present++));
+        }
+    }
+
+    ~Enumtype(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();    
 };
+
+class Enum{
+public:
+    std::string name;
+    int number=-1;
+
+    Enum(std::string n):name(n){}
+    Enum(std::string n, int num):name(n),number(num){}
+    ~Enum(){}
+
+};
+
 
 class Definedtype: public Type{
     std::string deftypeName;
     Type* type;
 public:
     Definedtype(std::string name){deftypeName=name;type=NULL;}
-    Definedtype(std::string name, Type* t): deftypeName(name), type(t){}
+    Definedtype(Type* t, std::string name): deftypeName(name), type(t){}
     ~Definedtype(){}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen);
@@ -170,6 +238,11 @@ public:
 	int DrawNode();        
 };
 
+
+
+
+
+/////////////////////////////////////////////////////////////////////
 
 
 //
@@ -209,8 +282,6 @@ public:
 
 
 
-
-
 // start your part at here
 class Expr : public Node{
 public:
@@ -224,8 +295,6 @@ public:
 	virtual llvm::Value * CodeGen(CodeGenerator &Gen)=0;
 	virtual int DrawNode();  
 };
-
-
 
 
 class Constant: public Expr{
