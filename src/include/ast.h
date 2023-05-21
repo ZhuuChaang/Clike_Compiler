@@ -36,7 +36,21 @@ class Basestmt;
 class Expr;
     class Constant;
     class Fundeclare;
-
+    class FuncCall;
+    using CallArgList = std::vector<Expr*>;
+    class BinopExpr;
+    class Binop;
+    class UnaopExpr;
+    class Unaop;
+    class SufopExpr;
+    class Sufop;
+    class SizeofExpr;
+    class SizeofType;
+    class TernaryCondition;
+    class TypeCast;
+    class Subscript;
+    class MemAccessPtr;
+    class MemAccessObj;
 
 class Node{
 public:
@@ -238,7 +252,131 @@ public:
 	int DrawNode();  
 };
 
+class FuncCall: public Expr{
+public:
+    std::string _func_name;
+    CallArgList* _arg_list;
+    FuncCall(std::string name, CallArgList* args) : _func_name(name), _arg_list(args) {}
+    ~FuncCall() {}
+};
 
+class BinopExpr: public Expr{
+public:
+    Binop* _op;
+    Expr* _lhs;
+    Expr* _rhs;
+    BinopExpr(Binop* op, Expr* lhs, Expr* rhs) : _op(op), _lhs(lhs), _rhs(rhs) {}
+    ~BinopExpr() {}
+};
+
+class Binop: public Node{
+public:
+    enum BinopID {
+        _add, _sub, _mul, _div, _mod,
+        _eq, _ne, _gt, _lt, _ge, _le,
+        _and, _or, _band, _bor, _bxor,
+        _shl, _shr,
+        _assign,
+        _addas, _subas, _mulas, _divas, _modas,
+        _bandas, _boras, _bxoras, _shlas, _shras,
+        _comma
+    };
+    BinopID _op;
+    Binop(BinopID op) : _op(op) {}
+    ~Binop() {}
+};
+
+class UnaopExpr: public Expr{
+public:
+    Unaop* _op;
+    Expr* _operand;
+    UnaopExpr(Unaop* op, Expr* operand): _op(op), _operand(operand) {}
+    ~UnaopExpr() {}
+};
+
+class Unaop: public Node{
+    enum UnaopID{
+        _inc, _dec,
+        _not, _bnot,
+        _mul, _band,
+        _add, _sub
+    };
+    UnaopID _op;
+    Unaop(UnaopID op): _op(op) {}
+    ~Unaop() {}
+};
+
+class SufopExpr: public Expr{
+public:
+    Sufop* _op;
+    Expr* _operand;
+    SufopExpr(Sufop* op, Expr* operand): _op(op), _operand(operand) {}
+    ~SufopExpr() {}
+};
+
+class Sufop: public Node{
+public:
+    enum SufopID{
+        _inc, _dec
+    };
+    SufopID _op;
+    Sufop(SufopID op): _op(op) {}
+    ~Sufop() {}
+};
+
+class SizeofExpr: public Expr{
+public:
+    Expr* _expr;
+    SizeofExpr(Expr* expr): _expr(expr) {}
+    ~SizeofExpr() {}
+};
+
+class SizeofType: public Expr{
+public:
+    Type* _type;
+    SizeofType(Type* type): _type(type) {}
+    ~SizeofType() {}
+};
+
+class TernaryCondition: public Expr{
+public:
+    Expr* _condition;
+    Expr* _if_then;
+    Expr* _else_then;
+    TernaryCondition(Expr* condition, Expr* if_then, Expr* else_then)
+        : _condition(condition), _if_then(if_then), _else_then(else_then) {}
+    ~TernaryCondition() {}
+};
+class TypeCast: public Expr{
+public:
+    Type* _type;
+    Expr* _expr;
+    TypeCast(Type* type, Expr* expr): _type(type), _expr(expr) {}
+    ~TypeCast() {}
+};
+class Subscript: public Expr{
+public:
+    Expr* _array;
+    Expr* _index;
+    Subscript(Expr* array, Expr* index): _array(array), _index(index) {}
+    ~Subscript() {}
+};
+class MemAccessPtr: public Expr{
+public:
+    Expr* _struct_ptr;
+    std::string _member;
+    MemAccessPtr(Expr* struct_ptr, std::string member)
+        : _struct_ptr(struct_ptr), _member(member) {}
+    ~MemAccessPtr() {}
+};
+class MemAccessObj: public Expr{
+public:
+    Expr* _struct;
+    std::string _member;
+    MemAccessObj(Expr* struct_name, std::string member)
+        : _struct(struct_name), _member(member) {}
+    ~MemAccessObj() {}
+};
 
 
 
