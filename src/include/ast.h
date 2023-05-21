@@ -133,6 +133,30 @@ public:
 	int DrawNode();
 };
 
+class Pointertype:public Type{
+    Type* basetype;
+
+public:
+    Pointertype(Type* t): basetype(t){}
+    ~Pointertype(){};
+
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode();
+};
+
+
+class Arraytype: public Type{
+    Type* basetype;
+    int size;
+public:
+    Arraytype(Type* t, int s): basetype(t), size(s) {}
+    ~Arraytype(){}
+
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode();        
+};
+
+
 
 //
 class Globalstmt:public Node{

@@ -91,10 +91,10 @@ TYPE:       _TYPE
             | STATIC _TYPE
             ;
 
-_TYPE:      BuiltinTYPE
-            | FieldTYPE
-            | _TYPE PTR
-            | _TYPE ARRAY
+_TYPE:      BuiltinTYPE     {$$=$1;}
+            | FieldTYPE     {$$=$1;}
+            | _TYPE PTR     {$$=new Pointertype($1);}
+            | _TYPE ARRAY   {$$=new Arraytype($1,*($2));}
             | IDENTIFER     {$$=new Definedtype($1);}
             ;
 
@@ -115,12 +115,10 @@ BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
 
 
 //ptr and array
-PTR:        MUL PTR
-            |
+PTR:        MUL {;}
             ;
 
-ARRAY:      LBRACKET INT RBRACKET ARRAY
-            | 
+ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=S2;}
             ;
 
 
@@ -182,7 +180,7 @@ _EnmLIST:   _EnmLIST COMMA Enm
             ;
 
 Enm:        IDENTIFER
-            | IDENTIFER ASSIGN INT
+            | IDENTIFER ASSIGN INTEGER_VAR
             ;
 
 //type defination
