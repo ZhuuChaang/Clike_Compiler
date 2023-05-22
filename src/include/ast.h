@@ -15,33 +15,41 @@ enum Csttype{
      cstty_char,
      cstty_bool
 };
+
+typedef std::vector<std::string> IdentifierList;
+
 //all AST node structures definition
 class Node;
     class Program; //the starting node of AST
     class Globalstmt;
-
-    class Enum;
-    class SUmemdec;
+    class Stmt;
 
 class Type;
     class Builtintype;
     class Structtype;
     class Uniontype;
+    class SUmemdec;
+        typedef std::vector<SUmemdec*> SUdecllist;
     class Enumtype;
+    class Enum;
     class Definedtype;
     class Pointertype;
     class Arraytype;
 
-
 class Basestmt;
-    
+    class Fundeclare;
+    class Fielddeclare;
+    class funArg;
+        typedef std::vector<funArg*> funArgList;
+    class InitID;
+        typedef std::vector<InitID*> InitIDList;
+    class Vardefine;
 
 class Expr;
     class Constant;
     class Variable;
-    class Fundeclare;
     class FuncCall;
-    using CallArgList = std::vector<Expr*>;
+        typedef std::vector<Expr*> CallArgList;
     class BinopExpr;
     //class Binop;
     class UnaopExpr;
@@ -171,6 +179,8 @@ public:
     ~SUmemdec(){}
 };
 
+
+
 class Enumtype: public Type{
     std::string enumname;
     std::map<std::string,int> enumMembers;
@@ -203,6 +213,7 @@ public:
 
 };
 
+typedef std::vector<Enum*> Enumlist;
 
 class Definedtype: public Type{
     std::string deftypeName;
@@ -250,10 +261,7 @@ public:
 class Globalstmt:public Node{
     std::vector<Basestmt*> stmtlist;
 public: 
-    Globalstmt(){
-        std::vector<Basestmt*> t;
-        stmtlist=t;
-    }
+    Globalstmt(){}
     ~Globalstmt(){}
     void Addstmt(Basestmt* s){
         stmtlist.push_back(s);
@@ -276,13 +284,78 @@ public:
 
 
 class Fundeclare: public Basestmt{
+    Type* retType;
     std::string  Funname;
+    std::map<std::string,Type*> Arglist;
 public:
+    Fundeclare(Type* t,std::string s, funArgList* l):retType(t),Funname(s){
+        int size=l->size();
+        for(int i=0;i<size;i++){
+            funArg* a=(*l)[i];
+            Arglist.insert(std::pair<std::string,Type*>(a->argName,a->type));
+        }
+    }
+    ~Fundeclare(){}
 
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();
+};
+
+class funArg{
+public:
+    std::string argName;
+    Type* type;
+
+    funArg(Type* t, std::string s): argName(s), type(t){}
+    ~funArg(){}
+};
+
+class Fielddeclare: public Basestmt{
+    Type* type;
+public:
+    Fielddeclare(Type* t):type(t){}
+    ~Fielddeclare(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();
 };
 
 
+class InitID{
+    std::string VarName;
+    Expr* eInit=NULL;
+    bool is_initiallized=false;
+public:
+    InitID(std::string s):VarName(s){}
+    InitID(std::string s,Expr* e):VarName(s),eInit(e){is_initiallized=true;}
+    ~InitID(){}
 
+    bool testinit(){return is_initiallized;}
+};
+
+class Vardefine: public Basestmt{
+    Type* type;
+    InitIDList* list;
+
+public:
+    Vardefine(Type* t, InitIDList* l): type(t), list(l){}
+    ~Vardefine(){}
+};
+
+
+class Stmt: public Node{
+    std::vector<Basestmt*> stmtlist;
+public:
+    Stmt(){}
+    ~Stmt(){}
+
+    void Addstmt(Basestmt* s){
+        stmtlist.push_back(s);
+    }
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////
 // start your part at here
 class Expr : public Node{
 public:
@@ -393,6 +466,7 @@ public:
     TypeCast(Type* type, Expr* expr): _type(type), _expr(expr) {}
     ~TypeCast() {}
 };
+
 class Subscript: public Expr{
 public:
     Expr* _array;
@@ -400,6 +474,7 @@ public:
     Subscript(Expr* array, Expr* index): _array(array), _index(index) {}
     ~Subscript() {}
 };
+
 class MemAccessPtr: public Expr{
 public:
     Expr* _struct_ptr;
@@ -408,6 +483,7 @@ public:
         : _struct_ptr(struct_ptr), _member(member) {}
     ~MemAccessPtr() {}
 };
+
 class MemAccessObj: public Expr{
 public:
     Expr* _struct;

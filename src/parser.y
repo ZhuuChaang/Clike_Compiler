@@ -26,6 +26,14 @@ int yylex(void);
     Node* AST_NODE_value;
     Program* AST_PROG_value;
     Type* AST_TYPE_value;
+    IdentifierList* AST_IDLIST_value;
+    Enum* AST_ENUM_value;
+    Enumlist* AST_ENUMLIST_value;
+    SUmemdec* AST_SUDEC_value;
+    SUdecllist* AST_SUDECLIST_value;
+
+    funArgList* AST_FUNARGLIST_Value;
+
     Constant* AST_CONSTANT_value; 
 }
 
@@ -47,7 +55,16 @@ int yylex(void);
 %token <IDENTIFER_value> IDENTIFER
 
 %type <AST_NODE_value> PROGRAM
+
+
 %type <AST_TYPE_value> _TYPE TYPE FieldTYPE BuiltinTYPE
+%type <AST_IDLIST_value> IdList
+%type <AST_ENUM_value> Enm
+%type <AST_ENUMLIST_value> _EnmLIST EnmLIST
+%type <AST_SUDEC_value> SUVarDEF
+%type <AST_SUDECLIST_value> SUSTMT
+
+%type <AST_FUNARGLIST_Value> ArgLIST _ArgLIST
 
 
 %type <AST_CONSTANT_value> CONSTANT
@@ -126,53 +143,53 @@ ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=S2;}
 
 
 // function declare and define
-FunDECL:    TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON
+FunDECL:    TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  {$$=new Fundeclare($1,*$2,$4);}
             ;
 
 FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN LBRACE STMT RBRACE
             ;
 
-ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER
-            | TYPE IDENTIFER
-            |
+ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,$4));}
+            | TYPE IDENTIFER                {$$->push_back(new funArg($1,$2));}
+            |                               {$$=new funArgList();}
 			;
 
-_ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER
-            TYPE IDENTIFER
+_ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,$4));}
+            TYPE IDENTIFER                  {$$->push_back(new funArg($1,$2));}
             ;
 
 //variable define and declare
-FieldDECL:  FieldTYPE SEMICOLON
+FieldDECL:  FieldTYPE SEMICOLON     {$$=new Fielddeclare($1);}
             ;
 
-VarDEF:     TYPE InitIDList SEMICOLON
+VarDEF:     TYPE InitIDLIST SEMICOLON   {$$=new Vardefine($1,$2);}
             ;
 
 SUVarDEF:   TYPE IdList SEMICOLON   {$$=new SUmemdec($1,$2);}
             ;
 
 
-IdList      IdList COMMA IDENTIFER {$$=$1; $$->pushback(*$3);}
-            | IDENTIFER             {$$=new std::vector<std::string>(); $$->pushback(*$1);}
+IdList      IdList COMMA IDENTIFER {$$=$1; $$->push_back(*$3);}
+            | IDENTIFER             {$$=new IdentifierList(); $$->push_back(*$1);}
             ;
 
 
-InitIDList: _InitIDList COMMA Init
-            | Init
+InitIDLIST: InitIDLIST COMMA Init  {$$=$1;$$->push_back($3);}
+            | Init                 {$$=new InitIDList();$$->push_back($1);}         
             ;
 
-Init:       IDENTIFER
-            | IDENTIFER ASSIGN EXPR
+Init:       IDENTIFER               {$$=new InitID(*$1);}
+            | IDENTIFER ASSIGN EXPR {$$=new InitID(*$1,$3);}
             ;
 
 
-EnmLIST:    _EnmLIST COMMA Enm  {$1->pushback($3);$$=$1;}
-            | Enm               {$$->pushback($1);}
-            |                   {$$=new std::vector<Enum*>();}
+EnmLIST:    _EnmLIST COMMA Enm  {$1->push_back($3);$$=$1;}
+            | Enm               {$$->push_back($1);}
+            |                   {$$=new Enumlist();}
             ;
 
-_EnmLIST:   _EnmLIST COMMA Enm  {$1->pushback($3);$$=$1;}
-            | Enm               {$$->pushback($1);}
+_EnmLIST:   _EnmLIST COMMA Enm  {$1->push_back($3);$$=$1;}
+            | Enm               {$$->push_back($1);}
             ;
 
 Enm:        IDENTIFER                       {$$=new Enum(*$1);}
@@ -184,7 +201,7 @@ TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,*$3);}
 
 
 
-SCOPE:      LBRACE STMT RBRACE
+SCOPE:      LBRACE STMT RBRACE  
             ;
 
 // ctrl flow 
@@ -242,25 +259,23 @@ CtrlSTMT:   STMT CtrlSTMT
             ;
 
 
-STMT:       STMT SEMICOLON STMT 
-            | STMT SEMICOLON
-            | CtrlFLOW
-            | EXPR SEMICOLON
-            | SCOPE
-            | TypeDEF
-            | VarDEF
-            | FieldDECL
-            | ReturnSTMT
-            | 
+STMT:       STMT CtrlFLOW           {$$=$1; $$->Addstmt($2);}
+            | STMT EXPR SEMICOLON   {$$=$1; $$->Addstmt($2);}
+            | STMT SCOPE            {$$=$1; $$->Addstmt($2);}
+            | STMT TypeDEF          {$$=$1; $$->Addstmt($2);}
+            | STMT VarDEF           {$$=$1; $$->Addstmt($2);}
+            | STMT FieldDECL        {$$=$1; $$->Addstmt($2);}
+            | STMT ReturnSTMT       {$$=$1; $$->Addstmt($2);}
+            |                       {$$=new Stmt();}
             ;
 
-ReturnSTMT: RETURN SEMICOLON
-            | RETURN EXPR SEMICOLON
+ReturnSTMT: RETURN SEMICOLON        
+            | RETURN EXPR SEMICOLON 
             ;
 
-SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->pushback($2);}
-            | SUVarDEF SEMICOLON        {$$->pushback($1);}    
-            |                           {$$=new std::vector<SUmemdec*>(); }
+SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
+            | SUVarDEF SEMICOLON        {$$->push_back($1);}    
+            |                           {$$=new SUdecllist(); }
             ;
 
 
