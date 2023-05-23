@@ -97,11 +97,11 @@ PROGRAM:    GlobalSTMT
 
 
 // top level statements of the program, including defines and declares of func and global var
-GlobalSTMT: GlobalSTMT FunDECL 
-            | GlobalSTMT FunDEF 
-            | GlobalSTMT TypeDEF
-            | GlobalSTMT VarDEF
-            | GlobalSTMT FieldDECL  {}
+GlobalSTMT: GlobalSTMT FunDECL      {$$->Addstmt($2);}
+            | GlobalSTMT FunDEF     {$$->Addstmt($2);}
+            | GlobalSTMT TypeDEF    {$$->Addstmt($2);}
+            | GlobalSTMT VarDEF     {$$->Addstmt($2);}      
+            | GlobalSTMT FieldDECL  {$$->Addstmt($2);}
             |                       {$$=new Globalstmt();}
             ;
 
@@ -201,66 +201,73 @@ TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,*$3);}
 
 
 
-SCOPE:      LBRACE STMT RBRACE  
+SCOPE:      LBRACE STMT RBRACE  {$$=new Scope($2);}
             ;
 
 // ctrl flow 
-CtrlFLOW:   IfFLOW
-            | ElseFLOW
-            | ElseifFLOW
-            | ForFLOW
-            | DowhileFLOW
-            | WhileFLOW
-            | SwitchFLOW
+CtrlFLOW:   IfFLOW          {$$=$1;}
+            | ForFLOW       {$$=$1;}
+            | DowhileFLOW   {$$=$1;}
+            | WhileFLOW     {$$=$1;}
+            | SwitchFLOW    {$$=$1;}
             ;
 
-IfFLOW:     IF LPAREN EXPR RPAREN SCOPE ElseifFLOW ElseFLOW
-            | IF LPAREN EXPR RPAREN SEMICOLON
+CtrlSCOPE:  LBRACE CtrlSTMT RBRACE  {$$=new Scope($2);}
+
+IfFLOW:     IF LPAREN EXPR RPAREN CtrlSCOPE ElseifFLOW ElseFLOW {$$=new Ifflow($3,$5,$6,$7);}
+            | IF LPAREN EXPR RPAREN SEMICOLON                   {$$=new Ifflow($3);}
             ;
 
-ElseFLOW:   ELSE SCOPE
-            ELSE SEMICOLON
+ElseFLOW:   ELSE CtrlSCOPE        {$$=new Elseflow($2);}
+            | ELSE SEMICOLON      {$$=new Elseflow();}
+            ;
 
-ElseifFLOW: ELSE IF LPAREN EXPR RPAREN SCOPE ElseifFLOW
-            |
+ElseifFLOW: ElseifFLOW ELSE IF LPAREN EXPR RPAREN CtrlSCOPE {$$=$1;$$->Addelseif($5,$7);}
+            |                                               {$$=new Elseifflow();}   
             ;
 
 
-ForFLOW:    FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN SEMICOLON
-            | FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN LBRACE CtrlSTMT RBRACE
+ForFLOW:    FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN SEMICOLON      {$$=new Forflow($3,$5,$7);}
+            | FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN CtrlSCOPE    {$$=new Forflow($3,$5,$7,$9);}
             ;
 
-WhileFLOW:  WHILE LPAREN EXPR RPAREN LBRACE CtrlSTMT RBRACE
-            | WHILE LPAREN EXPR RPAREN SEMICOLON
+WhileFLOW:  WHILE LPAREN EXPR RPAREN CtrlSCOPE      {$$=new Whileflow($3,$5);}
+            | WHILE LPAREN EXPR RPAREN SEMICOLON    {$$=new Whileflow($3);}
             ;
 
-DowhileFLOW: DO LBRACE CtrlSTMT RBRACE WHILE LPAREN EXPR RPAREN SEMICOLON
+DowhileFLOW: DO CtrlSCOPE WHILE LPAREN EXPR RPAREN SEMICOLON    {$$=new Dowhileflow($5,$2);}
             ;      
 
 
-SwitchFLOW: SWITCH LPAREN EXPR RPAREN LBRACE CaseLIST RBRACE
+SwitchFLOW: SWITCH LPAREN EXPR RPAREN LBRACE CaseLIST RBRACE    {$$=new Switchflow($3,$6);}
             ;
 
-CaseLIST:   CaseLIST CaseSTMT
-            |
+CaseLIST:   CaseLIST CaseSTMT   {$$->push_back($2);}
+            |                   {$$=new Caselist();}
             ;
 
 // statements
-CaseSTMT:   CASE EXPR COLON STMT BREAK SEMICOLON
-            | CASE EXPR COLON STMT
-            | DEFAULT EXPR COLON STMT BREAK SEMICOLON
-            | DEFAULT EXPR COLON STMT
+CaseSTMT:   CASE EXPR COLON STMT BREAK SEMICOLON    {$$=new Case($2,$4);$$->set_break();}
+            | CASE EXPR COLON STMT                  {$$=new Case($2,$4);}
+            | DEFAULT COLON STMT BREAK SEMICOLON    {$$=new Case($3);$$->set_break();$$->set_default();}
+            | DEFAULT COLON STMT                    {$$=new Case($3);$$->set_default();}
             ;             
 
-CtrlSTMT:   STMT CtrlSTMT
-            | BREAK SEMICOLON
-            | CONTINUE SEMICOLON
-            |
+CtrlSTMT:   CtrlSTMT CtrlFLOW               {$$=$1; $$->Addstmt($2);}
+            | CtrlSTMT BREAK SEMICOLON      {$$=$1; $$->Addstmt(new Breakstmt($2));}
+            | CtrlSTMT CONTINUE SEMICOLON   {$$=$1; $$->Addstmt(new Continuestmt($2));}
+            | CtrlSTMT EXPR SEMICOLON       {$$=$1; $$->Addstmt(new Exprstmt($2));}
+            | CtrlSTMT SCOPE                {$$=$1; $$->Addstmt($2);}
+            | CtrlSTMT TypeDEF              {$$=$1; $$->Addstmt($2);}
+            | CtrlSTMT VarDEF               {$$=$1; $$->Addstmt($2);}
+            | CtrlSTMT FieldDECL            {$$=$1; $$->Addstmt($2);}
+            | CtrlSTMT ReturnSTMT           {$$=$1; $$->Addstmt($2);}
+            |                               {$$=new Stmt();}
             ;
 
 
 STMT:       STMT CtrlFLOW           {$$=$1; $$->Addstmt($2);}
-            | STMT EXPR SEMICOLON   {$$=$1; $$->Addstmt($2);}
+            | STMT EXPR SEMICOLON   {$$=$1; $$->Addstmt(new Exprstmt($2));}
             | STMT SCOPE            {$$=$1; $$->Addstmt($2);}
             | STMT TypeDEF          {$$=$1; $$->Addstmt($2);}
             | STMT VarDEF           {$$=$1; $$->Addstmt($2);}
@@ -269,8 +276,8 @@ STMT:       STMT CtrlFLOW           {$$=$1; $$->Addstmt($2);}
             |                       {$$=new Stmt();}
             ;
 
-ReturnSTMT: RETURN SEMICOLON        
-            | RETURN EXPR SEMICOLON 
+ReturnSTMT: RETURN SEMICOLON        {$$=new ReturnSTMT();}
+            | RETURN EXPR SEMICOLON {$$=new ReturnSTMT($2);}
             ;
 
 SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}

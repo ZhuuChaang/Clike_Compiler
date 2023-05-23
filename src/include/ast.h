@@ -44,6 +44,22 @@ class Basestmt;
     class InitID;
         typedef std::vector<InitID*> InitIDList;
     class Vardefine;
+    class Scope;
+    class Exprstmt;
+    class Returnstmt;
+    class Breakstmt;
+    class Continuestmt;
+    class Ifflow;
+    class Elseifflow;
+    class Elseflow;
+    class Forflow;
+    class Whileflow;
+    class Dowhileflow;
+    class Switchflow;
+    class Case;
+    typedef std::vector<Case*> Caselist;
+
+
 
 class Expr;
     class Constant;
@@ -342,6 +358,7 @@ public:
     ~Vardefine(){}
 };
 
+//////////////////////////////////////////////////////////////////
 
 class Stmt: public Node{
     std::vector<Basestmt*> stmtlist;
@@ -355,8 +372,162 @@ public:
 };
 
 
+class Scope: public Basestmt{
+    Stmt* Scopestmt;    
+
+public:
+    Scope(Stmt* s):Scopestmt(s){}
+    ~Scope(){}
+};
+
+class Exprstmt: public Basestmt{
+    Expr* expr;
+
+public: 
+    Exprstmt(Expr* e):expr(e){}
+    ~Exprstmt(){}
+};
+
+class Returnstmt: public Basestmt{
+    Expr* ret=NULL;
+    bool withvalue=false;
+public:
+    Returnstmt(){ret=NULL; withvalue=false;}
+    Returnstmt(Expr* e): ret(e) {withvalue=true;}
+    ~Returnstmt(){}
+};
+
+class Breakstmt: public Basestmt{
+public:
+    Breakstmt(){}
+    ~Breakstmt(){}
+};
+
+class Continuestmt: public Basestmt{
+public:
+    Continuestmt(){}
+    ~Continuestmt(){}
+};
+
+class Ifflow: public Basestmt{
+    bool has_body;
+
+    Expr* condition;
+    Scope* ifbody;
+
+    Elseifflow* Elseif;
+    Elseflow* Else;
+
+public:
+    Ifflow(Expr* e):condition(e),ifbody(NULL){
+        has_body=false;
+    }
+
+    Ifflow(Expr* e,Scope* b, Elseifflow* elf, Elseflow* el):
+        condition(e), ifbody(b), Elseif(elf), Else(el)
+    {
+        has_body=true;
+    }
+
+    ~Ifflow(){}
+};
+
+class Elseifflow: public Basestmt{
+    std::vector<Expr*> conditions;
+    std::vector<Scope*> bodies;
+
+public:
+    Elseifflow(){}
+    ~Elseifflow(){}
+
+    void Addelseif(Expr* e, Scope* b){
+        conditions.push_back(e);
+        bodies.push_back(b);
+    }
+};
+
+class Elseflow: public Basestmt{
+    bool has_body;
+    Scope* Elsebody;
+
+public:
+    Elseflow():has_body(false), Elsebody(NULL){}
+    Elseflow(Scope* b):has_body(true), Elsebody(b){}
+    ~Elseflow(){}
+
+    bool test_body(){return has_body;} 
+};
+
+
+class Forflow: public Basestmt{
+    Expr* init;
+    Expr* limit;
+    Expr* step;
+    Scope* Forbody;
+    bool has_body;
+
+public:
+    Forflow(Expr* i,Expr* l,Expr* s):init(i),limit(l),step(s){Forbody=NULL;has_body=false;}
+    Forflow(Expr* i,Expr* l,Expr* s, Scope* b):init(i),limit(l),step(s){Forbody=b;has_body=true;}
+    ~Forflow(){}
+
+    bool test_body(){return has_body;}     
+};
+
+class Whileflow: public Basestmt{
+    Expr* limit;
+    Scope* whilebody;
+    bool has_body;
+
+public:
+    Whileflow(Expr* l):limit(l),whilebody(NULL),has_body(false){}
+    Whileflow(Expr* l, Scope* s): limit(l),whilebody(s),has_body(true){}
+    ~Whileflow(){}
+
+    bool test_body(){return has_body;}   
+};
+
+class Dowhileflow: public Basestmt{
+    Expr* limit;
+    Scope* whilebody;
+ 
+public:
+    Dowhileflow(Expr* l, Scope* w):limit(l),whilebody(w){}
+    ~Dowhileflow(){}
+    
+};
+
+
+class Switchflow: public Basestmt{
+    Expr* switchExpr;
+    Caselist* list;
+public:
+    Switchflow(Expr* e,Caselist* l):switchExpr(e),list(l){}
+    ~Switchflow(){}
+
+};
+
+class Case: public Node{
+    bool has_break;
+    bool is_default;
+    Expr* caseExpr;
+    Stmt* casebody;
+
+public:
+    Case(Expr* e, Stmt* b):caseExpr(e),casebody(b){has_break=false;is_default=false;}
+    Case(Stmt* b):caseExpr(NULL),casebody(b){has_break=false;is_default=false;}
+
+    ~Case(){}
+
+    void set_break(){has_break=true;}
+    void set_default(){is_default=true;}
+    bool test_break(){return has_break;}
+    bool test_default(){return is_default;}
+};
 //////////////////////////////////////////////////////////////////////////////////////
 // start your part at here
+
+
 class Expr : public Node{
 public:
     bool RHvalue; //is this expression only can be used as a right hand side value
