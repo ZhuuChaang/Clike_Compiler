@@ -90,8 +90,8 @@ public:
 
 class Program: public Node{
 public:
-    Globalstmt * StmtHead;
-    Program(Globalstmt* head) :StmtHead(head) {}
+    Globalstmt * Stmtlist;
+    Program(Globalstmt* l) :Stmtlist(l) {}
 	~Program(void) {}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen);
@@ -231,7 +231,7 @@ public:
 
 typedef std::vector<Enum*> Enumlist;
 
-class Definedtype: public Type{
+class Definedtype: public Basestmt{
     std::string deftypeName;
     Type* type;
 public:

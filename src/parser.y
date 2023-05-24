@@ -31,8 +31,18 @@ int yylex(void);
     Enumlist* AST_ENUMLIST_value;
     SUmemdec* AST_SUDEC_value;
     SUdecllist* AST_SUDECLIST_value;
+    funArgList* AST_FUNARGLIST_value;
 
-    funArgList* AST_FUNARGLIST_Value;
+    Stmt* AST_STMT_value;
+    Globalstmt* AST_GSTMT_value;
+    Basestmt* AST_BSTMT_value;
+    IdentifierList* AST_IDLIST_value;
+    InitID * AST_IID_value;
+    InitIDList* AST_IIDLIST_value;
+    Elseifflow* AST_ELIF_value;
+    Elseflow* AST_ELSE_value;
+    Caselist* AST_CASELIST_value;
+    Case* AST_CASE_value;
 
     Constant* AST_CONSTANT_value; 
 }
@@ -48,7 +58,7 @@ int yylex(void);
        CONDITION,DOT,ARROW,COMMA,SEMICOLON,COLON,
        LPAREN,RPAREN,LBRACKET,RBRACKET,LBRACE,RBRACE
        
-%token <INT_value> INTEGER_VAR
+%token <INT_value> INTEGER_VAR ARRAY
 %token <REAL_value> REAL_VAR
 %token <STRING_value> STRING_VAR
 %token <CHAR_value> CHAR_VAR
@@ -63,9 +73,20 @@ int yylex(void);
 %type <AST_ENUMLIST_value> _EnmLIST EnmLIST
 %type <AST_SUDEC_value> SUVarDEF
 %type <AST_SUDECLIST_value> SUSTMT
+%type <AST_FUNARGLIST_value> ArgLIST _ArgLIST
 
-%type <AST_FUNARGLIST_Value> ArgLIST _ArgLIST
-
+%type <AST_GSTMT_value> GlobalSTMT
+%type <AST_BSTMT_value> FunDECL FunDEF FieldDECL VarDEF SUVarDEF TypeDEF SCOPE CtrlFLOW
+                        CtrlSCOPE IfFLOW ForFLOW WhileFLOW DowhileFLOW SwitchFLOW 
+                        ReturnSTMT 
+%type <AST_IDLIST_value> IdList
+%type <AST_IID_value> Init
+%type <AST_IIDLIST_value> InitIDLIST
+%type <AST_ELIF_value> ElseifFLOW
+%type <AST_ELSE_value> ElseFLOW
+%type <AST_CASE_value> CaseSTMT
+%type <AST_CASELIST_value> CaseLIST
+%type <AST_STMT_value> CtrlSTMT STMT
 
 %type <AST_CONSTANT_value> CONSTANT
 
@@ -92,7 +113,7 @@ int yylex(void);
 %start PROGRAM
 
 %%
-PROGRAM:    GlobalSTMT
+PROGRAM:    GlobalSTMT  {$$=new Program($1);}
             ;
 
 
