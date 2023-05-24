@@ -44,7 +44,10 @@ int yylex(void);
     Caselist* AST_CASELIST_value;
     Case* AST_CASE_value;
 
-    Constant* AST_CONSTANT_value; 
+    Constant* AST_CONSTANT_value;
+    Expr* AST_EXPR_value;
+    int int_value;
+    CallArgList* AST_CALLARGLIST_value;
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -88,8 +91,11 @@ int yylex(void);
 %type <AST_CASELIST_value> CaseLIST
 %type <AST_STMT_value> CtrlSTMT STMT
 
+%type <AST_EXPR_value> EXPR
 %type <AST_CONSTANT_value> CONSTANT
-
+%type <AST_FUNCALL_value> FUNCALL
+%type <int_value> BINOP UNAOP SUFOP
+%type <int_CALLARGLIST_value> CallArgLIST _CallArgLIST
 
 %nonassoc IF
 %nonassoc ELSE
@@ -311,7 +317,7 @@ SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
 
 //expr            
 
-EXPR:       IDENTIFER                       {$$ = new Variable($1);}
+EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
             | FUNCALL                       {$$ = $1;}
             | CONSTANT                      {$$ = $1;}
             | EXPR BINOP EXPR               {$$ = new BinopExpr($1, $2, $3);}
@@ -374,7 +380,7 @@ BINOP       ADD     {$$ = $1;}
             ;
 
 FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
-                {$$ = new FuncCall(*$1, $2);}
+                {$$ = new FuncCall(*($1), $2);}
             ;
 
 CallArgLIST: _CallArgLIST COMMA EXPR    {$$ = $1; $$->push_back($3);}
