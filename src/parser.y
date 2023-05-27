@@ -17,7 +17,7 @@ int yylex(void);
 
 %union{
     int* INT_value;
-    double* REAl_value;
+    double* REAL_value;
     std::string* STRING_value;
     char* CHAR_value;
 
@@ -53,15 +53,16 @@ int yylex(void);
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
        FOR,DO,WHILE,BREAK,CONTINUE,IF,ELSE,GOTO,SWITCH,CASE,DEFAULT,RETURN,
        STATIC,CONST,SIZEOF,TYPEDEF,
-       ADD,SUB,MUL,DIV,MOD,INC,DEC,
-       EQ,NE,GT,LT,GE,LE,AND,OR,NOT,
-       BAND,BOR,BXOR,BNOT,SHL,SHR,
-       ASSIGN,ADDAS,SUBAS,MULAS,DIVAS,MODAS,
-       BANDAS,BORAS,BXORAS,SHLAS,SHRAS,
-       CONDITION,DOT,ARROW,COMMA,SEMICOLON,COLON,
+       CONDITION,DOT,ARROW,SEMICOLON,COLON,
        LPAREN,RPAREN,LBRACKET,RBRACKET,LBRACE,RBRACE
-       
-%token <INT_value> INTEGER_VAR ARRAY
+
+%token <token> ADD SUB MUL DIV MOD INC DEC
+                EQ,NE,GT,LT,GE,LE,AND,OR,NOT,
+                BAND,BOR,BXOR,BNOT,SHL,SHR,
+                ASSIGN,ADDAS,SUBAS,MULAS,DIVAS,MODAS,
+                BANDAS,BORAS,BXORAS,SHLAS,SHRAS,COMMA
+
+%token <INT_value> INTEGER_VAR
 %token <REAL_value> REAL_VAR
 %token <STRING_value> STRING_VAR
 %token <CHAR_value> CHAR_VAR
@@ -71,7 +72,7 @@ int yylex(void);
 
 
 %type <AST_TYPE_value> _TYPE TYPE FieldTYPE BuiltinTYPE
-%type <AST_IDLIST_value> IdList
+%type <INT_value> ARRAY
 %type <AST_ENUM_value> Enm
 %type <AST_ENUMLIST_value> _EnmLIST EnmLIST
 %type <AST_SUDEC_value> SUVarDEF
@@ -79,7 +80,7 @@ int yylex(void);
 %type <AST_FUNARGLIST_value> ArgLIST _ArgLIST
 
 %type <AST_GSTMT_value> GlobalSTMT
-%type <AST_BSTMT_value> FunDECL FunDEF FieldDECL VarDEF SUVarDEF TypeDEF SCOPE CtrlFLOW
+%type <AST_BSTMT_value> FunDECL FunDEF FieldDECL VarDEF TypeDEF SCOPE CtrlFLOW
                         CtrlSCOPE IfFLOW ForFLOW WhileFLOW DowhileFLOW SwitchFLOW 
                         ReturnSTMT 
 %type <AST_IDLIST_value> IdList
@@ -95,7 +96,7 @@ int yylex(void);
 %type <AST_CONSTANT_value> CONSTANT
 %type <AST_FUNCALL_value> FUNCALL
 %type <int_value> BINOP UNAOP SUFOP
-%type <int_CALLARGLIST_value> CallArgLIST _CallArgLIST
+%type <AST_CALLARGLIST_value> CallArgLIST _CallArgLIST
 
 %nonassoc IF
 %nonassoc ELSE
@@ -134,8 +135,8 @@ GlobalSTMT: GlobalSTMT FunDECL      {$$->Addstmt($2);}
 
 //types
 TYPE:       _TYPE           {$$=$1;}
-            | CONST _TYPE   {$1->set_const();$$=$1;}
-            | STATIC _TYPE  {$1->set_static();$$=$1;}
+            //| CONST _TYPE   {$1->set_const();$$=$1;}
+            //| STATIC _TYPE  {$1->set_static();$$=$1;}
             ;
 
 _TYPE:      BuiltinTYPE     {$$=$1;}
@@ -176,13 +177,13 @@ FunDECL:    TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  {$$=new Fundeclare($
 FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN LBRACE STMT RBRACE
             ;
 
-ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,$4));}
-            | TYPE IDENTIFER                {$$->push_back(new funArg($1,$2));}
+ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}
+            | TYPE IDENTIFER                {$$->push_back(new funArg($1,*$2));}
             |                               {$$=new funArgList();}
 			;
 
 _ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,$4));}
-            TYPE IDENTIFER                  {$$->push_back(new funArg($1,$2));}
+            | TYPE IDENTIFER                  {$$->push_back(new funArg($1,$2));}
             ;
 
 //variable define and declare
@@ -196,7 +197,7 @@ SUVarDEF:   TYPE IdList SEMICOLON   {$$=new SUmemdec($1,$2);}
             ;
 
 
-IdList      IdList COMMA IDENTIFER {$$=$1; $$->push_back(*$3);}
+IdList:      IdList COMMA IDENTIFER {$$=$1; $$->push_back(*$3);}
             | IDENTIFER             {$$=new IdentifierList(); $$->push_back(*$1);}
             ;
 
@@ -281,8 +282,8 @@ CaseSTMT:   CASE EXPR COLON STMT BREAK SEMICOLON    {$$=new Case($2,$4);$$->set_
             ;             
 
 CtrlSTMT:   CtrlSTMT CtrlFLOW               {$$=$1; $$->Addstmt($2);}
-            | CtrlSTMT BREAK SEMICOLON      {$$=$1; $$->Addstmt(new Breakstmt($2));}
-            | CtrlSTMT CONTINUE SEMICOLON   {$$=$1; $$->Addstmt(new Continuestmt($2));}
+            | CtrlSTMT BREAK SEMICOLON      {$$=$1; $$->Addstmt(new Breakstmt());}
+            | CtrlSTMT CONTINUE SEMICOLON   {$$=$1; $$->Addstmt(new Continuestmt());}
             | CtrlSTMT EXPR SEMICOLON       {$$=$1; $$->Addstmt(new Exprstmt($2));}
             | CtrlSTMT SCOPE                {$$=$1; $$->Addstmt($2);}
             | CtrlSTMT TypeDEF              {$$=$1; $$->Addstmt($2);}
@@ -303,8 +304,8 @@ STMT:       STMT CtrlFLOW           {$$=$1; $$->Addstmt($2);}
             |                       {$$=new Stmt();}
             ;
 
-ReturnSTMT: RETURN SEMICOLON        {$$=new ReturnSTMT();}
-            | RETURN EXPR SEMICOLON {$$=new ReturnSTMT($2);}
+ReturnSTMT: RETURN SEMICOLON        {$$=new Returnstmt();}
+            | RETURN EXPR SEMICOLON {$$=new Returnstmt($2);}
             ;
 
 SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
@@ -333,7 +334,7 @@ EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
             | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, $3);}
             ;  
 
-UNAOP       INC     {$$ = $1;}
+UNAOP:       INC     {$$ = $1;}
             | DEC   {$$ = $1;}
             | NOT   {$$ = $1;}
             | BNOT  {$$ = $1;}
@@ -343,11 +344,11 @@ UNAOP       INC     {$$ = $1;}
             | SUB   {$$ = $1;}
             ;
 
-SUFOP       INC     {$$ = $1;}
+SUFOP:       INC     {$$ = $1;}
             | DEC   {$$ = $1;}
             ;
 
-BINOP       ADD     {$$ = $1;}
+BINOP:       ADD     {$$ = $1;}
             | SUB   {$$ = $1;}
             | MUL   {$$ = $1;}
             | DIV   {$$ = $1;}
@@ -380,7 +381,7 @@ BINOP       ADD     {$$ = $1;}
             ;
 
 FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
-                {$$ = new FuncCall(*($1), $2);}
+                {$$ = new FuncCall(*($1), $3);}
             ;
 
 CallArgLIST: _CallArgLIST COMMA EXPR    {$$ = $1; $$->push_back($3);}
