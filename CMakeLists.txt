@@ -1,5 +1,5 @@
 #minimum version required
-cmake_minimum_required(VESRSION 3.20)
+cmake_minimum_required(VERSION 3.20)
 
 #name of the project
 project(Clike)
