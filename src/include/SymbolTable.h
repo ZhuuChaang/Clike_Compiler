@@ -8,13 +8,13 @@
 
 
 enum ValueTypes{
-    INT,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    ENUM,
-    CONSTANT,
-    STRUCT
+    INT_type,
+    FLOAT_type,
+    DOUBLE_type,
+    STRING_type,
+    ENUM_type,
+    CONSTANT_type,
+    STRUCT_type
 };
 
 class symValue{
