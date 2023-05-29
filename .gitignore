@@ -1,0 +1,5 @@
+build/*
+CMakeFiles/*
+src/parser.cpp
+src/parser.hpp
+src/tokenize.cpp

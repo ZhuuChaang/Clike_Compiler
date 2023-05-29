@@ -8,13 +8,13 @@
             "request": "launch",
             // "program": "${fileDirname}/${fileBasenameNoExtension}",
             "program": "${workspaceFolder}/build/clike",//change to real executable file name
-            "args": ["-i","build/test.c","-o","build/test.o"],//change to real execute arguments
+            "args": ["-i","build/hello.c","-o","build/test.o"],//change to real execute arguments
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "preLaunchTask": "build",
+            //"preLaunchTask": "build",
             "miDebuggerPath":"/usr/bin/gdb",
             "setupCommands": [
                 {
