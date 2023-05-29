@@ -14,4 +14,5 @@ int main(int argc, const char* argv[]){
     assert(yyin);
     yyparse();
     Root->DrawNode();
+    return 0;
 }

@@ -80,7 +80,7 @@ Program* Root;
 %token <CHAR_value> CHAR_VAR
 %token <IDENTIFER_value> IDENTIFER
 
-%type <AST_NODE_value> PROGRAM
+%type <AST_PROG_value> PROGRAM
 
 
 %type <AST_TYPE_value> _TYPE TYPE FieldTYPE
@@ -134,16 +134,16 @@ Program* Root;
 %start PROGRAM
 
 %%
-PROGRAM:    GlobalSTMT  {$$=new Program($1);}
+PROGRAM:    GlobalSTMT  {$$=new Program($1); Root=$$;}
             ;
 
 
 // top level statements of the program, including defines and declares of func and global var
-GlobalSTMT: GlobalSTMT FunDECL      {$$->Addstmt($2);}
-            | GlobalSTMT FunDEF     {$$->Addstmt($2);}
-            | GlobalSTMT TypeDEF    {$$->Addstmt($2);}
-            | GlobalSTMT VarDEF     {$$->Addstmt($2);}      
-            | GlobalSTMT FieldDECL  {$$->Addstmt($2);}
+GlobalSTMT: GlobalSTMT FunDECL      {$$=$1;$$->Addstmt($2);}
+            | GlobalSTMT FunDEF     {$$=$1;$$->Addstmt($2);}
+            | GlobalSTMT TypeDEF    {$$=$1;$$->Addstmt($2);}
+            | GlobalSTMT VarDEF     {$$=$1;$$->Addstmt($2);}      
+            | GlobalSTMT FieldDECL  {$$=$1;$$->Addstmt($2);}
             |                       {$$=new Globalstmt();}
             ;
 

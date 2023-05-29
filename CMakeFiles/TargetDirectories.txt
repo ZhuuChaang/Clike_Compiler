@@ -1,0 +1,6 @@
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/intrinsics_gen.dir
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/omp_gen.dir
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/acc_gen.dir
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/clike.dir
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/edit_cache.dir
+/mnt/d/courses/compiler_principles/compiler/Clike_Compiler/CMakeFiles/rebuild_cache.dir

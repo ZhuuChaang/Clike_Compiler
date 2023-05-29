@@ -7,6 +7,7 @@
 #include <map>
 #include "LLVMlibs.hpp"
 #include "CodeGen.hpp"
+#include <iostream>
 
 enum Csttype{
      cstty_int,
@@ -320,6 +321,7 @@ class Fundeclare: public Basestmt{
     std::map<std::string,Type*> Arglist;
 public:
     Fundeclare(Type* t,std::string s, funArgList* l):retType(t),Funname(s){
+        std::cout << s << std::endl;
         int size=l->size();
         for(int i=0;i<size;i++){
             funArg* a=(*l)[i];
