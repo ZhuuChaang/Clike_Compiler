@@ -1,4 +1,4 @@
-#include "astprinter.h"
+#include "astprinter.hpp"
 int printast(Node* root){
     root->DrawNode();
 }

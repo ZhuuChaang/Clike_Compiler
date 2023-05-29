@@ -1,8 +1,13 @@
+%code requires{
+    #include "ast.hpp"
+    #include <string>
+    #include<iostream>
+}
+
 %{
-#include<string>
-#include<iostream>
-#include "ast.h"
-_AST_H_
+
+#include "ast.hpp"
+
 
 void yyerror(const char *s) {
     std::printf("Error: %s\n", s);
@@ -11,9 +16,13 @@ void yyerror(const char *s) {
 
 int yylex(void);
 
+extern "C" int yywrap() {return 1;}
 
+Program* Root;
 
 %}
+
+%output "parser.cpp"
 
 %union{
     int* INT_value;
@@ -26,6 +35,7 @@ int yylex(void);
     Node* AST_NODE_value;
     Program* AST_PROG_value;
     Type* AST_TYPE_value;
+    Builtintype* AST_BUILTinTYPE_value;
     IdentifierList* AST_IDLIST_value;
     Enum* AST_ENUM_value;
     Enumlist* AST_ENUMLIST_value;
@@ -36,7 +46,7 @@ int yylex(void);
     Stmt* AST_STMT_value;
     Globalstmt* AST_GSTMT_value;
     Basestmt* AST_BSTMT_value;
-    IdentifierList* AST_IDLIST_value;
+    Scope* AST_SCOPE_value;
     InitID * AST_IID_value;
     InitIDList* AST_IIDLIST_value;
     Elseifflow* AST_ELIF_value;
@@ -48,6 +58,8 @@ int yylex(void);
     Expr* AST_EXPR_value;
     int int_value;
     CallArgList* AST_CALLARGLIST_value;
+    FuncCall* AST_FUNCALL_value;
+    int token;
 }
 
 %token CHAR,DOUBLE,FLOAT,INT,SHORT,LONG,VOID,ENUM,UNION,STRUCT,TRUE,FALSE
@@ -71,7 +83,8 @@ int yylex(void);
 %type <AST_NODE_value> PROGRAM
 
 
-%type <AST_TYPE_value> _TYPE TYPE FieldTYPE BuiltinTYPE
+%type <AST_TYPE_value> _TYPE TYPE FieldTYPE
+%type <AST_BUILTinTYPE_value> BuiltinTYPE
 %type <INT_value> ARRAY
 %type <AST_ENUM_value> Enm
 %type <AST_ENUMLIST_value> _EnmLIST EnmLIST
@@ -80,9 +93,10 @@ int yylex(void);
 %type <AST_FUNARGLIST_value> ArgLIST _ArgLIST
 
 %type <AST_GSTMT_value> GlobalSTMT
-%type <AST_BSTMT_value> FunDECL FunDEF FieldDECL VarDEF TypeDEF SCOPE CtrlFLOW
-                        CtrlSCOPE IfFLOW ForFLOW WhileFLOW DowhileFLOW SwitchFLOW 
+%type <AST_BSTMT_value> FunDECL FunDEF FieldDECL VarDEF TypeDEF CtrlFLOW
+                        IfFLOW ForFLOW WhileFLOW DowhileFLOW SwitchFLOW 
                         ReturnSTMT 
+%type <AST_SCOPE_value> SCOPE CtrlSCOPE 
 %type <AST_IDLIST_value> IdList
 %type <AST_IID_value> Init
 %type <AST_IIDLIST_value> InitIDLIST
@@ -149,7 +163,7 @@ _TYPE:      BuiltinTYPE     {$$=$1;}
 
 FieldTYPE:  STRUCT IDENTIFER LBRACE SUSTMT RBRACE   {$$=new Structtype(*$2,$4);}
             | UNION IDENTIFER LBRACE SUSTMT RBRACE  {$$=new Uniontype(*$2,$4);}
-            | ENUM IDENTIFER LBRACE EnmLIST RBRACE  {$$=new Enumtype(*$2,$4);}
+            | ENUM IDENTIFER LBRACE EnmLIST RBRACE  {$$=new Enumtype(*$2,*$4);}
             ;
 
 BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
@@ -166,7 +180,7 @@ BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
 PTR:        MUL {;}
             ;
 
-ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=S2;}
+ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=$2;}
             ;
 
 
@@ -174,7 +188,7 @@ ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=S2;}
 FunDECL:    TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  {$$=new Fundeclare($1,*$2,$4);}
             ;
 
-FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN LBRACE STMT RBRACE
+FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE {$$ = new Fundefine($1,*$2,$4,$6);}
             ;
 
 ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}
@@ -182,8 +196,8 @@ ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4
             |                               {$$=new funArgList();}
 			;
 
-_ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,$4));}
-            | TYPE IDENTIFER                  {$$->push_back(new funArg($1,$2));}
+_ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}
+            | TYPE IDENTIFER                  {$$->push_back(new funArg($1,*$2));}
             ;
 
 //variable define and declare
@@ -225,7 +239,7 @@ Enm:        IDENTIFER                       {$$=new Enum(*$1);}
             ;
 
 //type defination
-TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new Definedtype($2,*$3);}
+TypeDEF:    TYPEDEF TYPE IDENTIFER SEMICOLON    {$$=new TypeDefine(new Definedtype($2,*$3));}
 
 
 
@@ -321,17 +335,17 @@ SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
 EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
             | FUNCALL                       {$$ = $1;}
             | CONSTANT                      {$$ = $1;}
-            | EXPR BINOP EXPR               {$$ = new BinopExpr($1, $2, $3);}
+            | EXPR BINOP EXPR               {$$ = new BinopExpr($2, $1, $3);}
             | UNAOP EXPR                    {$$ = new UnaopExpr($1, $2);}
-            | EXPR SUFOP                    {$$ = new SufopExpr($1, $2);}
+            | EXPR SUFOP                    {$$ = new SufopExpr($2, $1);}
             | LPAREN EXPR RPAREN            {$$ = $2;}
             | SIZEOF LPAREN EXPR RPAREN     {$$ = new SizeofExpr($3);}
-            | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofExpr($3);}
+            | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofType($3);}
             | EXPR CONDITION EXPR COLON EXPR {$$ = new TernaryCondition($1, $3, $5);}
             | LPAREN TYPE RPAREN EXPR       {$$ = new TypeCast($2, $4);}
             | EXPR LBRACKET EXPR RBRACKET   {$$ = new Subscript($1, $3);}
-            | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, $3);}
-            | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, $3);}
+            | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, *$3);}
+            | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, *$3);}
             ;  
 
 UNAOP:       INC     {$$ = $1;}

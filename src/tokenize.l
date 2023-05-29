@@ -1,7 +1,7 @@
 %{
 #include<string>
 #include<stdio.h>
-#include "parser.h"
+#include "parser.hpp"
 %}
 
 %option outfile="tokenize.cpp"
@@ -113,8 +113,9 @@
 
 
 [a-zA-Z_][a-zA-Z_0-9]* {
-                        std::string s(yytext);
-                        yylval.IDENTIFER_value=&s;
+                        //std::string s(yytext);
+                        //yylval.IDENTIFER_value=&s;
+                        yylval.sVal = new std::string(yytext, yyleng);
                         return IDENTIFER;
                     }
 

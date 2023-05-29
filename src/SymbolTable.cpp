@@ -1,4 +1,4 @@
-#include "SymbolTable.h"
+#include "SymbolTable.hpp"
 
 void Symbol_Table::newValue(std::string varName,ValueTypes t,void* v,bool m){
     symValue s(t,v,m);

@@ -1,13 +1,13 @@
 #minimum version required
 cmake_minimum_required(VERSION 3.20)
-
 #name of the project
 project(Clike)
 
 #pre-build for lexer and yacc
 execute_process(WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src
                 COMMAND flex tokenize.l
-                COMMAND bison --header=[./include/parser.h] parser.y
+#                COMMAND bison --header=[./include/parser.h] parser.y
+                COMMAND bison -d parser.y
 )
 
 #set flags
@@ -27,11 +27,14 @@ else(LLVM_FOUND)
     message(STATUS "can'f found llvm")
 endif(LLVM_FOUND)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/src/include)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/src/include ${CMAKE_CURRENT_LIST_DIR}/src)
 
 #make the executable
-file(GLOB SOURCE ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp ${CMAKE_CURRENT_LIST_DIR}/src/include/*.h)
+file(GLOB SOURCE ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp ${CMAKE_CURRENT_LIST_DIR}/src/include/*.hpp ${CMAKE_CURRENT_LIST_DIR}/src/*.hpp)
 add_executable(clike ${SOURCE})
+
+find_package(FLEX)
+find_package(BISON)
 
 #link
     execute_process(COMMAND llvm-config-14 --libs all
