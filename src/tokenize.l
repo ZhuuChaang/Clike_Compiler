@@ -117,7 +117,6 @@
                         //std::string s(yytext);
                         //yylval.IDENTIFER_value=&s;
                         yylval.IDENTIFER_value = new std::string(yytext, yyleng);
-                        std::cout << *yylval.IDENTIFER_value;
                         return IDENTIFER;
                     }
 

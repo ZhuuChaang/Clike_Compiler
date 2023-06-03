@@ -13,6 +13,6 @@ int main(int argc, const char* argv[]){
     yyin = fopen(argv[2], "r");
     assert(yyin);
     yyparse();
-    Root->DrawNode();
+    Root->DrawNode(0);
     return 0;
 }
