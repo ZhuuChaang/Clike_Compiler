@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/clike.dir/src/CodeGen.cpp.o CMakeFiles/clike.dir/src/SymbolTable.cpp.o CMakeFiles/clike.dir/src/ast.cpp.o CMakeFiles/clike.dir/src/astprinter.cpp.o CMakeFiles/clike.dir/src/main.cpp.o CMakeFiles/clike.dir/src/parser.cpp.o CMakeFiles/clike.dir/src/tokenize.cpp.o -o clike  -lLLVM-14 
