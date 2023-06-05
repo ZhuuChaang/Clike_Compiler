@@ -87,9 +87,9 @@ public:
     Node(void) {}
     ~Node(void) {}
     // virtual llvm::Value * CodeGen(CodeGenerator &Gen)=0;
-    // virtual int DrawNode()=0;
+    // virtual int DrawNode(int depth)=0;
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {return nullptr;}
-    virtual int DrawNode() {return 0;}
+    virtual int DrawNode(int depth) {return 0;}
 };
 
 class Program: public Node{
@@ -98,7 +98,7 @@ public:
     Program(Globalstmt* l) :Stmtlist(l) {}
 	~Program(void) {}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen);
+	llvm::Value * CodeGen(CodeGenerator &Gen) {}
 	int DrawNode();
 };
 
@@ -110,7 +110,7 @@ public:
     ~Basestmt(){}
     
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual int DrawNode() {}
+    virtual int DrawNode(int depth) {}
 };
 
 //types
@@ -130,7 +130,6 @@ public:
     }
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual llvm::Type* TypeGen(CodeGenerator &Gen){};
     virtual int DrawNode() {}
 };
 
@@ -158,9 +157,8 @@ public:
     void set_double(){Ty=double_ty;}
     void set_float(){Ty=float_ty;}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-    int DrawNode();
+    virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    virtual int DrawNode();
 };
 
 class SUmemdec{
@@ -188,9 +186,8 @@ public:
     }
     ~Structtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-    int DrawNode();
+    llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    int DrawNode() {}
 };
 
 class Uniontype: public Type{
@@ -208,9 +205,8 @@ public:
         }
     }
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-    int DrawNode();
+    llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    int DrawNode() {}
 };
 
 
@@ -244,9 +240,8 @@ public:
 
     ~Enumtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-    int DrawNode();
+    llvm::Value * CodeGen(CodeGenerator &Gen){}
+    int DrawNode(){}
 };
 
 
@@ -261,9 +256,8 @@ public:
     Definedtype(Type* t, std::string name): deftypeName(name), type(t){}
     ~Definedtype(){}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-	int DrawNode();
+	llvm::Value * CodeGen(CodeGenerator &Gen){}
+	int DrawNode(){}
 };
 
 class Pointertype:public Type{
@@ -273,9 +267,8 @@ public:
     Pointertype(Type* t): basetype(t){}
     ~Pointertype(){};
 
-	llvm::Value * CodeGen(CodeGenerator &Gen);
-	llvm::Type* TypeGen(CodeGenerator &Gen);
-    int DrawNode();
+	llvm::Value * CodeGen(CodeGenerator &Gen){}
+	int DrawNode(){}
 };
 
 
@@ -286,9 +279,8 @@ public:
     Arraytype(Type* t, int s): basetype(t), size(s) {}
     ~Arraytype(){}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen);
-    llvm::Type* TypeGen(CodeGenerator &Gen);
-	int DrawNode();
+	llvm::Value * CodeGen(CodeGenerator &Gen){}
+	int DrawNode(){}       
 };
 
 
@@ -308,7 +300,7 @@ public:
         stmtlist.push_back(s);
     }
 
-	llvm::Value * CodeGen(CodeGenerator &Gen);
+	llvm::Value * CodeGen(CodeGenerator &Gen){}
 	int DrawNode();
 };
 
@@ -329,7 +321,6 @@ class Fundeclare: public Basestmt{
     std::map<std::string,Type*> Arglist;
 public:
     Fundeclare(Type* t,std::string s, funArgList* l):retType(t),Funname(s){
-        std::cout << s << std::endl;
         int size=l->size();
         for(int i=0;i<size;i++){
             funArg* a=(*l)[i];
@@ -338,8 +329,8 @@ public:
     }
     ~Fundeclare(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
-    int DrawNode();
+    llvm::Value * CodeGen(CodeGenerator &Gen){}
+    int DrawNode(){}
 };
 
 class Fundefine: public Basestmt{
@@ -357,7 +348,7 @@ public:
     }
     ~Fundefine(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen) {}
 	int DrawNode();
 };
 
@@ -368,7 +359,7 @@ public:
     ~Fielddeclare(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen){}
-    int DrawNode(){}
+    int DrawNode(int depth){}
 };
 
 
@@ -380,7 +371,7 @@ public:
     InitID(std::string s):VarName(s){}
     InitID(std::string s,Expr* e):VarName(s),eInit(e){is_initiallized=true;}
     ~InitID(){}
-
+    int DrawNode(int depth);
     bool testinit(){return is_initiallized;}
 };
 
@@ -391,6 +382,7 @@ class Vardefine: public Basestmt{
 public:
     Vardefine(Type* t, InitIDList* l): type(t), list(l){}
     ~Vardefine(){}
+    int DrawNode(int depth);
 };
 
 //////////////////////////////////////////////////////////////////
@@ -404,7 +396,7 @@ public:
     void Addstmt(Basestmt* s){
         stmtlist.push_back(s);
     }
-    virtual int DrawNode();
+    virtual int DrawNode(int depth);
 };
 
 
@@ -415,7 +407,7 @@ public:
     Scope(Stmt* s):Scopestmt(s){}
     ~Scope(){}
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual int DrawNode();
+    virtual int DrawNode(int depth);
 };
 
 class TypeDefine: public Basestmt{
@@ -440,7 +432,7 @@ public:
     Returnstmt(){ret=NULL; withvalue=false;}
     Returnstmt(Expr* e): ret(e) {withvalue=true;}
     ~Returnstmt(){}
-    virtual int DrawNode();
+    virtual int DrawNode(int depth);
 };
 
 class Breakstmt: public Basestmt{
@@ -584,7 +576,7 @@ public:
 // leave them be for now
     virtual llvm::Value * CodeGenPTR(CodeGenerator &Gen) {}
 	virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-	virtual int DrawNode() {}
+	virtual int DrawNode(int depth) {}
 };
 
 
@@ -609,7 +601,7 @@ public:
     }
 
 	// llvm::Value * CodeGen(CodeGenerator &Gen);
-	int DrawNode();  
+	int DrawNode(int depth);  
 };
 
 

@@ -139,7 +139,8 @@ extern int yydebug;
     REAL_VAR = 332,                /* REAL_VAR  */
     STRING_VAR = 333,              /* STRING_VAR  */
     CHAR_VAR = 334,                /* CHAR_VAR  */
-    IDENTIFER = 335                /* IDENTIFER  */
+    IDENTIFER = 335,               /* IDENTIFER  */
+    FUNC_CALL_ARG_LIST = 336       /* FUNC_CALL_ARG_LIST  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -186,7 +187,7 @@ union YYSTYPE
     FuncCall* AST_FUNCALL_value;
     int token;
 
-#line 190 "parser.hpp"
+#line 191 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

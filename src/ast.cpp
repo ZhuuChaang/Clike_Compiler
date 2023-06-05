@@ -3,33 +3,41 @@
 #include <map>
 using namespace std;
 
-int Program::DrawNode() {
-    cout << "Program: " << endl;
-    this->Stmtlist->DrawNode();
+void Indentation(int ind){
+    for(int i = 0; i < ind; i++){
+        cout << '\t';
+    }
+}
+
+int Program::DrawNode(int depth) {
+    Indentation(depth);
+    cout << "Program:" << endl;
+    this->Stmtlist->DrawNode(depth);
     return 0;
 }
 
-int Globalstmt::DrawNode() {
-    cout << "Globalstmt: " << endl;
+int Globalstmt::DrawNode(int depth) {
+    Indentation(depth);
+    cout << "Globalstmt:" << endl;
     for(int i = 0; i < this->stmtlist.size(); i++){
-        cout << "Stmt " << i << ":" << endl;
-        this->stmtlist[i]->DrawNode();
+        this->stmtlist[i]->DrawNode(depth + 1);
     }
     cout << endl;
     return 0;
 }
 
-int Stmt::DrawNode(){
+int Stmt::DrawNode(int depth){
     vector<Basestmt*>::iterator iter;
     for(iter = stmtlist.begin(); iter != stmtlist.end(); iter++){
-        (*iter)->DrawNode();
+        (*iter)->DrawNode(depth);
     }
     return 0;
 }
 
 //type
 
-int Builtintype::DrawNode() {
+int Builtintype::DrawNode(int depth) {
+    Indentation(depth);
     cout << "BuiltinType: ";
     switch (Ty){
     case int_ty:
@@ -61,41 +69,59 @@ int Builtintype::DrawNode() {
 }
 
 //statement
-int Fundefine::DrawNode() {
-    cout << "Fundefine: " << endl;
-    this->retType->DrawNode();
+int Fundefine::DrawNode(int depth) {
+    Indentation(depth);
+    cout << "Fundefine: ";\
+    //name
     cout << this->Funname;
+    //return type
+    this->retType->DrawNode(depth + 1);
+    cout << endl;
+    //argment list
     map<std::string,Type*>::iterator iter;
     for(iter = this->Arglist.begin(); iter != this->Arglist.end(); iter++){
-        (*iter).second->DrawNode();
-        cout << (*iter).first << " ";
-        cout << ", ";
+        (*iter).second->DrawNode(depth + 1);
+        cout << " " << (*iter).first << endl;
+    }
+    //body
+    this->Funbody->DrawNode(depth + 1);
+    return 0;
+}
+
+int Vardefine::DrawNode(int depth) {
+    Indentation(depth);
+    cout << "Vardefine: " << endl;
+    this->type->DrawNode(depth + 1);
+    for(int i = 0; i < this->list->size(); i++){
+        cout << endl;
+        this->list[i].DrawNode();
     }
     cout << endl;
-    this->Funbody->DrawNode();
-    cout << endl;
     return 0;
 }
 
+int InitID::DrawNode(int depth){
 
-int Scope::DrawNode(){
-    this->Scopestmt->DrawNode();
+}
+
+int Scope::DrawNode(int depth){
+    this->Scopestmt->DrawNode(depth);
     return 0;
 }
 
-int Returnstmt::DrawNode(){
+int Returnstmt::DrawNode(int depth){
     if(!withvalue){
         cout << "Return without value" << endl;
     }
     else{
         cout << "Return: ";
-        this->ret->DrawNode();
+        this->ret->DrawNode(depth);
     }
     return 0;
 }
 
 //expression
-int Constant::DrawNode(){
+int Constant::DrawNode(int depth){
     switch (this->type)    {
     case Csttype::cstty_bool:
         cout << b;

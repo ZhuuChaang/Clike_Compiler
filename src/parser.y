@@ -116,6 +116,7 @@ Program* Root;
 %nonassoc ELSE
 
 %left   COMMA
+%left	FUNC_CALL_ARG_LIST
 %right  ASSIGN ADDAS SUBAS MULAS DIVAS MODAS SHLAS SHRAS BANDAS BORAS BXORAS
 %right  CONDITION COLON
 %left   OR
@@ -398,20 +399,20 @@ FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
                 {$$ = new FuncCall(*($1), $3);}
             ;
 
-CallArgLIST: _CallArgLIST COMMA EXPR    {$$ = $1; $$->push_back($3);}
-            | EXPR                      {$$ = new CallArgList(); $$->push_back($1);}
-            |                           {$$ = new CallArgList();}
+CallArgLIST: _CallArgLIST COMMA EXPR        {$$ = $1; $$->push_back($3);}
+            | EXPR %prec FUNC_CALL_ARG_LIST {$$ = new CallArgList(); $$->push_back($1);}
+            |                               {$$ = new CallArgList();}
             ;
 
-_CallArgLIST: _CallArgLIST COMMA EXPR   {$$ = $1; $$->push_back($3);}
-            | EXPR                      {$$ = new CallArgList(); $$->push_back($1);}
+_CallArgLIST: _CallArgLIST COMMA EXPR       {$$ = $1; $$->push_back($3);}
+            | EXPR %prec FUNC_CALL_ARG_LIST {$$ = new CallArgList(); $$->push_back($1);}
             ;            
 
-CONSTANT:   TRUE    {enum Csttype t=cstty_bool; $$=new Constant(true,t);}
-            | FALSE {enum Csttype t=cstty_bool; $$=new Constant(false,t);}
-            | CHAR_VAR  {enum Csttype t=cstty_char; $$=new Constant(*($1),t);}
+CONSTANT:   TRUE            {enum Csttype t=cstty_bool; $$=new Constant(true,t);}
+            | FALSE         {enum Csttype t=cstty_bool; $$=new Constant(false,t);}
+            | CHAR_VAR      {enum Csttype t=cstty_char; $$=new Constant(*($1),t);}
             | INTEGER_VAR   {enum Csttype t=cstty_int; $$=new Constant(*($1),t);}
-            | REAL_VAR  {enum Csttype t=cstty_real; $$=new Constant(*($1),t);}
+            | REAL_VAR      {enum Csttype t=cstty_real; $$=new Constant(*($1),t);}
             | STRING_VAR    {enum Csttype t=cstty_str; $$=new Constant(*($1),t);} 
             ;
 
