@@ -115,3 +115,69 @@ int Constant::DrawNode(){
     }
     return 0;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+llvm::Value* Program::CodeGen(CodeGenerator &Gen){
+    this->Stmtlist->CodeGen(Gen);
+    return NULL;
+}
+
+
+
+llvm::Value* Globalstmt::CodeGen(CodeGenerator &Gen){
+    for(Basestmt* it:this->stmtlist){
+        it->CodeGen(Gen);
+    }
+    return NULL;
+}
+
+llvm::Value* Fundeclare::CodeGen(CodeGenerator &Gen){
+    std::vector<llvm::Type*> ArgTY;
+
+
+}
+
+llvm::Type* Builtintype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* ret;
+    switch (this->Ty)
+    {
+        case undefined_ty : break;
+        case int_ty : ret=Gen.TheBuilder.getInt32Ty(); break;
+        case short_ty : ret=Gen.TheBuilder.getInt16Ty(); break;
+        case long_ty : ret=Gen.TheBuilder.getInt64Ty(); break;
+        case void_ty : ret=Gen.TheBuilder.getVoidTy(); break;
+        case char_ty : ret=Gen.TheBuilder.getInt8Ty(); break;
+        case double_ty : ret=Gen.TheBuilder.getDoubleTy(); break;
+        case float_ty : ret=Gen.TheBuilder.getFloatTy(); break;
+        default:break;
+    }
+    return ret;
+}
+
+llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
+    llvm::StructType* sty=llvm::StructType::create(Gen.CodeContent,"struct." + this->structName);
+    Gen.addStruct(sty,this);
+}
+
+llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
+
+}
+
+llvm::Type* Enumtype::TypeGen(CodeGenerator &Gen){
+    
+}
+
+llvm::Type* Definedtype::TypeGen(CodeGenerator &Gen){
+    return this->type->TypeGen(Gen);
+}
+
+llvm::Type* Pointertype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* bty=this->basetype->TypeGen(Gen);
+    return llvm::PointerType::get(bty,0U);
+}
+
+llvm::Type* Arraytype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* bty=this->basetype->TypeGen(Gen);
+    return llvm::ArrayType::get(bty,this->size);    
+}

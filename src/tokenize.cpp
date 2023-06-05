@@ -1257,13 +1257,12 @@ YY_RULE_SETUP
                         //std::string s(yytext);
                         //yylval.IDENTIFER_value=&s;
                         yylval.IDENTIFER_value = new std::string(yytext, yyleng);
-                        std::cout << *yylval.IDENTIFER_value;
                         return IDENTIFER;
                     }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 124 "tokenize.l"
+#line 123 "tokenize.l"
 {
                         double tmp=0;
                         sscanf(yytext,"%lf",&tmp);
@@ -1273,7 +1272,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 131 "tokenize.l"
+#line 130 "tokenize.l"
 {
                         int tmp=0;
                         sscanf(yytext,"%d",&tmp);
@@ -1283,10 +1282,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 140 "tokenize.l"
+#line 139 "tokenize.l"
 ECHO;
 	YY_BREAK
-#line 1290 "tokenize.cpp"
+#line 1289 "tokenize.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2291,5 +2290,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 140 "tokenize.l"
+#line 139 "tokenize.l"
 

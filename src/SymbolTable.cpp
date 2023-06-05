@@ -1,7 +1,7 @@
 #include "SymbolTable.hpp"
 
 void Symbol_Table::newValue(std::string varName,ValueTypes t,void* v,bool m){
-    symValue s(t,v,m);
+    symValue s(t,v,this->scopelevel);
     this->newValueSym(varName,s);
 }
 
@@ -9,15 +9,19 @@ void Symbol_Table::newValueSym(std::string varName, symValue s){
     if(Table.find(varName)==Table.end()){
         std::vector<symValue> Vstack;
         Table.insert(std::pair<std::string,std::vector<symValue>>(varName,Vstack));
+        Table[varName].push_back(s);
+    }else{
+        int end=this->Table[varName].size()-1;
+        int toplevel=this->Table[varName][end].getmark();
+        if(toplevel<s.getmark()){
+            Table[varName].push_back(s);
+        }
     }
-    Table[varName].push_back(s);
+    
 }
 
 void Symbol_Table::enterScope(){
-    for(auto& it:Table){
-        int end=it.second.size()-1;
-        it.second[end].mark();
-    }
+    this->scopelevel++;
 }
 
 void Symbol_Table::leaveScope(){
@@ -25,8 +29,7 @@ void Symbol_Table::leaveScope(){
     for(auto& it:Table){
         int end=it.second.size()-1;
         for(int i=end;i>=0;i--){
-            if(it.second[i].ismarked()){
-                it.second[i].unmark();
+            if(it.second[i].getmark()<=this->scopelevel){
                 break;
             }
             it.second.pop_back();

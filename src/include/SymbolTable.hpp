@@ -8,36 +8,34 @@
 
 
 enum ValueTypes{
-    INT_type,
-    FLOAT_type,
-    DOUBLE_type,
-    STRING_type,
-    ENUM_type,
-    CONSTANT_type,
-    STRUCT_type
+    FUNC_type,
+    TYPE_type,
+    VAR_type,
+    CONST_type,
+    UNDEF_type
 };
 
 class symValue{
     ValueTypes type;
     void* value; //make sure the value is newed from the heap
-    bool marked=false; 
+    int mark=0; 
 
 public:
-    symValue(ValueTypes t,void* v,bool m):type(t),value(v),marked(m){}
+    symValue(ValueTypes t,void* v,int level):type(t),value(v),mark(level){}
     ~symValue(){
         delete this->value;
     }
 
-    void mark(){
-        this->marked=true;
-    }
+    // void mark(){
+    //     this->marked=true;
+    // }
 
-    void unmark(){
-        this->marked=false;
-    }
+    // void unmark(){
+    //     this->marked=false;
+    // }
 
-    bool ismarked(){
-        return marked;
+    int getmark(){
+        return mark;
     }
 
     void* getValue(){
@@ -52,6 +50,7 @@ public:
 
 class Symbol_Table{
     std::map<std::string,std::vector<symValue>> Table; 
+    int scopelevel=0;
 
 public:
     void newValue(std::string varName,ValueTypes t,void* v,bool m);//insert a new value into the symbol table
