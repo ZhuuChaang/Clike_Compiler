@@ -99,7 +99,7 @@ public:
 	~Program(void) {}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen) {}
-	int DrawNode();
+	int DrawNode(int depth);
 };
 
 
@@ -110,7 +110,7 @@ public:
     ~Basestmt(){}
     
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual int DrawNode(int depth) {}
+    virtual int DrawNode(int depth) {return 0;}
 };
 
 //types
@@ -130,7 +130,7 @@ public:
     }
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual int DrawNode() {}
+    virtual int DrawNode(int depth) {return 0;}
 };
 
 class Builtintype: public Type{
@@ -158,7 +158,7 @@ public:
     void set_float(){Ty=float_ty;}
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    virtual int DrawNode();
+    virtual int DrawNode(int depth);
 };
 
 class SUmemdec{
@@ -168,6 +168,7 @@ public:
 
     SUmemdec(Type* t, std::vector<std::string>* i):type(t),id(i){}
     ~SUmemdec(){}
+    int DrawNode(int depth);
 };
 
 class Structtype: public Type{
@@ -187,7 +188,7 @@ public:
     ~Structtype(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    int DrawNode() {}
+    int DrawNode(int depth);
 };
 
 class Uniontype: public Type{
@@ -206,7 +207,7 @@ public:
     }
 
     llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    int DrawNode() {}
+    int DrawNode(int depth);
 };
 
 
@@ -241,7 +242,7 @@ public:
     ~Enumtype(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen){}
-    int DrawNode(){}
+    int DrawNode(int depth);
 };
 
 
@@ -257,7 +258,7 @@ public:
     ~Definedtype(){}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}
+	int DrawNode(int depth);
 };
 
 class Pointertype:public Type{
@@ -268,7 +269,7 @@ public:
     ~Pointertype(){};
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}
+	int DrawNode(int depth);
 };
 
 
@@ -280,7 +281,7 @@ public:
     ~Arraytype(){}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}       
+	int DrawNode(int depth);     
 };
 
 
@@ -301,7 +302,7 @@ public:
     }
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode();
+	int DrawNode(int depth);
 };
 
 
@@ -349,7 +350,7 @@ public:
     ~Fundefine(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen) {}
-	int DrawNode();
+	int DrawNode(int depth);
 };
 
 class Fielddeclare: public Basestmt{
@@ -359,7 +360,7 @@ public:
     ~Fielddeclare(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen){}
-    int DrawNode(int depth){}
+    int DrawNode(int depth);
 };
 
 
@@ -415,6 +416,7 @@ public:
     Definedtype* defined_type;
     TypeDefine(Definedtype* defined_type): defined_type(defined_type) {}
     ~TypeDefine() {}
+    virtual int DrawNode(int depth);
 };
 
 class Exprstmt: public Basestmt{
@@ -423,6 +425,7 @@ class Exprstmt: public Basestmt{
 public: 
     Exprstmt(Expr* e):expr(e){}
     ~Exprstmt(){}
+    virtual int DrawNode(int depth);
 };
 
 class Returnstmt: public Basestmt{
@@ -439,12 +442,14 @@ class Breakstmt: public Basestmt{
 public:
     Breakstmt(){}
     ~Breakstmt(){}
+    virtual int DrawNode(int depth);
 };
 
 class Continuestmt: public Basestmt{
 public:
     Continuestmt(){}
     ~Continuestmt(){}
+    virtual int DrawNode(int depth);
 };
 
 class Ifflow: public Basestmt{
@@ -468,6 +473,7 @@ public:
     }
 
     ~Ifflow(){}
+    virtual int DrawNode(int depth);
 };
 
 class Elseifflow: public Basestmt{
@@ -482,6 +488,7 @@ public:
         conditions.push_back(e);
         bodies.push_back(b);
     }
+    virtual int DrawNode(int depth);
 };
 
 class Elseflow: public Basestmt{
@@ -493,7 +500,8 @@ public:
     Elseflow(Scope* b):has_body(true), Elsebody(b){}
     ~Elseflow(){}
 
-    bool test_body(){return has_body;} 
+    bool test_body(){return has_body;}
+    virtual int DrawNode(int depth);
 };
 
 
@@ -509,7 +517,8 @@ public:
     Forflow(Expr* i,Expr* l,Expr* s, Scope* b):init(i),limit(l),step(s){Forbody=b;has_body=true;}
     ~Forflow(){}
 
-    bool test_body(){return has_body;}     
+    bool test_body(){return has_body;}
+    virtual int DrawNode(int depth);  
 };
 
 class Whileflow: public Basestmt{
@@ -522,7 +531,8 @@ public:
     Whileflow(Expr* l, Scope* s): limit(l),whilebody(s),has_body(true){}
     ~Whileflow(){}
 
-    bool test_body(){return has_body;}   
+    bool test_body(){return has_body;}
+    virtual int DrawNode(int depth); 
 };
 
 class Dowhileflow: public Basestmt{
@@ -532,7 +542,7 @@ class Dowhileflow: public Basestmt{
 public:
     Dowhileflow(Expr* l, Scope* w):limit(l),whilebody(w){}
     ~Dowhileflow(){}
-    
+    virtual int DrawNode(int depth); 
 };
 
 
@@ -542,7 +552,7 @@ class Switchflow: public Basestmt{
 public:
     Switchflow(Expr* e,Caselist* l):switchExpr(e),list(l){}
     ~Switchflow(){}
-
+    virtual int DrawNode(int depth);
 };
 
 class Case: public Node{
@@ -561,6 +571,7 @@ public:
     void set_default(){is_default=true;}
     bool test_break(){return has_break;}
     bool test_default(){return is_default;}
+    virtual int DrawNode(int depth); 
 };
 //////////////////////////////////////////////////////////////////////////////////////
 // start your part at here
@@ -601,7 +612,7 @@ public:
     }
 
 	// llvm::Value * CodeGen(CodeGenerator &Gen);
-	int DrawNode(int depth);  
+	virtual int DrawNode(int depth);  
 };
 
 
@@ -610,6 +621,7 @@ public:
     std::string _name;
     Variable(std::string name): _name(name) {}
     ~Variable() {}
+    virtual int DrawNode(int depth);  
 };
 
 class FuncCall: public Expr{
@@ -618,6 +630,7 @@ public:
     CallArgList* _arg_list;
     FuncCall(std::string name, CallArgList* args) : _func_name(name), _arg_list(args) {}
     ~FuncCall() {}
+    virtual int DrawNode(int depth);  
 };
 
 class BinopExpr: public Expr{
@@ -627,6 +640,7 @@ public:
     Expr* _rhs;
     BinopExpr(int op, Expr* lhs, Expr* rhs) : _op(op), _lhs(lhs), _rhs(rhs) {}
     ~BinopExpr() {}
+    virtual int DrawNode(int depth);
 };
 
 class UnaopExpr: public Expr{
@@ -635,6 +649,7 @@ public:
     Expr* _operand;
     UnaopExpr(int op, Expr* operand): _op(op), _operand(operand) {}
     ~UnaopExpr() {}
+    virtual int DrawNode(int depth);
 };
 
 class SufopExpr: public Expr{
@@ -643,6 +658,7 @@ public:
     Expr* _operand;
     SufopExpr(int op, Expr* operand): _op(op), _operand(operand) {}
     ~SufopExpr() {}
+    virtual int DrawNode(int depth);
 };
 
 class SizeofExpr: public Expr{
@@ -650,6 +666,7 @@ public:
     Expr* _expr;
     SizeofExpr(Expr* expr): _expr(expr) {}
     ~SizeofExpr() {}
+    virtual int DrawNode(int depth);
 };
 
 class SizeofType: public Expr{
@@ -657,6 +674,7 @@ public:
     Type* _type;
     SizeofType(Type* type): _type(type) {}
     ~SizeofType() {}
+    virtual int DrawNode(int depth);
 };
 
 class TernaryCondition: public Expr{
@@ -667,6 +685,7 @@ public:
     TernaryCondition(Expr* condition, Expr* if_then, Expr* else_then)
         : _condition(condition), _if_then(if_then), _else_then(else_then) {}
     ~TernaryCondition() {}
+    virtual int DrawNode(int depth);
 };
 class TypeCast: public Expr{
 public:
@@ -674,6 +693,7 @@ public:
     Expr* _expr;
     TypeCast(Type* type, Expr* expr): _type(type), _expr(expr) {}
     ~TypeCast() {}
+    virtual int DrawNode(int depth);
 };
 
 class Subscript: public Expr{
@@ -682,6 +702,7 @@ public:
     Expr* _index;
     Subscript(Expr* array, Expr* index): _array(array), _index(index) {}
     ~Subscript() {}
+    virtual int DrawNode(int depth);
 };
 
 class MemAccessPtr: public Expr{
@@ -691,6 +712,7 @@ public:
     MemAccessPtr(Expr* struct_ptr, std::string member)
         : _struct_ptr(struct_ptr), _member(member) {}
     ~MemAccessPtr() {}
+    virtual int DrawNode(int depth);
 };
 
 class MemAccessObj: public Expr{
@@ -700,6 +722,7 @@ public:
     MemAccessObj(Expr* struct_name, std::string member)
         : _struct(struct_name), _member(member) {}
     ~MemAccessObj() {}
+    virtual int DrawNode(int depth);
 };
 
 

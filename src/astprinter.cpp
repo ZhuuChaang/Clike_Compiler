@@ -1,4 +1,4 @@
 #include "astprinter.hpp"
 int printast(Node* root){
-    root->DrawNode(int depth);
+    root->DrawNode(0);
 }
