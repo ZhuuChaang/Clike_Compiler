@@ -131,6 +131,7 @@ public:
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
     virtual int DrawNode(int depth) {return 0;}
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class Builtintype: public Type{
@@ -159,6 +160,7 @@ public:
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
     virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class SUmemdec{
@@ -189,6 +191,7 @@ public:
 
     llvm::Value * CodeGen(CodeGenerator &Gen) {}
     int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class Uniontype: public Type{
@@ -207,7 +210,8 @@ public:
     }
 
     llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    int DrawNode(int depth);
+    virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -242,7 +246,8 @@ public:
     ~Enumtype(){}
 
     llvm::Value * CodeGen(CodeGenerator &Gen){}
-    int DrawNode(int depth);
+    virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -258,7 +263,8 @@ public:
     ~Definedtype(){}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(int depth);
+	virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class Pointertype:public Type{
@@ -268,8 +274,9 @@ public:
     Pointertype(Type* t): basetype(t){}
     ~Pointertype(){};
 
-	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(int depth);
+	virtual llvm::Value * CodeGen(CodeGenerator &Gen){}
+	virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -281,7 +288,8 @@ public:
     ~Arraytype(){}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(int depth);     
+	virtual int DrawNode(int depth);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen);   
 };
 
 
