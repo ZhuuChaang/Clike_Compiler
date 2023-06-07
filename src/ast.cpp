@@ -78,6 +78,8 @@ int Structtype::DrawNode(int depth){
     }
 }
 
+
+
 int Uniontype::DrawNode(int depth){
     Indentation(depth);
     cout << "Uniontype: " << this->UnionName << endl;
