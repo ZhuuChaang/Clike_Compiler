@@ -69,6 +69,8 @@
         "strstream": "c",
         "fstream": "c",
         "iomanip": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "*.def": "cpp",
+        "*.inc": "cpp"
     }
 }

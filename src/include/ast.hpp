@@ -197,6 +197,7 @@ public:
 class Uniontype: public Type{
     std::string UnionName;
     std::map<std::string,Type*> unionMembers;
+    llvm::Type* maxtype;
 public:
     Uniontype(std::string s,std::vector<SUmemdec*> *list): UnionName(s){
         int size=list->size();
@@ -208,8 +209,9 @@ public:
             }
         }
     }
-
-    llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    void findMaxtype(CodeGenerator &Gen);
+    llvm::Type* getMaxtype(){return maxtype;}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -390,6 +392,7 @@ class Vardefine: public Basestmt{
 
 public:
     Vardefine(Type* t, InitIDList* l): type(t), list(l){}
+    llvm::Value* CodeGen(CodeGenerator &Gen);
     ~Vardefine(){}
     int DrawNode(int depth);
 };
