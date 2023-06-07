@@ -68,4 +68,3 @@ bool Symbol_Table::findhave(std::string varName){
         return true;
     }
 }
-
