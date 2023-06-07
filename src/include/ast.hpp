@@ -46,6 +46,7 @@ class Basestmt;
         typedef std::vector<InitID*> InitIDList;
     class Vardefine;
     class TypeDefine;
+    class Fundefine;
     class Scope;
     class Exprstmt;
     class Returnstmt;
@@ -98,8 +99,8 @@ public:
     Program(Globalstmt* l) :Stmtlist(l) {}
 	~Program(void) {}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen) {}
-	int DrawNode();
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode(int depth);
 };
 
 
@@ -131,6 +132,8 @@ public:
 
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
     virtual int DrawNode() {}
+
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen){}
 };
 
 class Builtintype: public Type{
@@ -157,8 +160,11 @@ public:
     void set_double(){Ty=double_ty;}
     void set_float(){Ty=float_ty;}
 
-    virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    virtual llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode();
+
+    llvm::Type* TypeGen(CodeGenerator &Gen);
+
 };
 
 class SUmemdec{
@@ -186,13 +192,16 @@ public:
     }
     ~Structtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    int DrawNode() {}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();
+
+    llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class Uniontype: public Type{
     std::string UnionName;
     std::map<std::string,Type*> unionMembers;
+    llvm::Type* maxtype=NULL;
 public:
     Uniontype(std::string s,std::vector<SUmemdec*> *list): UnionName(s){
         int size=list->size();
@@ -205,8 +214,16 @@ public:
         }
     }
 
-    llvm::Value * CodeGen(CodeGenerator &Gen) {}
-    int DrawNode() {}
+    llvm::Type* getMaxtype(){
+        return maxtype;
+    }
+
+    void findMaxtype(CodeGenerator &Gen);
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();
+    llvm::Type* TypeGen(CodeGenerator &Gen);
+
 };
 
 
@@ -240,8 +257,10 @@ public:
 
     ~Enumtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen){}
-    int DrawNode(){}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    int DrawNode();
+
+    llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -256,8 +275,9 @@ public:
     Definedtype(Type* t, std::string name): deftypeName(name), type(t){}
     ~Definedtype(){}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode();
+    llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 class Pointertype:public Type{
@@ -267,8 +287,9 @@ public:
     Pointertype(Type* t): basetype(t){}
     ~Pointertype(){};
 
-	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode();
+    llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -279,8 +300,9 @@ public:
     Arraytype(Type* t, int s): basetype(t), size(s) {}
     ~Arraytype(){}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen){}
-	int DrawNode(){}       
+	llvm::Value * CodeGen(CodeGenerator &Gen);
+	int DrawNode();
+    llvm::Type* TypeGen(CodeGenerator &Gen);
 };
 
 
@@ -329,7 +351,7 @@ public:
     }
     ~Fundeclare(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen){}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     int DrawNode(){}
 };
 
@@ -348,7 +370,7 @@ public:
     }
     ~Fundefine(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen) {}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
 	int DrawNode();
 };
 
@@ -382,6 +404,7 @@ class Vardefine: public Basestmt{
 public:
     Vardefine(Type* t, InitIDList* l): type(t), list(l){}
     ~Vardefine(){}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     int DrawNode(int depth);
 };
 
@@ -401,11 +424,15 @@ public:
 
 
 class Scope: public Basestmt{
-    Stmt* Scopestmt;    
+    Stmt* Scopestmt; 
+    bool isfun=false;   
 
 public:
     Scope(Stmt* s):Scopestmt(s){}
     ~Scope(){}
+
+    void setfun(){isfun=true;}
+
     virtual llvm::Value * CodeGen(CodeGenerator &Gen) {}
     virtual int DrawNode(int depth);
 };

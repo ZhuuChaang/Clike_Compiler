@@ -69,6 +69,11 @@
         "strstream": "c",
         "fstream": "c",
         "iomanip": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "complex": "cpp",
+        "optional": "cpp",
+        "cfenv": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }

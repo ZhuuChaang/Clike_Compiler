@@ -1,6 +1,6 @@
 #include "SymbolTable.hpp"
 
-void Symbol_Table::newValue(std::string varName,ValueTypes t,void* v,bool m){
+void Symbol_Table::newValue(std::string varName,ValueTypes t,void* v){
     symValue s(t,v,this->scopelevel);
     this->newValueSym(varName,s);
 }
@@ -59,5 +59,13 @@ ValueTypes Symbol_Table::findType(std::string varName){
 void* Symbol_Table::findValue(std::string varName){
     symValue s=this->find(varName);
     return s.getValue();
+}
+
+bool Symbol_Table::findhave(std::string varName){
+    if(this->Table.find(varName)==Table.end()){
+        return false;
+    }else{
+        return true;
+    }
 }
 

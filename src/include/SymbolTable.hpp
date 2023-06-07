@@ -53,13 +53,13 @@ class Symbol_Table{
     int scopelevel=0;
 
 public:
-    void newValue(std::string varName,ValueTypes t,void* v,bool m);//insert a new value into the symbol table
+    void newValue(std::string varName,ValueTypes t,void* v);//insert a new value into the symbol table
     void newValueSym(std::string varName, symValue s);
     void enterScope();//mark the table when enter a scope
     void leaveScope();//delete local variables and recover the table
     symValue find(std::string varName);//return symvalue of some variable according to it's name
     ValueTypes findType(std::string varName);//return the type of some variable according to it's type
     void* findValue(std::string varName);//return the value of some variable according to it's type
-
+    bool findhave(std::string varName);
 };
 #endif

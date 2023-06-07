@@ -9,13 +9,16 @@
 class Node;
 
 class CodeGenerator{
-    llvm::Module * TheModule;
-    Symbol_Table symTable;
-    std::map<llvm::StructType*,Structtype*> structTable;
-
 public:
     llvm::LLVMContext CodeContent;
     llvm::IRBuilder<>  TheBuilder;
+    llvm::Module * TheModule;
+    llvm::DataLayout* thedatalayout;
+    Symbol_Table symTable;    
+    std::map<llvm::StructType*,Structtype*> structTable;
+    std::map<llvm::StructType*,Uniontype*> unionTable;
+    llvm::Function* curf=NULL;
+
 
 
 
@@ -25,8 +28,12 @@ public:
     int ObjGenerate();
 
     void addStruct(llvm::StructType* lt, Structtype* at);
-    
+    void addUnion(llvm::StructType* lt, Uniontype* at);
+    void addFunSymtable(std::string fname, llvm::Function* fun);
+    void addVarSymtable(std::string vname, llvm::AllocaInst* var);
+    bool findIDSymtable(std::string name);
 
+    llvm::TypeSize getTypesize(llvm::Type* t);
     llvm::Value * Error(std::string error_info);
 };
 
