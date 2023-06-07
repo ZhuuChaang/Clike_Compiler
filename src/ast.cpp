@@ -20,7 +20,7 @@ int Globalstmt::DrawNode(int depth) {
     Indentation(depth);
     cout << "Globalstmt:" << endl;
     for(int i = 0; i < this->stmtlist.size(); i++){
-        this->stmtlist[i]->DrawNode(depth + 1);
+        this->stmtlist[i]->DrawNode(depth);
     }
     cout << endl;
     return 0;
@@ -41,7 +41,7 @@ int Builtintype::DrawNode(int depth) {
     cout << "BuiltinType: ";
     switch (Ty){
     case int_ty:
-        cout << "int";
+        cout << "int"; 
         break;
     case short_ty:
         cout << "short";
@@ -68,12 +68,71 @@ int Builtintype::DrawNode(int depth) {
     return 0;
 }
 
+int Structtype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Structtype: "  << this->structName << endl;
+    map<std::string,Type*>::iterator iter;
+    for(iter = this->structMembers.begin(); iter != this->structMembers.end(); iter++){
+        (*iter).second->DrawNode(depth + 1);
+        cout << " " << (*iter).first << endl;
+    }
+}
+
+int Uniontype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Uniontype: " << this->UnionName << endl;
+    map<std::string,Type*>::iterator iter;
+    for(iter = this->unionMembers.begin(); iter != this->unionMembers.end(); iter++){
+        (*iter).second->DrawNode(depth + 1);
+        cout << " " << (*iter).first << endl;
+    }
+}
+
+int SUmemdec::DrawNode(int depth){
+    Indentation(depth);
+    cout << "SUmemdec:" << endl;
+    this->type->DrawNode(depth + 1);
+    vector<std::string>::iterator iter;
+    for(iter = this->id->begin(); iter != this->id->end(); iter++){
+        Indentation(depth + 1);
+        cout << (*iter) << endl;
+    }
+}
+
+int Enumtype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Enumtype: " << this->enumname << endl;
+    std::map<std::string,int>::iterator iter;
+    for(iter = this->enumMembers.begin(); iter != this->enumMembers.end(); iter++){
+        Indentation(depth + 1);
+        cout << (*iter).first << " " << (*iter).second << endl;
+    }
+}
+
+int Definedtype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Definedtype: " << this->deftypeName << endl;
+    this->type->DrawNode(depth + 1);
+}
+
+int Pointertype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Pointertype: " << endl;
+    this->basetype->DrawNode(depth + 1);
+}
+
+int Arraytype::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Arraytype: " << endl;
+    this->basetype->DrawNode(depth + 1);
+}
+
 //statement
 int Fundefine::DrawNode(int depth) {
     Indentation(depth);
     cout << "Fundefine: ";\
     //name
-    cout << this->Funname;
+    cout << this->Funname << endl;
     //return type
     this->retType->DrawNode(depth + 1);
     cout << endl;
@@ -92,16 +151,21 @@ int Vardefine::DrawNode(int depth) {
     Indentation(depth);
     cout << "Vardefine: " << endl;
     this->type->DrawNode(depth + 1);
-    for(int i = 0; i < this->list->size(); i++){
-        cout << endl;
-        this->list[i].DrawNode();
+    cout << endl;
+    vector<InitID*>::iterator iter;
+    for(iter = this->list->begin(); iter != this->list->end(); iter++){
+        (*iter)->DrawNode(depth + 1);
     }
     cout << endl;
     return 0;
 }
 
 int InitID::DrawNode(int depth){
-
+    Indentation(depth);
+    cout << "InitID: " << this->VarName << endl;
+    if(this->is_initiallized)
+        this->eInit->DrawNode(depth + 1);
+    return 0;
 }
 
 int Scope::DrawNode(int depth){
@@ -109,19 +173,140 @@ int Scope::DrawNode(int depth){
     return 0;
 }
 
+int TypeDefine::DrawNode(int depth){
+    Indentation(depth);
+    cout << "TypeDefine: " << endl;
+    this->defined_type->DrawNode(depth + 1);
+    return 0;
+}
+
+int Fielddeclare::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Fielddeclare:" << endl;
+    this->type->DrawNode(depth + 1);
+    return 0;
+}
+
+int Exprstmt::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Exprstmt: " << endl;
+    this->expr->DrawNode(depth + 1);
+    return 0;
+}
+
 int Returnstmt::DrawNode(int depth){
+    Indentation(depth);
     if(!withvalue){
-        cout << "Return without value" << endl;
+        cout << "Returnstmt without value" << endl;
     }
     else{
-        cout << "Return: ";
-        this->ret->DrawNode(depth);
+        cout << "Returnstmt:" << endl;
+        this->ret->DrawNode(depth + 1);
     }
+    return 0;
+}
+
+int Breakstmt::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Breakstmt: " << endl;
+    return 0;
+}
+
+int Continuestmt::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Continuestmt:" << endl;
+    return 0;
+}
+
+int Ifflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Ifflow: " << endl;
+    this->condition->DrawNode(depth + 1);
+    if(this->has_body){
+        this->ifbody->DrawNode(depth + 1);
+        this->Elseif->DrawNode(depth);
+        this->Else->DrawNode(depth);
+    }
+    return 0;
+}
+
+int Elseifflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Elseifflow:" << endl;
+    std::vector<Expr*>::iterator iter_condition;
+    std::vector<Scope*>::iterator iter_body;
+    for(iter_condition = this->conditions.begin(), iter_body = this->bodies.begin();
+        iter_condition != this->conditions.end() && iter_body != this->bodies.end();
+        iter_condition++ , iter_body++){
+        (*iter_condition)->DrawNode(depth + 1);
+        (*iter_body)->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int Elseflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Elseflow: " << endl;
+    if(has_body){
+        this->Elsebody->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int Forflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Forflow: " << endl;
+    this->init->DrawNode(depth + 1);
+    this->limit->DrawNode(depth + 1);
+    this->step->DrawNode(depth + 1);
+    if(this->has_body){
+        this->Forbody->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int Whileflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Whileflow: " << endl;
+    this->limit->DrawNode(depth + 1);
+    if(this->has_body){
+        this->whilebody->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int Dowhileflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Dowhileflow: " << endl;
+    this->limit->DrawNode(depth + 1);
+    this->whilebody->DrawNode(depth + 1);
+    return 0;
+}
+
+int Switchflow::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Switchflow: " << endl;
+    this->switchExpr->DrawNode(depth + 1);
+    std::vector<Case*>::iterator iter;
+    for(iter = this->list->begin(); iter !=this->list->end(); iter++){
+        (*iter)->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int Case::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Case: " << endl;
+    if(this->caseExpr != nullptr){
+        this->caseExpr->DrawNode(depth + 1);
+    }
+    this->casebody->DrawNode(depth + 1);
     return 0;
 }
 
 //expression
 int Constant::DrawNode(int depth){
+    Indentation(depth);
     switch (this->type)    {
     case Csttype::cstty_bool:
         cout << b;
@@ -139,6 +324,96 @@ int Constant::DrawNode(int depth){
         cout << _str;
         break;
     }
+    return 0;
+}
+int Variable::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Variable: " << this->_name << endl;
+    return 0;
+}
+
+int FuncCall::DrawNode(int depth){
+    Indentation(depth);
+    cout << "FuncCall: " << this->_func_name << endl;
+    std::vector<Expr*>::iterator iter;
+    for(iter = this->_arg_list->begin(); iter != _arg_list->end(); iter++){
+        (*iter)->DrawNode(depth + 1);
+    }
+    return 0;
+}
+
+int BinopExpr::DrawNode(int depth){
+    Indentation(depth);
+    cout << "BinopExpr: " << _op << endl;
+    _lhs->DrawNode(depth + 1);
+    _rhs->DrawNode(depth + 1);
+    return 0;
+}
+
+int UnaopExpr::DrawNode(int depth){
+    Indentation(depth);
+    cout << "UnaopExpr: " << _op << endl;
+    _operand->DrawNode(depth + 1);
+    return 0;
+}
+
+int SufopExpr::DrawNode(int depth){
+    Indentation(depth);
+    cout << "SufopExpr:" << _op << endl;
+    _operand->DrawNode(depth + 1);
+    return 0;
+}
+
+int SizeofExpr::DrawNode(int depth){
+    Indentation(depth);
+    cout << "SizeofExpr: " << endl;
+    _expr->DrawNode(depth + 1);
+    return 0;
+}
+
+int SizeofType::DrawNode(int depth){
+    Indentation(depth);
+    cout << "SizeofType: " << endl;
+    _type->DrawNode(depth + 1);
+    return 0;
+}
+
+int TernaryCondition::DrawNode(int depth){
+    Indentation(depth);
+    cout << "TernaryCondition: " << endl;
+    _condition->DrawNode(depth + 1);
+    _if_then->DrawNode(depth + 1);
+    _else_then->DrawNode(depth + 1);
+    return 0;
+}
+
+int TypeCast::DrawNode(int depth){
+    Indentation(depth);
+    cout << "TypeCast: " << endl;
+    _type->DrawNode(depth + 1);
+    _expr->DrawNode(depth + 1);
+    return 0;
+}
+
+int Subscript::DrawNode(int depth){
+    Indentation(depth);
+    cout << "Subscript: " << endl;
+    _array->DrawNode(depth + 1);
+    _index->DrawNode(depth + 1);
+    return 0;
+}
+
+int MemAccessPtr::DrawNode(int depth){
+    Indentation(depth);
+    cout << "MemAccessPtr: " << _member << endl;
+    _struct_ptr->DrawNode(depth + 1);
+    return 0;
+}
+
+int MemAccessObj::DrawNode(int depth){
+    Indentation(depth);
+    cout << "MemAccessObj: " << _member << endl;
+    _struct->DrawNode(depth + 1);
     return 0;
 }
 
