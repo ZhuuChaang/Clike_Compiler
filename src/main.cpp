@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include "ast.hpp"
 #include "astprinter.hpp"
@@ -13,6 +13,7 @@ int main(int argc, const char* argv[]){
     yyin = fopen(argv[2], "r");
     assert(yyin);
     yyparse();
+    std::cout << "dddd" << std::endl;
     Root->DrawNode(0);
     std::cout<<"haha\n";
     return 0;

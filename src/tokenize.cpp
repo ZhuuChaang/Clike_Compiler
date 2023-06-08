@@ -989,187 +989,187 @@ YY_RULE_SETUP
 case 29:
 YY_RULE_SETUP
 #line 43 "tokenize.l"
-{return ADD;}
+{return yylval.token = ADD;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 44 "tokenize.l"
-{return SUB;}
+{return yylval.token = SUB;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 45 "tokenize.l"
-{return MUL;}
+{return yylval.token = MUL;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 46 "tokenize.l"
-{return DIV;}
+{return yylval.token = DIV;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 47 "tokenize.l"
-{return MOD;}
+{return yylval.token = MOD;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 48 "tokenize.l"
-{return INC;}
+{return yylval.token = INC;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 49 "tokenize.l"
-{return DEC;}
+{return yylval.token = DEC;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 51 "tokenize.l"
-{return EQ;}
+{return yylval.token = EQ;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 52 "tokenize.l"
-{return NE;}
+{return yylval.token = NE;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 53 "tokenize.l"
-{return GT;}
+{return yylval.token = GT;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 54 "tokenize.l"
-{return LT;}
+{return yylval.token = LT;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 55 "tokenize.l"
-{return GE;}
+{return yylval.token = GE;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 56 "tokenize.l"
-{return LE;}
+{return yylval.token = LE;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 58 "tokenize.l"
-{return AND;}
+{return yylval.token = AND;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 59 "tokenize.l"
-{return OR;}
+{return yylval.token = OR;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 60 "tokenize.l"
-{return NOT;}
+{return yylval.token = NOT;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 61 "tokenize.l"
-{return BAND;}
+{return yylval.token = BAND;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 62 "tokenize.l"
-{return BOR;}
+{return yylval.token = BOR;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 63 "tokenize.l"
-{return BXOR;}
+{return yylval.token = BXOR;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 64 "tokenize.l"
-{return BNOT;}
+{return yylval.token = BNOT;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 65 "tokenize.l"
-{return SHL;}
+{return yylval.token = SHL;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 66 "tokenize.l"
-{return SHR;}
+{return yylval.token = SHR;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 68 "tokenize.l"
-{return ASSIGN;}
+{return yylval.token = ASSIGN;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 69 "tokenize.l"
-{return ADDAS;}
+{return yylval.token = ADDAS;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 70 "tokenize.l"
-{return SUBAS;}
+{return yylval.token = SUBAS;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 71 "tokenize.l"
-{return MULAS;}
+{return yylval.token = MULAS;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 72 "tokenize.l"
-{return DIVAS;}
+{return yylval.token = DIVAS;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 73 "tokenize.l"
-{return MODAS;}
+{return yylval.token = MODAS;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 74 "tokenize.l"
-{return BANDAS;}
+{return yylval.token = BANDAS;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 75 "tokenize.l"
-{return BORAS;}
+{return yylval.token = BORAS;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 76 "tokenize.l"
-{return BXORAS;}
+{return yylval.token = BXORAS;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
 #line 77 "tokenize.l"
-{return SHLAS;}
+{return yylval.token = SHLAS;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
 #line 78 "tokenize.l"
-{return SHRAS;}
+{return yylval.token = SHRAS;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 80 "tokenize.l"
-{return CONDITION;}
+{return yylval.token = CONDITION;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
 #line 81 "tokenize.l"
-{return DOT;}
+{return yylval.token = DOT;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 82 "tokenize.l"
-{return ARROW;}
+{return yylval.token = ARROW;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
 #line 83 "tokenize.l"
-{return COMMA;}
+{return yylval.token = COMMA;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP

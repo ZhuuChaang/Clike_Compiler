@@ -1,7 +1,8 @@
 build/*
 CMakeFiles/*
+test/*
 Makefile
 cmake_install.cmake
+src/tokenize.cpp
 src/parser.cpp
 src/parser.hpp
-src/tokenize.cpp

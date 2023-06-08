@@ -680,12 +680,31 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
 
 //expr
 ////////////////////////////////////////////////////////////
-llvm::Value* Constant::CodeGen(CodeGenerator &Gen){
+llvm::Value* Constant::CodeGen(CodeGenerator& Gen){
+    switch (this->getType())
+    {
+    case Csttype::cstty_bool :
+        return Gen.TheBuilder.getInt1(this->b);
+        break;
+    case Csttype::cstty_char :
+        return Gen.TheBuilder.getInt8(this->c);
+        break;
+    case Csttype::cstty_int :
+        return Gen.TheBuilder.getInt32(this->_integer);
+        break;
+    case Csttype::cstty_real :
+        return llvm::ConstantFP::get(llvm::Type::getDoubleTy(Gen.CodeContent), this->_double);
+        break;
+    case Csttype::cstty_str :
+        return Gen.TheBuilder.CreateGlobalStringPtr(this->_str);
+    }
     return NULL;
 }
 
 
 llvm::Value* Variable::CodeGen(CodeGenerator &Gen){
+    // llvm::Value* var_ptr = Gen.findIDSymtable(this->_name);
+
     return NULL;
 }
 
@@ -736,6 +755,7 @@ llvm::Value* MemAccessObj::CodeGen(CodeGenerator &Gen){
 
 //////////////////
 llvm::Value* Constant::LeftValueGen(CodeGenerator &Gen){
+    cout << "constant cannot be leftvalue" << endl;
     return NULL;
 }
 

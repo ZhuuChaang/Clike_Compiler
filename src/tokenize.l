@@ -40,47 +40,47 @@
 "sizeof"            {return SIZEOF;}
 "typedef"           {return TYPEDEF;}
 
-"+"                 {return ADD;}
-"-"                 {return SUB;}
-"*"                 {return MUL;}
-"/"                 {return DIV;}
-"%"                 {return MOD;}
-"++"                {return INC;}
-"--"                {return DEC;}
+"+"                 {return yylval.token = ADD;}
+"-"                 {return yylval.token = SUB;}
+"*"                 {return yylval.token = MUL;}
+"/"                 {return yylval.token = DIV;}
+"%"                 {return yylval.token = MOD;}
+"++"                {return yylval.token = INC;}
+"--"                {return yylval.token = DEC;}
 
-"=="                {return EQ;}
-"!="                {return NE;}
-">"                 {return GT;}
-"<"                 {return LT;}
-">="                {return GE;}
-"<="                {return LE;}
+"=="                {return yylval.token = EQ;}
+"!="                {return yylval.token = NE;}
+">"                 {return yylval.token = GT;}
+"<"                 {return yylval.token = LT;}
+">="                {return yylval.token = GE;}
+"<="                {return yylval.token = LE;}
 
-"&&"                {return AND;}
-"||"                {return OR;}
-"!"                 {return NOT;}
-"&"                 {return BAND;}
-"|"                 {return BOR;}
-"^"                 {return BXOR;}
-"~"                 {return BNOT;}
-"<<"                {return SHL;}
-">>"                {return SHR;}
+"&&"                {return yylval.token = AND;}
+"||"                {return yylval.token = OR;}
+"!"                 {return yylval.token = NOT;}
+"&"                 {return yylval.token = BAND;}
+"|"                 {return yylval.token = BOR;}
+"^"                 {return yylval.token = BXOR;}
+"~"                 {return yylval.token = BNOT;}
+"<<"                {return yylval.token = SHL;}
+">>"                {return yylval.token = SHR;}
 
-"="                 {return ASSIGN;}
-"+="                {return ADDAS;}
-"-="                {return SUBAS;}
-"*="                {return MULAS;}
-"/="                {return DIVAS;}
-"%="                {return MODAS;}
-"&="                {return BANDAS;}
-"|="                {return BORAS;}
-"^="                {return BXORAS;}
-"<<="               {return SHLAS;}
-">>="               {return SHRAS;}
+"="                 {return yylval.token = ASSIGN;}
+"+="                {return yylval.token = ADDAS;}
+"-="                {return yylval.token = SUBAS;}
+"*="                {return yylval.token = MULAS;}
+"/="                {return yylval.token = DIVAS;}
+"%="                {return yylval.token = MODAS;}
+"&="                {return yylval.token = BANDAS;}
+"|="                {return yylval.token = BORAS;}
+"^="                {return yylval.token = BXORAS;}
+"<<="               {return yylval.token = SHLAS;}
+">>="               {return yylval.token = SHRAS;}
 
-"?"                 {return CONDITION;}
-"."                 {return DOT;}
-"->"                {return ARROW;}
-","                 {return COMMA;}
+"?"                 {return yylval.token = CONDITION;}
+"."                 {return yylval.token = DOT;}
+"->"                {return yylval.token = ARROW;}
+","                 {return yylval.token = COMMA;}
 ";"                 {return SEMICOLON;}
 ":"                 {return COLON;}
 "("                 {return LPAREN;}
