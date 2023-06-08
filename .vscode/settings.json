@@ -70,7 +70,10 @@
         "fstream": "c",
         "iomanip": "c",
         "sstream": "c",
-        "*.def": "cpp",
-        "*.inc": "cpp"
+        "complex": "cpp",
+        "optional": "cpp",
+        "cfenv": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }

@@ -189,7 +189,7 @@ ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=$2;}
 FunDECL:    TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  {$$=new Fundeclare($1,*$2,$4);}
             ;
 
-FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE {$$ = new Fundefine($1,*$2,$4,$6);}
+FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE {$$ = new Fundefine($1,*$2,$4,$6);$6->setfun();}
             ;
 
 ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}

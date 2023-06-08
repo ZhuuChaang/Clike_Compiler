@@ -200,7 +200,7 @@ public:
 class Uniontype: public Type{
     std::string UnionName;
     std::map<std::string,Type*> unionMembers;
-    llvm::Type* maxtype;
+    llvm::Type* maxtype=NULL;
 public:
     Uniontype(std::string s,std::vector<SUmemdec*> *list): UnionName(s){
         int size=list->size();
@@ -215,8 +215,9 @@ public:
     void findMaxtype(CodeGenerator &Gen);
     llvm::Type* getMaxtype(){return maxtype;}
     llvm::Value * CodeGen(CodeGenerator &Gen);
+
     virtual int DrawNode(int depth);
-    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen); 
 };
 
 
@@ -397,6 +398,7 @@ public:
     Vardefine(Type* t, InitIDList* l): type(t), list(l){}
     llvm::Value* CodeGen(CodeGenerator &Gen);
     ~Vardefine(){}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     int DrawNode(int depth);
 };
 
@@ -416,11 +418,15 @@ public:
 
 
 class Scope: public Basestmt{
-    Stmt* Scopestmt;    
+    Stmt* Scopestmt; 
+    bool isfun=false;   
 
 public:
     Scope(Stmt* s):Scopestmt(s){}
     ~Scope(){}
+
+    void setfun(){isfun=true;}
+
     virtual llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
