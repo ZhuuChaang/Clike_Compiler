@@ -113,7 +113,7 @@ public:
     Basestmt(){}
     ~Basestmt(){}
     
-    virtual llvm::Value * CodeGen(CodeGenerator &Gen);
+    virtual llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;};
     virtual int DrawNode(int depth) {return 0;}
 };
 
@@ -133,9 +133,9 @@ public:
         is_const=true;
     }
 
-    virtual llvm::Value * CodeGen(CodeGenerator &Gen);
-    virtual int DrawNode(int depth) {return 0;}
-    virtual llvm::Type* TypeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;};
+    virtual int DrawNode(int depth)=0;
+    virtual llvm::Type* TypeGen(CodeGenerator &Gen)=0;
 };
 
 class Builtintype: public Type{
@@ -162,7 +162,6 @@ public:
     void set_double(){Ty=double_ty;}
     void set_float(){Ty=float_ty;}
 
-    virtual llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -193,7 +192,6 @@ public:
     }
     ~Structtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
     int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -215,7 +213,6 @@ public:
     }
     void findMaxtype(CodeGenerator &Gen);
     llvm::Type* getMaxtype(){return maxtype;}
-    llvm::Value * CodeGen(CodeGenerator &Gen);
 
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen); 
@@ -252,7 +249,6 @@ public:
 
     ~Enumtype(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -281,7 +277,6 @@ public:
     Pointertype(Type* t): basetype(t){}
     ~Pointertype(){};
 
-	virtual llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
 	virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -294,7 +289,6 @@ public:
     Arraytype(Type* t, int s): basetype(t), size(s) {}
     ~Arraytype(){}
 
-	llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
 	virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);   
 };
@@ -620,9 +614,9 @@ public:
     Expr(){}
     ~Expr(){}
 // leave them be for now
-    virtual llvm::Value * LeftValueGen(CodeGenerator &Gen);
-	virtual llvm::Value * CodeGen(CodeGenerator &Gen);
-	virtual int DrawNode(int depth);
+    virtual llvm::Value * LeftValueGen(CodeGenerator &Gen)=0;
+	virtual llvm::Value * CodeGen(CodeGenerator &Gen)=0;
+	virtual int DrawNode(int depth)=0;
 };
 
 
@@ -668,7 +662,10 @@ public:
     CallArgList* _arg_list;
     FuncCall(std::string name, CallArgList* args) : _func_name(name), _arg_list(args) {}
     ~FuncCall() {}
+
     virtual int DrawNode(int depth);  
+    virtual llvm::Value* LeftValueGen(CodeGenerator &Gen);
+    virtual llvm::Value * CodeGen(CodeGenerator &Gen); 
 };
 
 class BinopExpr: public Expr{
@@ -689,6 +686,9 @@ public:
     Expr* _operand;
     UnaopExpr(int op, Expr* operand): _op(op), _operand(operand) {}
     ~UnaopExpr() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);    
     virtual int DrawNode(int depth);
 };
 
@@ -698,6 +698,9 @@ public:
     Expr* _operand;
     SufopExpr(int op, Expr* operand): _op(op), _operand(operand) {}
     ~SufopExpr() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);    
     virtual int DrawNode(int depth);
 };
 
@@ -706,6 +709,9 @@ public:
     Expr* _expr;
     SizeofExpr(Expr* expr): _expr(expr) {}
     ~SizeofExpr() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);    
     virtual int DrawNode(int depth);
 };
 
@@ -714,6 +720,9 @@ public:
     Type* _type;
     SizeofType(Type* type): _type(type) {}
     ~SizeofType() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -725,14 +734,21 @@ public:
     TernaryCondition(Expr* condition, Expr* if_then, Expr* else_then)
         : _condition(condition), _if_then(if_then), _else_then(else_then) {}
     ~TernaryCondition() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);
     virtual int DrawNode(int depth);
 };
+
 class TypeCast: public Expr{
 public:
     Type* _type;
     Expr* _expr;
     TypeCast(Type* type, Expr* expr): _type(type), _expr(expr) {}
     ~TypeCast() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -742,6 +758,9 @@ public:
     Expr* _index;
     Subscript(Expr* array, Expr* index): _array(array), _index(index) {}
     ~Subscript() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);    
     virtual int DrawNode(int depth);
 };
 
@@ -752,6 +771,9 @@ public:
     MemAccessPtr(Expr* struct_ptr, std::string member)
         : _struct_ptr(struct_ptr), _member(member) {}
     ~MemAccessPtr() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -762,6 +784,9 @@ public:
     MemAccessObj(Expr* struct_name, std::string member)
         : _struct(struct_name), _member(member) {}
     ~MemAccessObj() {}
+
+    virtual llvm::Value* LeftValueGen(CodeGenerator& Gen);
+    virtual llvm::Value* CodeGen(CodeGenerator& Gen);
     virtual int DrawNode(int depth);
 };
 

@@ -674,3 +674,116 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
     this->expr->CodeGen(Gen);
     return NULL;
 }
+
+
+//expr
+////////////////////////////////////////////////////////////
+llvm::Value* Constant::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+
+llvm::Value* Variable::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+
+llvm::Value* FuncCall::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SufopExpr::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SizeofExpr::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SizeofType::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* TernaryCondition::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* TypeCast::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* Subscript::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* MemAccessPtr::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* MemAccessObj::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+//////////////////
+llvm::Value* Constant::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+
+llvm::Value* Variable::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+
+
+llvm::Value* FuncCall::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* UnaopExpr::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SufopExpr::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SizeofExpr::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* SizeofType::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* TernaryCondition::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* TypeCast::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* Subscript::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* MemAccessPtr::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}
+
+llvm::Value* MemAccessObj::LeftValueGen(CodeGenerator &Gen){
+    return NULL;
+}

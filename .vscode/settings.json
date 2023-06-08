@@ -74,6 +74,7 @@
         "optional": "cpp",
         "cfenv": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.def": "cpp"
     }
 }
