@@ -21,7 +21,7 @@ void CodeGenerator::addFunSymtable(std::string fname, llvm::Function* fun){
     this->symTable.newValue(fname,FUNC_type,(void*)fun);
 }
 
-void CodeGenerator::addVarSymtable(std::string vname, llvm::AllocaInst* var){
+void CodeGenerator::addVarSymtable(std::string vname, llvm::Value* var){
     this->symTable.newValue(vname,VAR_type,(void*)var);
 }
 

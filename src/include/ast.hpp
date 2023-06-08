@@ -42,6 +42,7 @@ class Type;
 
 class Basestmt;
     class Fundeclare;
+    class Fundefine;
     class Fielddeclare;
     class funArg;
         typedef std::vector<funArg*> funArgList;
@@ -216,6 +217,12 @@ public:
     llvm::Type* getMaxtype(){return maxtype;}
     llvm::Value * CodeGen(CodeGenerator &Gen);
 
+<<<<<<< HEAD
+=======
+    void findMaxtype(CodeGenerator &Gen);
+    llvm::Type* getMaxtype(){return maxtype;}
+    llvm::Value * CodeGen(CodeGenerator &Gen) {}
+>>>>>>> 50c8515dc409b6b352ac75640bc75be1b7d0d866
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen); 
 };
@@ -367,13 +374,27 @@ public:
 	int DrawNode(int depth);
 };
 
+class TypeDefine: public Basestmt{
+public:
+    Definedtype* defined_type;
+    TypeDefine(Definedtype* defined_type): defined_type(defined_type) {}
+    ~TypeDefine() {}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+    virtual int DrawNode(int depth);
+};
+
 class Fielddeclare: public Basestmt{
     Type* type;
 public:
     Fielddeclare(Type* t):type(t){}
     ~Fielddeclare(){}
 
+<<<<<<< HEAD
     llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
+=======
+    llvm::Value * CodeGen(CodeGenerator &Gen);
+>>>>>>> 50c8515dc409b6b352ac75640bc75be1b7d0d866
     int DrawNode(int depth);
 };
 
@@ -386,6 +407,11 @@ public:
     InitID(std::string s):VarName(s){}
     InitID(std::string s,Expr* e):VarName(s),eInit(e){is_initiallized=true;}
     ~InitID(){}
+
+    std::string getname(){return VarName;}
+    Expr* getexpr(){return this->eInit;}
+    bool hasinit(){return is_initiallized;}
+
     int DrawNode(int depth);
     bool testinit(){return is_initiallized;}
 };
@@ -407,12 +433,16 @@ public:
 class Stmt: public Node{
     std::vector<Basestmt*> stmtlist;
 public:
+    friend class Scope;
+
     Stmt(){}
     ~Stmt(){}
 
     void Addstmt(Basestmt* s){
         stmtlist.push_back(s);
     }
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -431,13 +461,7 @@ public:
     virtual int DrawNode(int depth);
 };
 
-class TypeDefine: public Basestmt{
-public:
-    Definedtype* defined_type;
-    TypeDefine(Definedtype* defined_type): defined_type(defined_type) {}
-    ~TypeDefine() {}
-    virtual int DrawNode(int depth);
-};
+
 
 class Exprstmt: public Basestmt{
     Expr* expr;
@@ -445,6 +469,8 @@ class Exprstmt: public Basestmt{
 public: 
     Exprstmt(Expr* e):expr(e){}
     ~Exprstmt(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 

@@ -30,7 +30,7 @@ public:
     void addStruct(llvm::StructType* lt, Structtype* at);
     void addUnion(llvm::StructType* lt, Uniontype* at);
     void addFunSymtable(std::string fname, llvm::Function* fun);
-    void addVarSymtable(std::string vname, llvm::AllocaInst* var);
+    void addVarSymtable(std::string vname, llvm::Value* var);
     bool findIDSymtable(std::string name);
 
     llvm::TypeSize getTypesize(llvm::Type* t);
