@@ -1253,43 +1253,32 @@ YY_RULE_SETUP
 case 79:
 YY_RULE_SETUP
 #line 116 "tokenize.l"
-<<<<<<< HEAD
 {
                         //std::string s(yytext);
                         //yylval.IDENTIFER_value=&s;
                         yylval.IDENTIFER_value = new std::string(yytext, yyleng);
                         return IDENTIFER;
                     }
-=======
-{
-                        //std::string s(yytext);
-                        //yylval.IDENTIFER_value=&s;
-                        yylval.IDENTIFER_value = new std::string(yytext, yyleng);
-                        return IDENTIFER;
-                    }
->>>>>>> db481ccc9c572ad6b87c4daf9a0573331af17378
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 124 "tokenize.l"
+#line 123 "tokenize.l"
 {
                         double tmp=0;
                         sscanf(yytext,"%lf",&tmp);
                         yylval.REAL_value=&tmp;
                         return REAL_VAR;
                     }
->>>>>>> db481ccc9c572ad6b87c4daf9a0573331af17378
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 131 "tokenize.l"
+#line 130 "tokenize.l"
 {
                         int tmp=0;
                         sscanf(yytext,"%d",&tmp);
                         yylval.INT_value=&tmp;
                         return INTEGER_VAR;
                     }
->>>>>>> db481ccc9c572ad6b87c4daf9a0573331af17378
 	YY_BREAK
 case 82:
 YY_RULE_SETUP

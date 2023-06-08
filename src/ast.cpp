@@ -1,7 +1,10 @@
 #include"ast.hpp"
+#include"parser.hpp"
 #include <iostream>
 #include <map>
+#include "CodeGen.hpp"
 using namespace std;
+
 
 void Indentation(int ind){
     for(int i = 0; i < ind; i++){
@@ -76,6 +79,7 @@ int Structtype::DrawNode(int depth){
         (*iter).second->DrawNode(depth + 1);
         cout << " " << (*iter).first << endl;
     }
+    return 0;
 }
 
 int Uniontype::DrawNode(int depth){
@@ -86,6 +90,7 @@ int Uniontype::DrawNode(int depth){
         (*iter).second->DrawNode(depth + 1);
         cout << " " << (*iter).first << endl;
     }
+    return 0;
 }
 
 int SUmemdec::DrawNode(int depth){
@@ -97,6 +102,7 @@ int SUmemdec::DrawNode(int depth){
         Indentation(depth + 1);
         cout << (*iter) << endl;
     }
+    return 0;
 }
 
 int Enumtype::DrawNode(int depth){
@@ -107,24 +113,28 @@ int Enumtype::DrawNode(int depth){
         Indentation(depth + 1);
         cout << (*iter).first << " " << (*iter).second << endl;
     }
+    return 0;
 }
 
 int Definedtype::DrawNode(int depth){
     Indentation(depth);
     cout << "Definedtype: " << this->deftypeName << endl;
     this->type->DrawNode(depth + 1);
+    return 0;
 }
 
 int Pointertype::DrawNode(int depth){
     Indentation(depth);
     cout << "Pointertype: " << endl;
     this->basetype->DrawNode(depth + 1);
+    return 0;
 }
 
 int Arraytype::DrawNode(int depth){
     Indentation(depth);
     cout << "Arraytype: " << endl;
     this->basetype->DrawNode(depth + 1);
+    return 0;
 }
 
 //statement
@@ -157,6 +167,24 @@ int Vardefine::DrawNode(int depth) {
         (*iter)->DrawNode(depth + 1);
     }
     cout << endl;
+    return 0;
+}
+
+
+int Fundeclare::DrawNode(int depth) {
+    Indentation(depth);
+    cout << "Fundeclare: ";
+    //name
+    cout << this->Funname << endl;
+    //return type
+    this->retType->DrawNode(depth + 1);
+    cout << endl;
+    //argment list
+    map<std::string,Type*>::iterator iter;
+    for(iter = this->Arglist.begin(); iter != this->Arglist.end(); iter++){
+        (*iter).second->DrawNode(depth + 1);
+        cout << " " << (*iter).first << endl;
+    }
     return 0;
 }
 
@@ -546,7 +574,6 @@ llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
     return ret;
 
 }
-
 void Uniontype::findMaxtype(CodeGenerator &Gen){
     size_t maxsize=0;
     llvm::Type* maxty=NULL;
@@ -578,3 +605,71 @@ llvm::Type* Arraytype::TypeGen(CodeGenerator &Gen){
     llvm::Type* bty=this->basetype->TypeGen(Gen);
     return llvm::ArrayType::get(bty,this->size);    
 }
+
+
+
+
+
+
+
+//--expr-------------------------------------
+
+llvm::Value* Constant::LeftValueGen(CodeGenerator &Gen){
+    cout << "constant cannot be left value" << endl;
+    return NULL;
+}
+
+llvm::Value* Constant::CodeGen(CodeGenerator &Gen){
+    switch (this->getType()){
+    case Csttype::cstty_int:
+        return Gen.TheBuilder.getInt32(this->_integer);
+        break;
+    case Csttype::cstty_char:
+        return Gen.TheBuilder.getInt16(this->c);
+        break;
+    case Csttype::cstty_bool:
+        return Gen.TheBuilder.getInt1(this->b);
+        break;
+    case Csttype::cstty_real:
+        return llvm::ConstantFP::get(Gen.TheBuilder.getDoubleTy(), this->_double);
+        break;
+    case Csttype::cstty_str:
+        return Gen.TheBuilder.CreateGlobalStringPtr(this->_str);
+        break;
+    default:
+        return NULL;
+    }
+}
+/*need symbol table support
+llvm::Value* Variable::LeftValueGen(CodeGenerator& Gen){
+    llvm::Value* 
+}
+
+llvm::Value* Variable::CodeGen(CodeGenerator& Gen){
+
+}
+
+llvm::Value* FuncCall::LeftValueGen(CodeGenerator& Gen){
+
+}
+
+llvm::Value* FuncCall::CodeGen(CodeGenerator& Gen){
+    
+}
+*/
+
+llvm::Value* BinopExpr::CodeGen(CodeGenerator& Gen){
+    llvm::Value* lhs = this->_lhs->CodeGen(Gen);
+    llvm::Value* rhs = this->_rhs->CodeGen(Gen);
+    return 0;
+    
+}
+class UnaopExpr;
+class SufopExpr;
+class SizeofExpr;
+class SizeofType;
+class TernaryCondition;
+class TypeCast;
+class Subscript;
+class MemAccessPtr;
+class MemAccessObj;

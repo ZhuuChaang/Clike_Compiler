@@ -2,11 +2,11 @@
 #define _CODEGEN_H_
 #include "LLVMlibs.hpp"
 #include "SymbolTable.hpp"
+#include "ast.hpp"
 #include <string>
 #include <map>
-#include <ast.hpp>
 
-class Node;
+
 
 class CodeGenerator{
 public:
@@ -22,10 +22,10 @@ public:
 
 
 
-    CodeGenerator();
-    ~CodeGenerator();
-    void CodeGenerate(Node& root);
-    int ObjGenerate();
+    CodeGenerator():CodeContent(),TheBuilder(CodeContent){}
+    ~CodeGenerator(){}
+    void CodeGenerate(Node& root){}
+    int ObjGenerate(){return 0;}
 
     void addStruct(llvm::StructType* lt, Structtype* at);
     void addUnion(llvm::StructType* lt, Uniontype* at);
