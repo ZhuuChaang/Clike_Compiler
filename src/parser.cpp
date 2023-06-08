@@ -1808,7 +1808,7 @@ yyreduce:
 
   case 28: /* FunDEF: TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE  */
 #line 192 "parser.y"
-                                                       {(yyval.AST_BSTMT_value) = new Fundefine((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value),(yyvsp[0].AST_SCOPE_value));}
+                                                       {(yyval.AST_BSTMT_value) = new Fundefine((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value),(yyvsp[0].AST_SCOPE_value));(yyvsp[0].AST_SCOPE_value)->setfun();}
 #line 1813 "parser.cpp"
     break;
 

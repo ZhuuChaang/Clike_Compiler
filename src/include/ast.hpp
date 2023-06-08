@@ -217,12 +217,6 @@ public:
     llvm::Type* getMaxtype(){return maxtype;}
     llvm::Value * CodeGen(CodeGenerator &Gen);
 
-<<<<<<< HEAD
-=======
-    void findMaxtype(CodeGenerator &Gen);
-    llvm::Type* getMaxtype(){return maxtype;}
-    llvm::Value * CodeGen(CodeGenerator &Gen) {}
->>>>>>> 50c8515dc409b6b352ac75640bc75be1b7d0d866
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen); 
 };
@@ -390,11 +384,7 @@ public:
     Fielddeclare(Type* t):type(t){}
     ~Fielddeclare(){}
 
-<<<<<<< HEAD
-    llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
-=======
     llvm::Value * CodeGen(CodeGenerator &Gen);
->>>>>>> 50c8515dc409b6b352ac75640bc75be1b7d0d866
     int DrawNode(int depth);
 };
 
@@ -422,7 +412,6 @@ class Vardefine: public Basestmt{
 
 public:
     Vardefine(Type* t, InitIDList* l): type(t), list(l){}
-    llvm::Value* CodeGen(CodeGenerator &Gen);
     ~Vardefine(){}
     llvm::Value * CodeGen(CodeGenerator &Gen);
     int DrawNode(int depth);

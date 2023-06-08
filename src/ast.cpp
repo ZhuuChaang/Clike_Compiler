@@ -598,11 +598,11 @@ llvm::Value* Fundefine::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value * TypeDefine::CodeGen(CodeGenerator &Gen){
-
+    return NULL;
 }
 
 llvm::Value* Fielddeclare::CodeGen(CodeGenerator &Gen){
-    
+    return NULL;
 }
 
 
@@ -672,4 +672,5 @@ llvm::Value* Scope::CodeGen(CodeGenerator &Gen){
 
 llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
     this->expr->CodeGen(Gen);
+    return NULL;
 }
