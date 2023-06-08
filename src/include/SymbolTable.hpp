@@ -22,9 +22,7 @@ class symValue{
 
 public:
     symValue(ValueTypes t,void* v,int level):type(t),value(v),mark(level){}
-    ~symValue(){
-        delete this->value;
-    }
+    ~symValue(){}
 
     // void mark(){
     //     this->marked=true;
