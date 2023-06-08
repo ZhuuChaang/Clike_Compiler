@@ -427,7 +427,84 @@ llvm::Value* Program::CodeGen(CodeGenerator &Gen){
 }
 
 
+llvm::Type* Builtintype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* ret;
+    switch (this->Ty)
+    {
+        case undefined_ty : break;
+        case int_ty : ret=Gen.TheBuilder.getInt32Ty(); break;
+        case short_ty : ret=Gen.TheBuilder.getInt16Ty(); break;
+        case long_ty : ret=Gen.TheBuilder.getInt64Ty(); break;
+        case void_ty : ret=Gen.TheBuilder.getVoidTy(); break;
+        case char_ty : ret=Gen.TheBuilder.getInt8Ty(); break;
+        case double_ty : ret=Gen.TheBuilder.getDoubleTy(); break;
+        case float_ty : ret=Gen.TheBuilder.getFloatTy(); break;
+        default:break;
+    }
+    return ret;
+}
 
+llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
+    llvm::StructType* sty=llvm::StructType::create(Gen.CodeContent,"struct." + this->structName);
+    Gen.addStruct(sty,this);
+    std::vector<llvm::Type*> Mems;
+    for(auto it: this->structMembers){
+        Mems.push_back(it.second->TypeGen(Gen));
+    }
+    sty->setBody(Mems);
+    llvm::Type* ret=sty;
+    return ret;
+}
+
+llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
+    llvm::StructType* uty=llvm::StructType::create(Gen.CodeContent,"union." + this->UnionName);
+    Gen.addUnion(uty,this);
+    llvm::Type* maxty=this->getMaxtype();
+    if(maxty==NULL){
+        this->findMaxtype(Gen);
+        maxty=this->getMaxtype();
+    }
+    uty->setBody(std::vector<llvm::Type*>{maxty});
+    llvm::Type* ret=uty;
+    return ret;
+
+}
+
+void Uniontype::findMaxtype(CodeGenerator &Gen){
+    size_t maxsize=0;
+    llvm::Type* maxty=NULL;
+    for(auto it: this->unionMembers){
+        size_t tmp=Gen.getTypesize(it.second->TypeGen(Gen));
+        if(tmp>maxsize){
+            maxsize=tmp;
+            maxty=it.second->TypeGen(Gen);
+        }
+    }
+    this->maxtype=maxty;
+}
+
+//types 
+llvm::Type* Enumtype::TypeGen(CodeGenerator &Gen){
+    return llvm::IntegerType::getInt32Ty(Gen.CodeContent);
+}
+
+llvm::Type* Definedtype::TypeGen(CodeGenerator &Gen){
+    return this->type->TypeGen(Gen);
+}
+
+llvm::Type* Pointertype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* bty=this->basetype->TypeGen(Gen);
+    return llvm::PointerType::get(bty,0U);
+}
+
+llvm::Type* Arraytype::TypeGen(CodeGenerator &Gen){
+    llvm::Type* bty=this->basetype->TypeGen(Gen);
+    return llvm::ArrayType::get(bty,this->size);    
+}
+
+
+
+//stmt
 llvm::Value* Globalstmt::CodeGen(CodeGenerator &Gen){
     for(Basestmt* it:this->stmtlist){
         it->CodeGen(Gen);
@@ -492,91 +569,79 @@ llvm::Value* Fundefine::CodeGen(CodeGenerator &Gen){
     return NULL;
 }
 
+llvm::Value * TypeDefine::CodeGen(CodeGenerator &Gen){
+
+}
+
+llvm::Value* Fielddeclare::CodeGen(CodeGenerator &Gen){
+    
+}
+
+
 llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
     llvm::Type* ty=this->type->TypeGen(Gen);
     
     for(auto it: *(this->list)){
         if(Gen.curf==NULL){//global
+            Gen.TheModule->getOrInsertGlobal(it->getname(),ty);
+            llvm::GlobalVariable* gvar=Gen.TheModule->getNamedGlobal(it->getname());
+            Gen.addVarSymtable(it->getname(),gvar);
+
+            if(it->hasinit()){
+                llvm::Value* inite=it->getexpr()->CodeGen(Gen);
+                Gen.TheBuilder.CreateStore(inite,gvar);
+            }
 
         }else{
-            
+            llvm::Function* FUN=Gen.curf;
+            llvm::IRBuilder<> tmp(&FUN->getEntryBlock(),FUN->getEntryBlock().begin());
+            llvm::AllocaInst* def=tmp.CreateAlloca(ty,0,it->getname());
+            Gen.addVarSymtable(it->getname(),def);
+
+            if(it->hasinit()){
+                llvm::Value* inite=it->getexpr()->CodeGen(Gen);
+                Gen.TheBuilder.CreateStore(inite,def);
+            }
         }
     }
     return NULL;
 }
 
-
-llvm::Type* Builtintype::TypeGen(CodeGenerator &Gen){
-    llvm::Type* ret;
-    switch (this->Ty)
-    {
-        case undefined_ty : break;
-        case int_ty : ret=Gen.TheBuilder.getInt32Ty(); break;
-        case short_ty : ret=Gen.TheBuilder.getInt16Ty(); break;
-        case long_ty : ret=Gen.TheBuilder.getInt64Ty(); break;
-        case void_ty : ret=Gen.TheBuilder.getVoidTy(); break;
-        case char_ty : ret=Gen.TheBuilder.getInt8Ty(); break;
-        case double_ty : ret=Gen.TheBuilder.getDoubleTy(); break;
-        case float_ty : ret=Gen.TheBuilder.getFloatTy(); break;
-        default:break;
+llvm::Value* Stmt::CodeGen(CodeGenerator &Gen){
+    for(auto it: this->stmtlist){
+        it->CodeGen(Gen);
     }
-    return ret;
+    return NULL;
 }
 
-llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
-    llvm::StructType* sty=llvm::StructType::create(Gen.CodeContent,"struct." + this->structName);
-    Gen.addStruct(sty,this);
-    std::vector<llvm::Type*> Mems;
-    for(auto it: this->structMembers){
-        Mems.push_back(it.second->TypeGen(Gen));
-    }
-    sty->setBody(Mems);
-    llvm::Type* ret=sty;
-    return ret;
-}
+llvm::Value* Scope::CodeGen(CodeGenerator &Gen){
+    Gen.symTable.enterScope();
 
-llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
-    llvm::StructType* uty=llvm::StructType::create(Gen.CodeContent,"union." + this->UnionName);
-    Gen.addUnion(uty,this);
-    llvm::Type* maxty=this->getMaxtype();
-    if(maxty==NULL){
-        this->findMaxtype(Gen);
-        maxty=this->getMaxtype();
-    }
-    uty->setBody(std::vector<llvm::Type*>{maxty});
-    llvm::Type* ret=uty;
-    return ret;
-
-}
-
-void Uniontype::findMaxtype(CodeGenerator &Gen){
-    size_t maxsize=0;
-    llvm::Type* maxty=NULL;
-    for(auto it: this->unionMembers){
-        size_t tmp=Gen.getTypesize(it.second->TypeGen(Gen));
-        if(tmp>maxsize){
-            maxsize=tmp;
-            maxty=it.second->TypeGen(Gen);
+    for(auto it: this->Scopestmt->stmtlist){
+        if(Gen.TheBuilder.GetInsertBlock()->getTerminator()){
+            break;
+        }else{
+            it->CodeGen(Gen);
         }
     }
-    this->maxtype=maxty;
+
+    if(this->isfun){
+        if(!Gen.TheBuilder.GetInsertBlock()->getTerminator()){
+            llvm::Type* retty=Gen.curf->getReturnType();
+            if(retty->isVoidTy()){
+                Gen.TheBuilder.CreateRetVoid();
+            }else{
+                Gen.TheBuilder.CreateRet(llvm::UndefValue::get(retty));
+            }
+        }
+    }
+
+    Gen.symTable.leaveScope();
+
+    return NULL;
 }
 
 
-llvm::Type* Enumtype::TypeGen(CodeGenerator &Gen){
-    return llvm::IntegerType::getInt32Ty(Gen.CodeContent);
-}
-
-llvm::Type* Definedtype::TypeGen(CodeGenerator &Gen){
-    return this->type->TypeGen(Gen);
-}
-
-llvm::Type* Pointertype::TypeGen(CodeGenerator &Gen){
-    llvm::Type* bty=this->basetype->TypeGen(Gen);
-    return llvm::PointerType::get(bty,0U);
-}
-
-llvm::Type* Arraytype::TypeGen(CodeGenerator &Gen){
-    llvm::Type* bty=this->basetype->TypeGen(Gen);
-    return llvm::ArrayType::get(bty,this->size);    
+llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
+    this->expr->CodeGen(Gen);
 }
