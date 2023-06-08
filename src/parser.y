@@ -25,10 +25,10 @@ Program* Root;
 %output "parser.cpp"
 
 %union{
-    int* INT_value;
-    double* REAL_value;
+    int INT_value;
+    double REAL_value;
     std::string* STRING_value;
-    char* CHAR_value;
+    char CHAR_value;
 
     std::string* IDENTIFER_value;
 
@@ -157,7 +157,7 @@ TYPE:       _TYPE           {$$=$1;}
 _TYPE:      BuiltinTYPE     {$$=$1;}
             | FieldTYPE     {$$=$1;}
             | _TYPE PTR     {$$=new Pointertype($1);}
-            | _TYPE ARRAY   {$$=new Arraytype($1,*($2));}
+            | _TYPE ARRAY   {$$=new Arraytype($1,$2);}
             | IDENTIFER     {$$=new Definedtype(*$1);}
             ;
 
@@ -193,12 +193,12 @@ FunDEF:     TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE {$$ = new Fundefine($1,*$
             ;
 
 ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}
-            | TYPE IDENTIFER                {$$->push_back(new funArg($1,*$2));}
+            | TYPE IDENTIFER                {$$=new funArgList();$$->push_back(new funArg($1,*$2));}
             |                               {$$=new funArgList();}
 			;
 
 _ArgLIST:	_ArgLIST COMMA TYPE IDENTIFER   {$$=$1; $$->push_back(new funArg($3,*$4));}
-            | TYPE IDENTIFER                  {$$->push_back(new funArg($1,*$2));}
+            | TYPE IDENTIFER                  {$$=new funArgList();$$->push_back(new funArg($1,*$2));}
             ;
 
 //variable define and declare
@@ -208,7 +208,7 @@ FieldDECL:  FieldTYPE SEMICOLON     {$$=new Fielddeclare($1);}
 VarDEF:     TYPE InitIDLIST SEMICOLON   {$$=new Vardefine($1,$2);}
             ;
 
-SUVarDEF:   TYPE IdList SEMICOLON   {$$=new SUmemdec($1,$2);}
+SUVarDEF:   TYPE IdList   {$$=new SUmemdec($1,$2);}
             ;
 
 
@@ -227,16 +227,16 @@ Init:       IDENTIFER               {$$=new InitID(*$1);}
 
 
 EnmLIST:    _EnmLIST COMMA Enm  {$1->push_back($3);$$=$1;}
-            | Enm               {$$->push_back($1);}
+            | Enm               {$$=new Enumlist();$$->push_back($1);}
             |                   {$$=new Enumlist();}
             ;
 
 _EnmLIST:   _EnmLIST COMMA Enm  {$1->push_back($3);$$=$1;}
-            | Enm               {$$->push_back($1);}
+            | Enm               {$$=new Enumlist();$$->push_back($1);}
             ;
 
 Enm:        IDENTIFER                       {$$=new Enum(*$1);}
-            | IDENTIFER ASSIGN INTEGER_VAR  {$$=new Enum(*$1,*$3);}
+            | IDENTIFER ASSIGN INTEGER_VAR  {$$=new Enum(*$1,$3);}
             ;
 
 //type defination
@@ -324,7 +324,7 @@ ReturnSTMT: RETURN SEMICOLON        {$$=new Returnstmt();}
             ;
 
 SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
-            | SUVarDEF SEMICOLON        {$$->push_back($1);}    
+            | SUVarDEF SEMICOLON        {$$=new SUdecllist(); $$->push_back($1);}    
             |                           {$$=new SUdecllist(); }
             ;
 
@@ -410,9 +410,9 @@ _CallArgLIST: _CallArgLIST COMMA EXPR       {$$ = $1; $$->push_back($3);}
 
 CONSTANT:   TRUE            {enum Csttype t=cstty_bool; $$=new Constant(true,t);}
             | FALSE         {enum Csttype t=cstty_bool; $$=new Constant(false,t);}
-            | CHAR_VAR      {enum Csttype t=cstty_char; $$=new Constant(*($1),t);}
-            | INTEGER_VAR   {enum Csttype t=cstty_int; $$=new Constant(*($1),t);}
-            | REAL_VAR      {enum Csttype t=cstty_real; $$=new Constant(*($1),t);}
+            | CHAR_VAR      {enum Csttype t=cstty_char; $$=new Constant($1,t);}
+            | INTEGER_VAR   {enum Csttype t=cstty_int; $$=new Constant($1,t);}
+            | REAL_VAR      {enum Csttype t=cstty_real; $$=new Constant($1,t);}
             | STRING_VAR    {enum Csttype t=cstty_str; $$=new Constant(*($1),t);} 
             ;
 

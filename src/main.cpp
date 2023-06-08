@@ -14,5 +14,6 @@ int main(int argc, const char* argv[]){
     assert(yyin);
     yyparse();
     Root->DrawNode(0);
+    std::cout<<"haha\n";
     return 0;
 }

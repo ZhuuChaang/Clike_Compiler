@@ -151,10 +151,10 @@ union YYSTYPE
 {
 #line 27 "parser.y"
 
-    int* INT_value;
-    double* REAL_value;
+    int INT_value;
+    double REAL_value;
     std::string* STRING_value;
-    char* CHAR_value;
+    char CHAR_value;
 
     std::string* IDENTIFER_value;
 

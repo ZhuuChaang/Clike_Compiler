@@ -135,6 +135,8 @@ int Pointertype::DrawNode(int depth){
 int Arraytype::DrawNode(int depth){
     Indentation(depth);
     cout << "Arraytype: " << endl;
+    Indentation(depth+1);
+    cout << "size: " << this->size <<endl;
     this->basetype->DrawNode(depth + 1);
     return 0;
 }
