@@ -510,7 +510,7 @@ public:
 
     ~Ifflow(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    //llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -527,7 +527,7 @@ public:
         bodies.push_back(b);
     }
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    //llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -540,7 +540,7 @@ public:
     Elseflow(Scope* b):has_body(true), Elsebody(b){}
     ~Elseflow(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    //llvm::Value * CodeGen(CodeGenerator &Gen);
     bool test_body(){return has_body;}
     virtual int DrawNode(int depth);
 };
@@ -574,7 +574,7 @@ public:
 
     bool test_body(){return has_body;}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    //llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 
@@ -586,7 +586,7 @@ public:
     Dowhileflow(Expr* l, Scope* w):limit(l),whilebody(w){}
     ~Dowhileflow(){}
 
-    llvm::Value * CodeGen(CodeGenerator &Gen);
+    //llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 
