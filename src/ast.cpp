@@ -68,6 +68,7 @@ int Builtintype::DrawNode(int depth) {
         cout << "undefined";
         break;
     }
+    cout << endl;
     return 0;
 }
 
@@ -77,7 +78,8 @@ int Structtype::DrawNode(int depth){
     map<std::string,Type*>::iterator iter;
     for(iter = this->structMembers.begin(); iter != this->structMembers.end(); iter++){
         (*iter).second->DrawNode(depth + 1);
-        cout << " " << (*iter).first << endl;
+        Indentation(depth + 1);
+        cout << (*iter).first << endl;
     }
     return 0;
 }
@@ -151,7 +153,6 @@ int Fundefine::DrawNode(int depth) {
     cout << this->Funname << endl;
     //return type
     this->retType->DrawNode(depth + 1);
-    cout << endl;
     //argment list
     map<std::string,Type*>::iterator iter;
     for(iter = this->Arglist.begin(); iter != this->Arglist.end(); iter++){
@@ -167,12 +168,10 @@ int Vardefine::DrawNode(int depth) {
     Indentation(depth);
     cout << "Vardefine: " << endl;
     this->type->DrawNode(depth + 1);
-    cout << endl;
     vector<InitID*>::iterator iter;
     for(iter = this->list->begin(); iter != this->list->end(); iter++){
         (*iter)->DrawNode(depth + 1);
     }
-    cout << endl;
     return 0;
 }
 
@@ -341,6 +340,7 @@ int Case::DrawNode(int depth){
 //expression
 int Constant::DrawNode(int depth){
     Indentation(depth);
+    cout << "Constant: ";
     switch (this->type)    {
     case Csttype::cstty_bool:
         cout << b;
@@ -358,6 +358,7 @@ int Constant::DrawNode(int depth){
         cout << _str;
         break;
     }
+    cout << endl;
     return 0;
 }
 int Variable::DrawNode(int depth){
