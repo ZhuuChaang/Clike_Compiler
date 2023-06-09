@@ -265,6 +265,8 @@ public:
     Definedtype(Type* t, std::string name): deftypeName(name), type(t){}
     ~Definedtype(){}
 
+    void gettype(CodeGenerator &Gen);
+
 	llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
 	virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
@@ -464,6 +466,8 @@ public:
     Returnstmt(){ret=NULL; withvalue=false;}
     Returnstmt(Expr* e): ret(e) {withvalue=true;}
     ~Returnstmt(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -471,6 +475,7 @@ class Breakstmt: public Basestmt{
 public:
     Breakstmt(){}
     ~Breakstmt(){}
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -478,6 +483,8 @@ class Continuestmt: public Basestmt{
 public:
     Continuestmt(){}
     ~Continuestmt(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -502,6 +509,8 @@ public:
     }
 
     ~Ifflow(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -517,6 +526,8 @@ public:
         conditions.push_back(e);
         bodies.push_back(b);
     }
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -529,6 +540,7 @@ public:
     Elseflow(Scope* b):has_body(true), Elsebody(b){}
     ~Elseflow(){}
 
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     bool test_body(){return has_body;}
     virtual int DrawNode(int depth);
 };
@@ -561,6 +573,8 @@ public:
     ~Whileflow(){}
 
     bool test_body(){return has_body;}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 
@@ -571,6 +585,8 @@ class Dowhileflow: public Basestmt{
 public:
     Dowhileflow(Expr* l, Scope* w):limit(l),whilebody(w){}
     ~Dowhileflow(){}
+
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 

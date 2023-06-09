@@ -121,7 +121,9 @@ int Enumtype::DrawNode(int depth){
 int Definedtype::DrawNode(int depth){
     Indentation(depth);
     cout << "Definedtype: " << this->deftypeName << endl;
-    this->type->DrawNode(depth + 1);
+    if(this->type!=NULL){
+        this->type->DrawNode(depth + 1);
+    }
     return 0;
 }
 
@@ -519,7 +521,15 @@ llvm::Type* Enumtype::TypeGen(CodeGenerator &Gen){
 }
 
 llvm::Type* Definedtype::TypeGen(CodeGenerator &Gen){
+    if(this->type==NULL){
+        this->gettype(Gen);
+    }
     return this->type->TypeGen(Gen);
+}
+
+void Definedtype::gettype(CodeGenerator &Gen){
+    Type* ty=(Type*)Gen.symTable.findValue(this->deftypeName);
+    this->type=ty;
 }
 
 llvm::Type* Pointertype::TypeGen(CodeGenerator &Gen){
@@ -676,6 +686,32 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
     this->expr->CodeGen(Gen);
     return NULL;
 }
+
+
+
+
+
+llvm::Value* Returnstmt::CodeGen(CodeGenerator &Gen){
+    llvm::Function* FUN=Gen.curf;
+    if(this->ret==NULL){
+        if(FUN->getReturnType()->isVoidTy()){
+            Gen.TheBuilder.CreateRetVoid();
+        }
+    }else{
+        //remember to add typecast
+        llvm::Value* ret=this->ret->CodeGen(Gen);
+        Gen.TheBuilder.CreateRet(ret);
+    }
+}
+
+llvm::Value* Breakstmt::CodeGen(CodeGenerator &Gen){
+    
+}
+
+llvm::Value* Continuestmt::CodeGen(CodeGenerator &Gen){
+
+}
+
 
 
 //expr

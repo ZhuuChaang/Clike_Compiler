@@ -154,11 +154,14 @@ TYPE:       _TYPE           {$$=$1;}
             //| STATIC _TYPE  {$1->set_static();$$=$1;}
             ;
 
-_TYPE:      BuiltinTYPE     {$$=$1;}
-            | FieldTYPE     {$$=$1;}
-            | _TYPE PTR     {$$=new Pointertype($1);}
-            | _TYPE ARRAY   {$$=new Arraytype($1,$2);}
-            | IDENTIFER     {$$=new Definedtype(*$1);}
+_TYPE:      BuiltinTYPE         {$$=$1;}
+            | FieldTYPE         {$$=$1;}
+            | _TYPE PTR         {$$=new Pointertype($1);}
+            | _TYPE ARRAY       {$$=new Arraytype($1,$2);}
+            | IDENTIFER         {$$=new Definedtype(*$1);}
+            | STRUCT IDENTIFER  {$$=new Definedtype(*$2);}  
+            | UNION IDENTIFER   {$$=new Definedtype(*$2);}
+            | ENUM IDENTIFER    {$$=new Definedtype(*$2);}
             ;
 
 
@@ -263,6 +266,7 @@ IfFLOW:     IF LPAREN EXPR RPAREN CtrlSCOPE ElseifFLOW ElseFLOW {$$=new Ifflow($
 
 ElseFLOW:   ELSE CtrlSCOPE        {$$=new Elseflow($2);}
             | ELSE SEMICOLON      {$$=new Elseflow();}
+            |                     {$$=new Elseflow();}  
             ;
 
 ElseifFLOW: ElseifFLOW ELSE IF LPAREN EXPR RPAREN CtrlSCOPE {$$=$1;$$->Addelseif($5,$7);}

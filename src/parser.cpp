@@ -576,7 +576,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  47
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  164
+#define YYNRULES  168
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  263
 
@@ -636,22 +636,22 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,   138,   138,   143,   144,   145,   146,   147,   148,   152,
-     157,   158,   159,   160,   161,   165,   166,   167,   170,   171,
-     172,   173,   174,   175,   176,   181,   184,   189,   192,   195,
-     196,   197,   200,   201,   205,   208,   211,   215,   216,   220,
-     221,   224,   225,   229,   230,   231,   234,   235,   238,   239,
-     243,   247,   251,   252,   253,   254,   255,   258,   260,   261,
-     264,   265,   268,   269,   273,   274,   277,   278,   281,   285,
-     288,   289,   293,   294,   295,   296,   299,   300,   301,   302,
-     303,   304,   305,   306,   307,   308,   312,   313,   314,   315,
-     316,   317,   318,   319,   322,   323,   326,   327,   328,   336,
-     337,   338,   339,   340,   341,   342,   343,   344,   345,   346,
-     347,   348,   349,   352,   353,   354,   355,   356,   357,   358,
-     359,   362,   363,   366,   367,   368,   369,   370,   371,   372,
+     157,   158,   159,   160,   161,   162,   163,   164,   168,   169,
+     170,   173,   174,   175,   176,   177,   178,   179,   184,   187,
+     192,   195,   198,   199,   200,   203,   204,   208,   211,   214,
+     218,   219,   223,   224,   227,   228,   232,   233,   234,   237,
+     238,   241,   242,   246,   250,   254,   255,   256,   257,   258,
+     261,   263,   264,   267,   268,   269,   272,   273,   277,   278,
+     281,   282,   285,   289,   292,   293,   297,   298,   299,   300,
+     303,   304,   305,   306,   307,   308,   309,   310,   311,   312,
+     316,   317,   318,   319,   320,   321,   322,   323,   326,   327,
+     330,   331,   332,   340,   341,   342,   343,   344,   345,   346,
+     347,   348,   349,   350,   351,   352,   353,   356,   357,   358,
+     359,   360,   361,   362,   363,   366,   367,   370,   371,   372,
      373,   374,   375,   376,   377,   378,   379,   380,   381,   382,
      383,   384,   385,   386,   387,   388,   389,   390,   391,   392,
-     393,   394,   395,   398,   402,   403,   404,   407,   408,   411,
-     412,   413,   414,   415,   416
+     393,   394,   395,   396,   397,   398,   399,   402,   406,   407,
+     408,   411,   412,   415,   416,   417,   418,   419,   420
 };
 #endif
 
@@ -700,7 +700,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-159)
+#define YYTABLE_NINF (-163)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -743,33 +743,33 @@ static const yytype_int16 yypact[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       8,     0,     2,     1,    18,    19,    20,    21,    22,    23,
-      24,     0,     0,     0,     0,    14,     0,     9,    11,    10,
-       3,     4,     7,     6,     5,     0,     0,     0,     0,    11,
-      41,     0,    40,     0,    25,    12,    13,    34,    45,    98,
-      98,     0,    31,     0,    35,     0,     0,    48,     0,     0,
-      44,     0,     0,     0,     0,    50,     0,     0,     0,   159,
-     160,     0,     0,   119,   120,   117,   113,   114,   115,   118,
-     116,   162,   163,   164,   161,    99,    42,     0,   100,   101,
-      41,    39,    26,     0,    17,     0,    38,    36,    97,    16,
-       0,    15,    30,     0,     0,     0,    99,     0,     0,   156,
-       0,     0,     0,     0,   123,   124,   125,   126,   127,   121,
-     122,   128,   129,   130,   131,   132,   133,   134,   135,   136,
-     137,   138,   139,   140,   141,   142,   143,   144,   145,   146,
-     147,   148,   149,   150,   151,   152,   104,     0,   103,    49,
-      43,     0,    96,    27,    93,    28,     0,     0,     0,     0,
-     105,   155,     0,     0,     0,   112,   111,     0,   102,    37,
-       0,    29,   107,   106,   109,   153,     0,     0,   110,     0,
-       0,     0,     0,     0,     0,    51,     0,    91,    90,    89,
-      88,    86,    52,    53,    55,    54,    56,    92,     0,   154,
-     108,     0,    85,     0,     0,     0,     0,    94,     0,    87,
-       0,     0,     0,     0,     0,     0,    95,     0,     0,     0,
-      57,    83,    82,    81,    80,    76,    84,     0,     0,     0,
-       0,     0,     0,    77,    78,    79,     0,    67,    66,    59,
-      63,    71,     0,     0,     0,     0,     0,    68,     0,    58,
-       0,     0,    69,    70,     0,     0,    61,    60,     0,    93,
-      64,    65,     0,    93,    75,     0,    73,     0,     0,     0,
-      74,    62,    72
+       8,     0,     2,     1,    21,    22,    23,    24,    25,    26,
+      27,     0,     0,     0,     0,    14,     0,     9,    11,    10,
+       3,     4,     7,     6,     5,    17,    16,    15,     0,    11,
+      44,     0,    43,     0,    28,    12,    13,    37,    48,   102,
+     102,     0,    34,     0,    38,     0,     0,    51,     0,     0,
+      47,     0,     0,     0,     0,    53,     0,     0,     0,   163,
+     164,     0,     0,   123,   124,   121,   117,   118,   119,   122,
+     120,   166,   167,   168,   165,   103,    45,     0,   104,   105,
+      44,    42,    29,     0,    20,     0,    41,    39,   101,    19,
+       0,    18,    33,     0,     0,     0,   103,     0,     0,   160,
+       0,     0,     0,     0,   127,   128,   129,   130,   131,   125,
+     126,   132,   133,   134,   135,   136,   137,   138,   139,   140,
+     141,   142,   143,   144,   145,   146,   147,   148,   149,   150,
+     151,   152,   153,   154,   155,   156,   108,     0,   107,    52,
+      46,     0,   100,    30,    97,    31,     0,     0,     0,     0,
+     109,   159,     0,     0,     0,   116,   115,     0,   106,    40,
+       0,    32,   111,   110,   113,   157,     0,     0,   114,     0,
+       0,     0,     0,     0,     0,    54,     0,    95,    94,    93,
+      92,    90,    55,    56,    58,    57,    59,    96,     0,   158,
+     112,     0,    89,     0,     0,     0,     0,    98,     0,    91,
+       0,     0,     0,     0,     0,     0,    99,     0,     0,     0,
+      60,    87,    86,    85,    84,    80,    88,     0,     0,     0,
+       0,     0,     0,    81,    82,    83,     0,    71,    70,    62,
+      67,    75,     0,     0,    65,     0,     0,    72,     0,    61,
+       0,     0,    73,    74,     0,     0,    64,    63,     0,    97,
+      68,    69,     0,    97,    79,     0,    77,     0,     0,     0,
+      78,    66,    76
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -810,10 +810,10 @@ static const yytype_int16 yytable[] =
      242,    34,   192,   158,   144,   192,    15,    40,   229,    46,
       89,    47,    55,   214,   192,   164,     4,     5,     6,     7,
        8,     9,    10,    11,    12,    13,    80,    82,   250,    86,
-      83,    84,   189,   190,   192,    85,   -47,    88,    92,    93,
-     198,    95,    99,    94,    43,   142,   139,   141,   -33,    15,
-     192,   149,   -46,   162,    91,   155,   156,   200,   176,    18,
-     203,   204,   205,   159,   161,   165,   166,   217,   -32,   191,
+      83,    84,   189,   190,   192,    85,   -50,    88,    92,    93,
+     198,    95,    99,    94,    43,   142,   139,   141,   -36,    15,
+     192,   149,   -49,   162,    91,   155,   156,   200,   176,    18,
+     203,   204,   205,   159,   161,   165,   166,   217,   -35,   191,
      194,   195,   196,   222,     4,     5,     6,     7,     8,     9,
       10,    11,    12,    13,   226,   202,   218,   223,   224,   231,
      237,   238,   249,    15,   252,   260,   262,    81,   236,   176,
@@ -939,11 +939,11 @@ static const yytype_int16 yytable[] =
      105,   106,   107,   108,   109,   110,   111,   112,   113,   114,
      115,   116,   117,   118,     0,   119,   120,   121,     0,   122,
      123,   124,   125,   126,   127,   128,   129,   130,   131,   132,
-     133,   134,  -158,   100,   101,   102,     0,     0,     0,     0,
+     133,   134,  -162,   100,   101,   102,     0,     0,     0,     0,
      103,     0,     0,     0,   104,   105,   106,   107,   108,   109,
      110,   111,   112,   113,   114,   115,   116,   117,   118,     0,
      119,   120,   121,     0,   122,   123,   124,   125,   126,   127,
-     128,   129,   130,   131,   132,   133,   134,  -157,   100,   101,
+     128,   129,   130,   131,   132,   133,   134,  -161,   100,   101,
      102,     0,     0,     0,     0,   103,     0,     0,     0,   104,
      105,   106,   107,   108,   109,   110,   111,   112,   113,   114,
      115,   116,   117,   118,     0,   119,   120,   121,     0,   122,
@@ -1150,44 +1150,44 @@ static const yytype_uint8 yystos[] =
 static const yytype_uint8 yyr1[] =
 {
        0,    82,    83,    84,    84,    84,    84,    84,    84,    85,
-      86,    86,    86,    86,    86,    87,    87,    87,    88,    88,
-      88,    88,    88,    88,    88,    89,    90,    91,    92,    93,
-      93,    93,    94,    94,    95,    96,    97,    98,    98,    99,
-      99,   100,   100,   101,   101,   101,   102,   102,   103,   103,
-     104,   105,   106,   106,   106,   106,   106,   107,   108,   108,
-     109,   109,   110,   110,   111,   111,   112,   112,   113,   114,
-     115,   115,   116,   116,   116,   116,   117,   117,   117,   117,
-     117,   117,   117,   117,   117,   117,   118,   118,   118,   118,
-     118,   118,   118,   118,   119,   119,   120,   120,   120,   121,
-     121,   121,   121,   121,   121,   121,   121,   121,   121,   121,
-     121,   121,   121,   122,   122,   122,   122,   122,   122,   122,
-     122,   123,   123,   124,   124,   124,   124,   124,   124,   124,
+      86,    86,    86,    86,    86,    86,    86,    86,    87,    87,
+      87,    88,    88,    88,    88,    88,    88,    88,    89,    90,
+      91,    92,    93,    93,    93,    94,    94,    95,    96,    97,
+      98,    98,    99,    99,   100,   100,   101,   101,   101,   102,
+     102,   103,   103,   104,   105,   106,   106,   106,   106,   106,
+     107,   108,   108,   109,   109,   109,   110,   110,   111,   111,
+     112,   112,   113,   114,   115,   115,   116,   116,   116,   116,
+     117,   117,   117,   117,   117,   117,   117,   117,   117,   117,
+     118,   118,   118,   118,   118,   118,   118,   118,   119,   119,
+     120,   120,   120,   121,   121,   121,   121,   121,   121,   121,
+     121,   121,   121,   121,   121,   121,   121,   122,   122,   122,
+     122,   122,   122,   122,   122,   123,   123,   124,   124,   124,
      124,   124,   124,   124,   124,   124,   124,   124,   124,   124,
      124,   124,   124,   124,   124,   124,   124,   124,   124,   124,
-     124,   124,   124,   125,   126,   126,   126,   127,   127,   128,
-     128,   128,   128,   128,   128
+     124,   124,   124,   124,   124,   124,   124,   125,   126,   126,
+     126,   127,   127,   128,   128,   128,   128,   128,   128
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     2,     2,     2,     2,     0,     1,
-       1,     1,     2,     2,     1,     5,     5,     5,     1,     1,
-       1,     1,     1,     1,     1,     1,     3,     6,     6,     4,
-       2,     0,     4,     2,     2,     3,     2,     3,     1,     3,
-       1,     1,     3,     3,     1,     0,     3,     1,     1,     3,
-       4,     3,     1,     1,     1,     1,     1,     3,     7,     5,
-       2,     2,     7,     0,     9,     9,     5,     5,     7,     7,
-       2,     0,     6,     4,     5,     3,     2,     3,     3,     3,
-       2,     2,     2,     2,     2,     0,     2,     3,     2,     2,
-       2,     2,     2,     0,     2,     3,     3,     2,     0,     1,
-       1,     1,     3,     2,     2,     3,     4,     4,     5,     4,
-       4,     3,     3,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     2,     2,     1,     2,     2,     2,     5,     5,
+       5,     1,     1,     1,     1,     1,     1,     1,     1,     3,
+       6,     6,     4,     2,     0,     4,     2,     2,     3,     2,
+       3,     1,     3,     1,     1,     3,     3,     1,     0,     3,
+       1,     1,     3,     4,     3,     1,     1,     1,     1,     1,
+       3,     7,     5,     2,     2,     0,     7,     0,     9,     9,
+       5,     5,     7,     7,     2,     0,     6,     4,     5,     3,
+       2,     3,     3,     3,     2,     2,     2,     2,     2,     0,
+       2,     3,     2,     2,     2,     2,     2,     0,     2,     3,
+       3,     2,     0,     1,     1,     1,     3,     2,     2,     3,
+       4,     4,     5,     4,     4,     3,     3,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     4,     3,     1,     0,     3,     1,     1,
-       1,     1,     1,     1,     1
+       1,     1,     1,     1,     1,     1,     1,     4,     3,     1,
+       0,     3,     1,     1,     1,     1,     1,     1,     1
 };
 
 
@@ -1700,936 +1700,960 @@ yyreduce:
 
   case 10: /* _TYPE: BuiltinTYPE  */
 #line 157 "parser.y"
-                            {(yyval.AST_TYPE_value)=(yyvsp[0].AST_BUILTinTYPE_value);}
+                                {(yyval.AST_TYPE_value)=(yyvsp[0].AST_BUILTinTYPE_value);}
 #line 1705 "parser.cpp"
     break;
 
   case 11: /* _TYPE: FieldTYPE  */
 #line 158 "parser.y"
-                            {(yyval.AST_TYPE_value)=(yyvsp[0].AST_TYPE_value);}
+                                {(yyval.AST_TYPE_value)=(yyvsp[0].AST_TYPE_value);}
 #line 1711 "parser.cpp"
     break;
 
   case 12: /* _TYPE: _TYPE PTR  */
 #line 159 "parser.y"
-                            {(yyval.AST_TYPE_value)=new Pointertype((yyvsp[-1].AST_TYPE_value));}
+                                {(yyval.AST_TYPE_value)=new Pointertype((yyvsp[-1].AST_TYPE_value));}
 #line 1717 "parser.cpp"
     break;
 
   case 13: /* _TYPE: _TYPE ARRAY  */
 #line 160 "parser.y"
-                            {(yyval.AST_TYPE_value)=new Arraytype((yyvsp[-1].AST_TYPE_value),(yyvsp[0].INT_value));}
+                                {(yyval.AST_TYPE_value)=new Arraytype((yyvsp[-1].AST_TYPE_value),(yyvsp[0].INT_value));}
 #line 1723 "parser.cpp"
     break;
 
   case 14: /* _TYPE: IDENTIFER  */
 #line 161 "parser.y"
-                            {(yyval.AST_TYPE_value)=new Definedtype(*(yyvsp[0].IDENTIFER_value));}
+                                {(yyval.AST_TYPE_value)=new Definedtype(*(yyvsp[0].IDENTIFER_value));}
 #line 1729 "parser.cpp"
     break;
 
-  case 15: /* FieldTYPE: STRUCT IDENTIFER LBRACE SUSTMT RBRACE  */
-#line 165 "parser.y"
-                                                    {(yyval.AST_TYPE_value)=new Structtype(*(yyvsp[-3].IDENTIFER_value),(yyvsp[-1].AST_SUDECLIST_value));}
+  case 15: /* _TYPE: STRUCT IDENTIFER  */
+#line 162 "parser.y"
+                                {(yyval.AST_TYPE_value)=new Definedtype(*(yyvsp[0].IDENTIFER_value));}
 #line 1735 "parser.cpp"
     break;
 
-  case 16: /* FieldTYPE: UNION IDENTIFER LBRACE SUSTMT RBRACE  */
-#line 166 "parser.y"
-                                                    {(yyval.AST_TYPE_value)=new Uniontype(*(yyvsp[-3].IDENTIFER_value),(yyvsp[-1].AST_SUDECLIST_value));}
+  case 16: /* _TYPE: UNION IDENTIFER  */
+#line 163 "parser.y"
+                                {(yyval.AST_TYPE_value)=new Definedtype(*(yyvsp[0].IDENTIFER_value));}
 #line 1741 "parser.cpp"
     break;
 
-  case 17: /* FieldTYPE: ENUM IDENTIFER LBRACE EnmLIST RBRACE  */
-#line 167 "parser.y"
-                                                    {(yyval.AST_TYPE_value)=new Enumtype(*(yyvsp[-3].IDENTIFER_value),*(yyvsp[-1].AST_ENUMLIST_value));}
+  case 17: /* _TYPE: ENUM IDENTIFER  */
+#line 164 "parser.y"
+                                {(yyval.AST_TYPE_value)=new Definedtype(*(yyvsp[0].IDENTIFER_value));}
 #line 1747 "parser.cpp"
     break;
 
-  case 18: /* BuiltinTYPE: CHAR  */
-#line 170 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_char();}
+  case 18: /* FieldTYPE: STRUCT IDENTIFER LBRACE SUSTMT RBRACE  */
+#line 168 "parser.y"
+                                                    {(yyval.AST_TYPE_value)=new Structtype(*(yyvsp[-3].IDENTIFER_value),(yyvsp[-1].AST_SUDECLIST_value));}
 #line 1753 "parser.cpp"
     break;
 
-  case 19: /* BuiltinTYPE: DOUBLE  */
-#line 171 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_double();}
+  case 19: /* FieldTYPE: UNION IDENTIFER LBRACE SUSTMT RBRACE  */
+#line 169 "parser.y"
+                                                    {(yyval.AST_TYPE_value)=new Uniontype(*(yyvsp[-3].IDENTIFER_value),(yyvsp[-1].AST_SUDECLIST_value));}
 #line 1759 "parser.cpp"
     break;
 
-  case 20: /* BuiltinTYPE: FLOAT  */
-#line 172 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_float();}
+  case 20: /* FieldTYPE: ENUM IDENTIFER LBRACE EnmLIST RBRACE  */
+#line 170 "parser.y"
+                                                    {(yyval.AST_TYPE_value)=new Enumtype(*(yyvsp[-3].IDENTIFER_value),*(yyvsp[-1].AST_ENUMLIST_value));}
 #line 1765 "parser.cpp"
     break;
 
-  case 21: /* BuiltinTYPE: INT  */
+  case 21: /* BuiltinTYPE: CHAR  */
 #line 173 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_int();}
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_char();}
 #line 1771 "parser.cpp"
     break;
 
-  case 22: /* BuiltinTYPE: SHORT  */
+  case 22: /* BuiltinTYPE: DOUBLE  */
 #line 174 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_short();}
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_double();}
 #line 1777 "parser.cpp"
     break;
 
-  case 23: /* BuiltinTYPE: LONG  */
+  case 23: /* BuiltinTYPE: FLOAT  */
 #line 175 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_long();}
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_float();}
 #line 1783 "parser.cpp"
     break;
 
-  case 24: /* BuiltinTYPE: VOID  */
+  case 24: /* BuiltinTYPE: INT  */
 #line 176 "parser.y"
-                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_void();}
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_int();}
 #line 1789 "parser.cpp"
     break;
 
-  case 25: /* PTR: MUL  */
-#line 181 "parser.y"
-                {;}
+  case 25: /* BuiltinTYPE: SHORT  */
+#line 177 "parser.y"
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_short();}
 #line 1795 "parser.cpp"
     break;
 
-  case 26: /* ARRAY: LBRACKET INTEGER_VAR RBRACKET  */
-#line 184 "parser.y"
-                                          {(yyval.INT_value)=(yyvsp[-1].INT_value);}
+  case 26: /* BuiltinTYPE: LONG  */
+#line 178 "parser.y"
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_long();}
 #line 1801 "parser.cpp"
     break;
 
-  case 27: /* FunDECL: TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  */
-#line 189 "parser.y"
-                                                            {(yyval.AST_BSTMT_value)=new Fundeclare((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value));}
+  case 27: /* BuiltinTYPE: VOID  */
+#line 179 "parser.y"
+                    {(yyval.AST_BUILTinTYPE_value)=new Builtintype();(yyval.AST_BUILTinTYPE_value)->set_void();}
 #line 1807 "parser.cpp"
     break;
 
-  case 28: /* FunDEF: TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE  */
-#line 192 "parser.y"
-                                                       {(yyval.AST_BSTMT_value) = new Fundefine((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value),(yyvsp[0].AST_SCOPE_value));(yyvsp[0].AST_SCOPE_value)->setfun();}
+  case 28: /* PTR: MUL  */
+#line 184 "parser.y"
+                {;}
 #line 1813 "parser.cpp"
     break;
 
-  case 29: /* ArgLIST: _ArgLIST COMMA TYPE IDENTIFER  */
-#line 195 "parser.y"
-                                                {(yyval.AST_FUNARGLIST_value)=(yyvsp[-3].AST_FUNARGLIST_value); (yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
+  case 29: /* ARRAY: LBRACKET INTEGER_VAR RBRACKET  */
+#line 187 "parser.y"
+                                          {(yyval.INT_value)=(yyvsp[-1].INT_value);}
 #line 1819 "parser.cpp"
     break;
 
-  case 30: /* ArgLIST: TYPE IDENTIFER  */
-#line 196 "parser.y"
-                                            {(yyval.AST_FUNARGLIST_value)=new funArgList();(yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
+  case 30: /* FunDECL: TYPE IDENTIFER LPAREN ArgLIST RPAREN SEMICOLON  */
+#line 192 "parser.y"
+                                                            {(yyval.AST_BSTMT_value)=new Fundeclare((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value));}
 #line 1825 "parser.cpp"
     break;
 
-  case 31: /* ArgLIST: %empty  */
-#line 197 "parser.y"
-                                            {(yyval.AST_FUNARGLIST_value)=new funArgList();}
+  case 31: /* FunDEF: TYPE IDENTIFER LPAREN ArgLIST RPAREN SCOPE  */
+#line 195 "parser.y"
+                                                       {(yyval.AST_BSTMT_value) = new Fundefine((yyvsp[-5].AST_TYPE_value),*(yyvsp[-4].IDENTIFER_value),(yyvsp[-2].AST_FUNARGLIST_value),(yyvsp[0].AST_SCOPE_value));(yyvsp[0].AST_SCOPE_value)->setfun();}
 #line 1831 "parser.cpp"
     break;
 
-  case 32: /* _ArgLIST: _ArgLIST COMMA TYPE IDENTIFER  */
-#line 200 "parser.y"
+  case 32: /* ArgLIST: _ArgLIST COMMA TYPE IDENTIFER  */
+#line 198 "parser.y"
                                                 {(yyval.AST_FUNARGLIST_value)=(yyvsp[-3].AST_FUNARGLIST_value); (yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
 #line 1837 "parser.cpp"
     break;
 
-  case 33: /* _ArgLIST: TYPE IDENTIFER  */
-#line 201 "parser.y"
-                                              {(yyval.AST_FUNARGLIST_value)=new funArgList();(yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
+  case 33: /* ArgLIST: TYPE IDENTIFER  */
+#line 199 "parser.y"
+                                            {(yyval.AST_FUNARGLIST_value)=new funArgList();(yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
 #line 1843 "parser.cpp"
     break;
 
-  case 34: /* FieldDECL: FieldTYPE SEMICOLON  */
-#line 205 "parser.y"
-                                    {(yyval.AST_BSTMT_value)=new Fielddeclare((yyvsp[-1].AST_TYPE_value));}
+  case 34: /* ArgLIST: %empty  */
+#line 200 "parser.y"
+                                            {(yyval.AST_FUNARGLIST_value)=new funArgList();}
 #line 1849 "parser.cpp"
     break;
 
-  case 35: /* VarDEF: TYPE InitIDLIST SEMICOLON  */
-#line 208 "parser.y"
-                                        {(yyval.AST_BSTMT_value)=new Vardefine((yyvsp[-2].AST_TYPE_value),(yyvsp[-1].AST_IIDLIST_value));}
+  case 35: /* _ArgLIST: _ArgLIST COMMA TYPE IDENTIFER  */
+#line 203 "parser.y"
+                                                {(yyval.AST_FUNARGLIST_value)=(yyvsp[-3].AST_FUNARGLIST_value); (yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
 #line 1855 "parser.cpp"
     break;
 
-  case 36: /* SUVarDEF: TYPE IdList  */
-#line 211 "parser.y"
-                          {(yyval.AST_SUDEC_value)=new SUmemdec((yyvsp[-1].AST_TYPE_value),(yyvsp[0].AST_IDLIST_value));}
+  case 36: /* _ArgLIST: TYPE IDENTIFER  */
+#line 204 "parser.y"
+                                              {(yyval.AST_FUNARGLIST_value)=new funArgList();(yyval.AST_FUNARGLIST_value)->push_back(new funArg((yyvsp[-1].AST_TYPE_value),*(yyvsp[0].IDENTIFER_value)));}
 #line 1861 "parser.cpp"
     break;
 
-  case 37: /* IdList: IdList COMMA IDENTIFER  */
-#line 215 "parser.y"
-                                    {(yyval.AST_IDLIST_value)=(yyvsp[-2].AST_IDLIST_value); (yyval.AST_IDLIST_value)->push_back(*(yyvsp[0].IDENTIFER_value));}
+  case 37: /* FieldDECL: FieldTYPE SEMICOLON  */
+#line 208 "parser.y"
+                                    {(yyval.AST_BSTMT_value)=new Fielddeclare((yyvsp[-1].AST_TYPE_value));}
 #line 1867 "parser.cpp"
     break;
 
-  case 38: /* IdList: IDENTIFER  */
-#line 216 "parser.y"
-                                    {(yyval.AST_IDLIST_value)=new IdentifierList(); (yyval.AST_IDLIST_value)->push_back(*(yyvsp[0].IDENTIFER_value));}
+  case 38: /* VarDEF: TYPE InitIDLIST SEMICOLON  */
+#line 211 "parser.y"
+                                        {(yyval.AST_BSTMT_value)=new Vardefine((yyvsp[-2].AST_TYPE_value),(yyvsp[-1].AST_IIDLIST_value));}
 #line 1873 "parser.cpp"
     break;
 
-  case 39: /* InitIDLIST: InitIDLIST COMMA Init  */
-#line 220 "parser.y"
-                                   {(yyval.AST_IIDLIST_value)=(yyvsp[-2].AST_IIDLIST_value);(yyval.AST_IIDLIST_value)->push_back((yyvsp[0].AST_IID_value));}
+  case 39: /* SUVarDEF: TYPE IdList  */
+#line 214 "parser.y"
+                          {(yyval.AST_SUDEC_value)=new SUmemdec((yyvsp[-1].AST_TYPE_value),(yyvsp[0].AST_IDLIST_value));}
 #line 1879 "parser.cpp"
     break;
 
-  case 40: /* InitIDLIST: Init  */
-#line 221 "parser.y"
-                                   {(yyval.AST_IIDLIST_value)=new InitIDList();(yyval.AST_IIDLIST_value)->push_back((yyvsp[0].AST_IID_value));}
+  case 40: /* IdList: IdList COMMA IDENTIFER  */
+#line 218 "parser.y"
+                                    {(yyval.AST_IDLIST_value)=(yyvsp[-2].AST_IDLIST_value); (yyval.AST_IDLIST_value)->push_back(*(yyvsp[0].IDENTIFER_value));}
 #line 1885 "parser.cpp"
     break;
 
-  case 41: /* Init: IDENTIFER  */
-#line 224 "parser.y"
-                                    {(yyval.AST_IID_value)=new InitID(*(yyvsp[0].IDENTIFER_value));}
+  case 41: /* IdList: IDENTIFER  */
+#line 219 "parser.y"
+                                    {(yyval.AST_IDLIST_value)=new IdentifierList(); (yyval.AST_IDLIST_value)->push_back(*(yyvsp[0].IDENTIFER_value));}
 #line 1891 "parser.cpp"
     break;
 
-  case 42: /* Init: IDENTIFER ASSIGN EXPR  */
-#line 225 "parser.y"
-                                    {(yyval.AST_IID_value)=new InitID(*(yyvsp[-2].IDENTIFER_value),(yyvsp[0].AST_EXPR_value));}
+  case 42: /* InitIDLIST: InitIDLIST COMMA Init  */
+#line 223 "parser.y"
+                                   {(yyval.AST_IIDLIST_value)=(yyvsp[-2].AST_IIDLIST_value);(yyval.AST_IIDLIST_value)->push_back((yyvsp[0].AST_IID_value));}
 #line 1897 "parser.cpp"
     break;
 
-  case 43: /* EnmLIST: _EnmLIST COMMA Enm  */
-#line 229 "parser.y"
-                                {(yyvsp[-2].AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));(yyval.AST_ENUMLIST_value)=(yyvsp[-2].AST_ENUMLIST_value);}
+  case 43: /* InitIDLIST: Init  */
+#line 224 "parser.y"
+                                   {(yyval.AST_IIDLIST_value)=new InitIDList();(yyval.AST_IIDLIST_value)->push_back((yyvsp[0].AST_IID_value));}
 #line 1903 "parser.cpp"
     break;
 
-  case 44: /* EnmLIST: Enm  */
-#line 230 "parser.y"
-                                {(yyval.AST_ENUMLIST_value)=new Enumlist();(yyval.AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));}
+  case 44: /* Init: IDENTIFER  */
+#line 227 "parser.y"
+                                    {(yyval.AST_IID_value)=new InitID(*(yyvsp[0].IDENTIFER_value));}
 #line 1909 "parser.cpp"
     break;
 
-  case 45: /* EnmLIST: %empty  */
-#line 231 "parser.y"
-                                {(yyval.AST_ENUMLIST_value)=new Enumlist();}
+  case 45: /* Init: IDENTIFER ASSIGN EXPR  */
+#line 228 "parser.y"
+                                    {(yyval.AST_IID_value)=new InitID(*(yyvsp[-2].IDENTIFER_value),(yyvsp[0].AST_EXPR_value));}
 #line 1915 "parser.cpp"
     break;
 
-  case 46: /* _EnmLIST: _EnmLIST COMMA Enm  */
-#line 234 "parser.y"
+  case 46: /* EnmLIST: _EnmLIST COMMA Enm  */
+#line 232 "parser.y"
                                 {(yyvsp[-2].AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));(yyval.AST_ENUMLIST_value)=(yyvsp[-2].AST_ENUMLIST_value);}
 #line 1921 "parser.cpp"
     break;
 
-  case 47: /* _EnmLIST: Enm  */
-#line 235 "parser.y"
+  case 47: /* EnmLIST: Enm  */
+#line 233 "parser.y"
                                 {(yyval.AST_ENUMLIST_value)=new Enumlist();(yyval.AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));}
 #line 1927 "parser.cpp"
     break;
 
-  case 48: /* Enm: IDENTIFER  */
-#line 238 "parser.y"
-                                            {(yyval.AST_ENUM_value)=new Enum(*(yyvsp[0].IDENTIFER_value));}
+  case 48: /* EnmLIST: %empty  */
+#line 234 "parser.y"
+                                {(yyval.AST_ENUMLIST_value)=new Enumlist();}
 #line 1933 "parser.cpp"
     break;
 
-  case 49: /* Enm: IDENTIFER ASSIGN INTEGER_VAR  */
-#line 239 "parser.y"
-                                            {(yyval.AST_ENUM_value)=new Enum(*(yyvsp[-2].IDENTIFER_value),(yyvsp[0].INT_value));}
+  case 49: /* _EnmLIST: _EnmLIST COMMA Enm  */
+#line 237 "parser.y"
+                                {(yyvsp[-2].AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));(yyval.AST_ENUMLIST_value)=(yyvsp[-2].AST_ENUMLIST_value);}
 #line 1939 "parser.cpp"
     break;
 
-  case 50: /* TypeDEF: TYPEDEF TYPE IDENTIFER SEMICOLON  */
-#line 243 "parser.y"
-                                                {(yyval.AST_BSTMT_value)=new TypeDefine(new Definedtype((yyvsp[-2].AST_TYPE_value),*(yyvsp[-1].IDENTIFER_value)));}
+  case 50: /* _EnmLIST: Enm  */
+#line 238 "parser.y"
+                                {(yyval.AST_ENUMLIST_value)=new Enumlist();(yyval.AST_ENUMLIST_value)->push_back((yyvsp[0].AST_ENUM_value));}
 #line 1945 "parser.cpp"
     break;
 
-  case 51: /* SCOPE: LBRACE STMT RBRACE  */
-#line 247 "parser.y"
-                                {(yyval.AST_SCOPE_value)=new Scope((yyvsp[-1].AST_STMT_value));}
+  case 51: /* Enm: IDENTIFER  */
+#line 241 "parser.y"
+                                            {(yyval.AST_ENUM_value)=new Enum(*(yyvsp[0].IDENTIFER_value));}
 #line 1951 "parser.cpp"
     break;
 
-  case 52: /* CtrlFLOW: IfFLOW  */
-#line 251 "parser.y"
-                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
+  case 52: /* Enm: IDENTIFER ASSIGN INTEGER_VAR  */
+#line 242 "parser.y"
+                                            {(yyval.AST_ENUM_value)=new Enum(*(yyvsp[-2].IDENTIFER_value),(yyvsp[0].INT_value));}
 #line 1957 "parser.cpp"
     break;
 
-  case 53: /* CtrlFLOW: ForFLOW  */
-#line 252 "parser.y"
-                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
+  case 53: /* TypeDEF: TYPEDEF TYPE IDENTIFER SEMICOLON  */
+#line 246 "parser.y"
+                                                {(yyval.AST_BSTMT_value)=new TypeDefine(new Definedtype((yyvsp[-2].AST_TYPE_value),*(yyvsp[-1].IDENTIFER_value)));}
 #line 1963 "parser.cpp"
     break;
 
-  case 54: /* CtrlFLOW: DowhileFLOW  */
-#line 253 "parser.y"
-                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
+  case 54: /* SCOPE: LBRACE STMT RBRACE  */
+#line 250 "parser.y"
+                                {(yyval.AST_SCOPE_value)=new Scope((yyvsp[-1].AST_STMT_value));}
 #line 1969 "parser.cpp"
     break;
 
-  case 55: /* CtrlFLOW: WhileFLOW  */
+  case 55: /* CtrlFLOW: IfFLOW  */
 #line 254 "parser.y"
                             {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
 #line 1975 "parser.cpp"
     break;
 
-  case 56: /* CtrlFLOW: SwitchFLOW  */
+  case 56: /* CtrlFLOW: ForFLOW  */
 #line 255 "parser.y"
                             {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
 #line 1981 "parser.cpp"
     break;
 
-  case 57: /* CtrlSCOPE: LBRACE CtrlSTMT RBRACE  */
-#line 258 "parser.y"
-                                    {(yyval.AST_SCOPE_value)=new Scope((yyvsp[-1].AST_STMT_value));}
+  case 57: /* CtrlFLOW: DowhileFLOW  */
+#line 256 "parser.y"
+                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
 #line 1987 "parser.cpp"
     break;
 
-  case 58: /* IfFLOW: IF LPAREN EXPR RPAREN CtrlSCOPE ElseifFLOW ElseFLOW  */
-#line 260 "parser.y"
-                                                                {(yyval.AST_BSTMT_value)=new Ifflow((yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_SCOPE_value),(yyvsp[-1].AST_ELIF_value),(yyvsp[0].AST_ELSE_value));}
+  case 58: /* CtrlFLOW: WhileFLOW  */
+#line 257 "parser.y"
+                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
 #line 1993 "parser.cpp"
     break;
 
-  case 59: /* IfFLOW: IF LPAREN EXPR RPAREN SEMICOLON  */
-#line 261 "parser.y"
-                                                                {(yyval.AST_BSTMT_value)=new Ifflow((yyvsp[-2].AST_EXPR_value));}
+  case 59: /* CtrlFLOW: SwitchFLOW  */
+#line 258 "parser.y"
+                            {(yyval.AST_BSTMT_value)=(yyvsp[0].AST_BSTMT_value);}
 #line 1999 "parser.cpp"
     break;
 
-  case 60: /* ElseFLOW: ELSE CtrlSCOPE  */
-#line 264 "parser.y"
-                                  {(yyval.AST_ELSE_value)=new Elseflow((yyvsp[0].AST_SCOPE_value));}
+  case 60: /* CtrlSCOPE: LBRACE CtrlSTMT RBRACE  */
+#line 261 "parser.y"
+                                    {(yyval.AST_SCOPE_value)=new Scope((yyvsp[-1].AST_STMT_value));}
 #line 2005 "parser.cpp"
     break;
 
-  case 61: /* ElseFLOW: ELSE SEMICOLON  */
-#line 265 "parser.y"
-                                  {(yyval.AST_ELSE_value)=new Elseflow();}
+  case 61: /* IfFLOW: IF LPAREN EXPR RPAREN CtrlSCOPE ElseifFLOW ElseFLOW  */
+#line 263 "parser.y"
+                                                                {(yyval.AST_BSTMT_value)=new Ifflow((yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_SCOPE_value),(yyvsp[-1].AST_ELIF_value),(yyvsp[0].AST_ELSE_value));}
 #line 2011 "parser.cpp"
     break;
 
-  case 62: /* ElseifFLOW: ElseifFLOW ELSE IF LPAREN EXPR RPAREN CtrlSCOPE  */
-#line 268 "parser.y"
-                                                            {(yyval.AST_ELIF_value)=(yyvsp[-6].AST_ELIF_value);(yyval.AST_ELIF_value)->Addelseif((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
+  case 62: /* IfFLOW: IF LPAREN EXPR RPAREN SEMICOLON  */
+#line 264 "parser.y"
+                                                                {(yyval.AST_BSTMT_value)=new Ifflow((yyvsp[-2].AST_EXPR_value));}
 #line 2017 "parser.cpp"
     break;
 
-  case 63: /* ElseifFLOW: %empty  */
-#line 269 "parser.y"
-                                                            {(yyval.AST_ELIF_value)=new Elseifflow();}
+  case 63: /* ElseFLOW: ELSE CtrlSCOPE  */
+#line 267 "parser.y"
+                                  {(yyval.AST_ELSE_value)=new Elseflow((yyvsp[0].AST_SCOPE_value));}
 #line 2023 "parser.cpp"
     break;
 
-  case 64: /* ForFLOW: FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN SEMICOLON  */
-#line 273 "parser.y"
-                                                                                {(yyval.AST_BSTMT_value)=new Forflow((yyvsp[-6].AST_EXPR_value),(yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_EXPR_value));}
+  case 64: /* ElseFLOW: ELSE SEMICOLON  */
+#line 268 "parser.y"
+                                  {(yyval.AST_ELSE_value)=new Elseflow();}
 #line 2029 "parser.cpp"
     break;
 
-  case 65: /* ForFLOW: FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN CtrlSCOPE  */
-#line 274 "parser.y"
-                                                                                {(yyval.AST_BSTMT_value)=new Forflow((yyvsp[-6].AST_EXPR_value),(yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
+  case 65: /* ElseFLOW: %empty  */
+#line 269 "parser.y"
+                                  {(yyval.AST_ELSE_value)=new Elseflow();}
 #line 2035 "parser.cpp"
     break;
 
-  case 66: /* WhileFLOW: WHILE LPAREN EXPR RPAREN CtrlSCOPE  */
-#line 277 "parser.y"
-                                                    {(yyval.AST_BSTMT_value)=new Whileflow((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
+  case 66: /* ElseifFLOW: ElseifFLOW ELSE IF LPAREN EXPR RPAREN CtrlSCOPE  */
+#line 272 "parser.y"
+                                                            {(yyval.AST_ELIF_value)=(yyvsp[-6].AST_ELIF_value);(yyval.AST_ELIF_value)->Addelseif((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
 #line 2041 "parser.cpp"
     break;
 
-  case 67: /* WhileFLOW: WHILE LPAREN EXPR RPAREN SEMICOLON  */
-#line 278 "parser.y"
-                                                    {(yyval.AST_BSTMT_value)=new Whileflow((yyvsp[-2].AST_EXPR_value));}
+  case 67: /* ElseifFLOW: %empty  */
+#line 273 "parser.y"
+                                                            {(yyval.AST_ELIF_value)=new Elseifflow();}
 #line 2047 "parser.cpp"
     break;
 
-  case 68: /* DowhileFLOW: DO CtrlSCOPE WHILE LPAREN EXPR RPAREN SEMICOLON  */
-#line 281 "parser.y"
-                                                                {(yyval.AST_BSTMT_value)=new Dowhileflow((yyvsp[-2].AST_EXPR_value),(yyvsp[-5].AST_SCOPE_value));}
+  case 68: /* ForFLOW: FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN SEMICOLON  */
+#line 277 "parser.y"
+                                                                                {(yyval.AST_BSTMT_value)=new Forflow((yyvsp[-6].AST_EXPR_value),(yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_EXPR_value));}
 #line 2053 "parser.cpp"
     break;
 
-  case 69: /* SwitchFLOW: SWITCH LPAREN EXPR RPAREN LBRACE CaseLIST RBRACE  */
-#line 285 "parser.y"
-                                                                {(yyval.AST_BSTMT_value)=new Switchflow((yyvsp[-4].AST_EXPR_value),(yyvsp[-1].AST_CASELIST_value));}
+  case 69: /* ForFLOW: FOR LPAREN EXPR SEMICOLON EXPR SEMICOLON EXPR RPAREN CtrlSCOPE  */
+#line 278 "parser.y"
+                                                                                {(yyval.AST_BSTMT_value)=new Forflow((yyvsp[-6].AST_EXPR_value),(yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
 #line 2059 "parser.cpp"
     break;
 
-  case 70: /* CaseLIST: CaseLIST CaseSTMT  */
-#line 288 "parser.y"
-                                {(yyval.AST_CASELIST_value)->push_back((yyvsp[0].AST_CASE_value));}
+  case 70: /* WhileFLOW: WHILE LPAREN EXPR RPAREN CtrlSCOPE  */
+#line 281 "parser.y"
+                                                    {(yyval.AST_BSTMT_value)=new Whileflow((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_SCOPE_value));}
 #line 2065 "parser.cpp"
     break;
 
-  case 71: /* CaseLIST: %empty  */
-#line 289 "parser.y"
-                                {(yyval.AST_CASELIST_value)=new Caselist();}
+  case 71: /* WhileFLOW: WHILE LPAREN EXPR RPAREN SEMICOLON  */
+#line 282 "parser.y"
+                                                    {(yyval.AST_BSTMT_value)=new Whileflow((yyvsp[-2].AST_EXPR_value));}
 #line 2071 "parser.cpp"
     break;
 
-  case 72: /* CaseSTMT: CASE EXPR COLON STMT BREAK SEMICOLON  */
-#line 293 "parser.y"
-                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_STMT_value));(yyval.AST_CASE_value)->set_break();}
+  case 72: /* DowhileFLOW: DO CtrlSCOPE WHILE LPAREN EXPR RPAREN SEMICOLON  */
+#line 285 "parser.y"
+                                                                {(yyval.AST_BSTMT_value)=new Dowhileflow((yyvsp[-2].AST_EXPR_value),(yyvsp[-5].AST_SCOPE_value));}
 #line 2077 "parser.cpp"
     break;
 
-  case 73: /* CaseSTMT: CASE EXPR COLON STMT  */
-#line 294 "parser.y"
-                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_STMT_value));}
+  case 73: /* SwitchFLOW: SWITCH LPAREN EXPR RPAREN LBRACE CaseLIST RBRACE  */
+#line 289 "parser.y"
+                                                                {(yyval.AST_BSTMT_value)=new Switchflow((yyvsp[-4].AST_EXPR_value),(yyvsp[-1].AST_CASELIST_value));}
 #line 2083 "parser.cpp"
     break;
 
-  case 74: /* CaseSTMT: DEFAULT COLON STMT BREAK SEMICOLON  */
-#line 295 "parser.y"
-                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-2].AST_STMT_value));(yyval.AST_CASE_value)->set_break();(yyval.AST_CASE_value)->set_default();}
+  case 74: /* CaseLIST: CaseLIST CaseSTMT  */
+#line 292 "parser.y"
+                                {(yyval.AST_CASELIST_value)->push_back((yyvsp[0].AST_CASE_value));}
 #line 2089 "parser.cpp"
     break;
 
-  case 75: /* CaseSTMT: DEFAULT COLON STMT  */
-#line 296 "parser.y"
-                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[0].AST_STMT_value));(yyval.AST_CASE_value)->set_default();}
+  case 75: /* CaseLIST: %empty  */
+#line 293 "parser.y"
+                                {(yyval.AST_CASELIST_value)=new Caselist();}
 #line 2095 "parser.cpp"
     break;
 
-  case 76: /* CtrlSTMT: CtrlSTMT CtrlFLOW  */
-#line 299 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+  case 76: /* CaseSTMT: CASE EXPR COLON STMT BREAK SEMICOLON  */
+#line 297 "parser.y"
+                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-4].AST_EXPR_value),(yyvsp[-2].AST_STMT_value));(yyval.AST_CASE_value)->set_break();}
 #line 2101 "parser.cpp"
     break;
 
-  case 77: /* CtrlSTMT: CtrlSTMT BREAK SEMICOLON  */
-#line 300 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Breakstmt());}
+  case 77: /* CaseSTMT: CASE EXPR COLON STMT  */
+#line 298 "parser.y"
+                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-2].AST_EXPR_value),(yyvsp[0].AST_STMT_value));}
 #line 2107 "parser.cpp"
     break;
 
-  case 78: /* CtrlSTMT: CtrlSTMT CONTINUE SEMICOLON  */
-#line 301 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Continuestmt());}
+  case 78: /* CaseSTMT: DEFAULT COLON STMT BREAK SEMICOLON  */
+#line 299 "parser.y"
+                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[-2].AST_STMT_value));(yyval.AST_CASE_value)->set_break();(yyval.AST_CASE_value)->set_default();}
 #line 2113 "parser.cpp"
     break;
 
-  case 79: /* CtrlSTMT: CtrlSTMT EXPR SEMICOLON  */
-#line 302 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Exprstmt((yyvsp[-1].AST_EXPR_value)));}
+  case 79: /* CaseSTMT: DEFAULT COLON STMT  */
+#line 300 "parser.y"
+                                                    {(yyval.AST_CASE_value)=new Case((yyvsp[0].AST_STMT_value));(yyval.AST_CASE_value)->set_default();}
 #line 2119 "parser.cpp"
     break;
 
-  case 80: /* CtrlSTMT: CtrlSTMT SCOPE  */
+  case 80: /* CtrlSTMT: CtrlSTMT CtrlFLOW  */
 #line 303 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_SCOPE_value));}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2125 "parser.cpp"
     break;
 
-  case 81: /* CtrlSTMT: CtrlSTMT TypeDEF  */
+  case 81: /* CtrlSTMT: CtrlSTMT BREAK SEMICOLON  */
 #line 304 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Breakstmt());}
 #line 2131 "parser.cpp"
     break;
 
-  case 82: /* CtrlSTMT: CtrlSTMT VarDEF  */
+  case 82: /* CtrlSTMT: CtrlSTMT CONTINUE SEMICOLON  */
 #line 305 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Continuestmt());}
 #line 2137 "parser.cpp"
     break;
 
-  case 83: /* CtrlSTMT: CtrlSTMT FieldDECL  */
+  case 83: /* CtrlSTMT: CtrlSTMT EXPR SEMICOLON  */
 #line 306 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Exprstmt((yyvsp[-1].AST_EXPR_value)));}
 #line 2143 "parser.cpp"
     break;
 
-  case 84: /* CtrlSTMT: CtrlSTMT ReturnSTMT  */
+  case 84: /* CtrlSTMT: CtrlSTMT SCOPE  */
 #line 307 "parser.y"
-                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_SCOPE_value));}
 #line 2149 "parser.cpp"
     break;
 
-  case 85: /* CtrlSTMT: %empty  */
+  case 85: /* CtrlSTMT: CtrlSTMT TypeDEF  */
 #line 308 "parser.y"
-                                            {(yyval.AST_STMT_value)=new Stmt();}
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2155 "parser.cpp"
     break;
 
-  case 86: /* STMT: STMT CtrlFLOW  */
-#line 312 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+  case 86: /* CtrlSTMT: CtrlSTMT VarDEF  */
+#line 309 "parser.y"
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2161 "parser.cpp"
     break;
 
-  case 87: /* STMT: STMT EXPR SEMICOLON  */
-#line 313 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Exprstmt((yyvsp[-1].AST_EXPR_value)));}
+  case 87: /* CtrlSTMT: CtrlSTMT FieldDECL  */
+#line 310 "parser.y"
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2167 "parser.cpp"
     break;
 
-  case 88: /* STMT: STMT SCOPE  */
-#line 314 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_SCOPE_value));}
+  case 88: /* CtrlSTMT: CtrlSTMT ReturnSTMT  */
+#line 311 "parser.y"
+                                            {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2173 "parser.cpp"
     break;
 
-  case 89: /* STMT: STMT TypeDEF  */
-#line 315 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+  case 89: /* CtrlSTMT: %empty  */
+#line 312 "parser.y"
+                                            {(yyval.AST_STMT_value)=new Stmt();}
 #line 2179 "parser.cpp"
     break;
 
-  case 90: /* STMT: STMT VarDEF  */
+  case 90: /* STMT: STMT CtrlFLOW  */
 #line 316 "parser.y"
                                     {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2185 "parser.cpp"
     break;
 
-  case 91: /* STMT: STMT FieldDECL  */
+  case 91: /* STMT: STMT EXPR SEMICOLON  */
 #line 317 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                    {(yyval.AST_STMT_value)=(yyvsp[-2].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt(new Exprstmt((yyvsp[-1].AST_EXPR_value)));}
 #line 2191 "parser.cpp"
     break;
 
-  case 92: /* STMT: STMT ReturnSTMT  */
+  case 92: /* STMT: STMT SCOPE  */
 #line 318 "parser.y"
-                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
+                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_SCOPE_value));}
 #line 2197 "parser.cpp"
     break;
 
-  case 93: /* STMT: %empty  */
+  case 93: /* STMT: STMT TypeDEF  */
 #line 319 "parser.y"
-                                    {(yyval.AST_STMT_value)=new Stmt();}
+                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2203 "parser.cpp"
     break;
 
-  case 94: /* ReturnSTMT: RETURN SEMICOLON  */
-#line 322 "parser.y"
-                                    {(yyval.AST_BSTMT_value)=new Returnstmt();}
+  case 94: /* STMT: STMT VarDEF  */
+#line 320 "parser.y"
+                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2209 "parser.cpp"
     break;
 
-  case 95: /* ReturnSTMT: RETURN EXPR SEMICOLON  */
-#line 323 "parser.y"
-                                    {(yyval.AST_BSTMT_value)=new Returnstmt((yyvsp[-1].AST_EXPR_value));}
+  case 95: /* STMT: STMT FieldDECL  */
+#line 321 "parser.y"
+                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2215 "parser.cpp"
     break;
 
-  case 96: /* SUSTMT: SUSTMT SUVarDEF SEMICOLON  */
-#line 326 "parser.y"
-                                        {(yyval.AST_SUDECLIST_value)=(yyvsp[-2].AST_SUDECLIST_value);(yyval.AST_SUDECLIST_value)->push_back((yyvsp[-1].AST_SUDEC_value));}
+  case 96: /* STMT: STMT ReturnSTMT  */
+#line 322 "parser.y"
+                                    {(yyval.AST_STMT_value)=(yyvsp[-1].AST_STMT_value); (yyval.AST_STMT_value)->Addstmt((yyvsp[0].AST_BSTMT_value));}
 #line 2221 "parser.cpp"
     break;
 
-  case 97: /* SUSTMT: SUVarDEF SEMICOLON  */
-#line 327 "parser.y"
-                                        {(yyval.AST_SUDECLIST_value)=new SUdecllist(); (yyval.AST_SUDECLIST_value)->push_back((yyvsp[-1].AST_SUDEC_value));}
+  case 97: /* STMT: %empty  */
+#line 323 "parser.y"
+                                    {(yyval.AST_STMT_value)=new Stmt();}
 #line 2227 "parser.cpp"
     break;
 
-  case 98: /* SUSTMT: %empty  */
-#line 328 "parser.y"
-                                        {(yyval.AST_SUDECLIST_value)=new SUdecllist(); }
+  case 98: /* ReturnSTMT: RETURN SEMICOLON  */
+#line 326 "parser.y"
+                                    {(yyval.AST_BSTMT_value)=new Returnstmt();}
 #line 2233 "parser.cpp"
     break;
 
-  case 99: /* EXPR: IDENTIFER  */
-#line 336 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new Variable(*((yyvsp[0].IDENTIFER_value)));}
+  case 99: /* ReturnSTMT: RETURN EXPR SEMICOLON  */
+#line 327 "parser.y"
+                                    {(yyval.AST_BSTMT_value)=new Returnstmt((yyvsp[-1].AST_EXPR_value));}
 #line 2239 "parser.cpp"
     break;
 
-  case 100: /* EXPR: FUNCALL  */
-#line 337 "parser.y"
-                                            {(yyval.AST_EXPR_value) = (yyvsp[0].AST_FUNCALL_value);}
+  case 100: /* SUSTMT: SUSTMT SUVarDEF SEMICOLON  */
+#line 330 "parser.y"
+                                        {(yyval.AST_SUDECLIST_value)=(yyvsp[-2].AST_SUDECLIST_value);(yyval.AST_SUDECLIST_value)->push_back((yyvsp[-1].AST_SUDEC_value));}
 #line 2245 "parser.cpp"
     break;
 
-  case 101: /* EXPR: CONSTANT  */
-#line 338 "parser.y"
-                                            {(yyval.AST_EXPR_value) = (yyvsp[0].AST_CONSTANT_value);}
+  case 101: /* SUSTMT: SUVarDEF SEMICOLON  */
+#line 331 "parser.y"
+                                        {(yyval.AST_SUDECLIST_value)=new SUdecllist(); (yyval.AST_SUDECLIST_value)->push_back((yyvsp[-1].AST_SUDEC_value));}
 #line 2251 "parser.cpp"
     break;
 
-  case 102: /* EXPR: EXPR BINOP EXPR  */
-#line 339 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new BinopExpr((yyvsp[-1].int_value), (yyvsp[-2].AST_EXPR_value), (yyvsp[0].AST_EXPR_value));}
+  case 102: /* SUSTMT: %empty  */
+#line 332 "parser.y"
+                                        {(yyval.AST_SUDECLIST_value)=new SUdecllist(); }
 #line 2257 "parser.cpp"
     break;
 
-  case 103: /* EXPR: UNAOP EXPR  */
+  case 103: /* EXPR: IDENTIFER  */
 #line 340 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new UnaopExpr((yyvsp[-1].int_value), (yyvsp[0].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = new Variable(*((yyvsp[0].IDENTIFER_value)));}
 #line 2263 "parser.cpp"
     break;
 
-  case 104: /* EXPR: EXPR SUFOP  */
+  case 104: /* EXPR: FUNCALL  */
 #line 341 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new SufopExpr((yyvsp[0].int_value), (yyvsp[-1].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = (yyvsp[0].AST_FUNCALL_value);}
 #line 2269 "parser.cpp"
     break;
 
-  case 105: /* EXPR: LPAREN EXPR RPAREN  */
+  case 105: /* EXPR: CONSTANT  */
 #line 342 "parser.y"
-                                            {(yyval.AST_EXPR_value) = (yyvsp[-1].AST_EXPR_value);}
+                                            {(yyval.AST_EXPR_value) = (yyvsp[0].AST_CONSTANT_value);}
 #line 2275 "parser.cpp"
     break;
 
-  case 106: /* EXPR: SIZEOF LPAREN EXPR RPAREN  */
+  case 106: /* EXPR: EXPR BINOP EXPR  */
 #line 343 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new SizeofExpr((yyvsp[-1].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = new BinopExpr((yyvsp[-1].int_value), (yyvsp[-2].AST_EXPR_value), (yyvsp[0].AST_EXPR_value));}
 #line 2281 "parser.cpp"
     break;
 
-  case 107: /* EXPR: SIZEOF LPAREN TYPE RPAREN  */
+  case 107: /* EXPR: UNAOP EXPR  */
 #line 344 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new SizeofType((yyvsp[-1].AST_TYPE_value));}
+                                            {(yyval.AST_EXPR_value) = new UnaopExpr((yyvsp[-1].int_value), (yyvsp[0].AST_EXPR_value));}
 #line 2287 "parser.cpp"
     break;
 
-  case 108: /* EXPR: EXPR CONDITION EXPR COLON EXPR  */
+  case 108: /* EXPR: EXPR SUFOP  */
 #line 345 "parser.y"
-                                             {(yyval.AST_EXPR_value) = new TernaryCondition((yyvsp[-4].AST_EXPR_value), (yyvsp[-2].AST_EXPR_value), (yyvsp[0].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = new SufopExpr((yyvsp[0].int_value), (yyvsp[-1].AST_EXPR_value));}
 #line 2293 "parser.cpp"
     break;
 
-  case 109: /* EXPR: LPAREN TYPE RPAREN EXPR  */
+  case 109: /* EXPR: LPAREN EXPR RPAREN  */
 #line 346 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new TypeCast((yyvsp[-2].AST_TYPE_value), (yyvsp[0].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = (yyvsp[-1].AST_EXPR_value);}
 #line 2299 "parser.cpp"
     break;
 
-  case 110: /* EXPR: EXPR LBRACKET EXPR RBRACKET  */
+  case 110: /* EXPR: SIZEOF LPAREN EXPR RPAREN  */
 #line 347 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new Subscript((yyvsp[-3].AST_EXPR_value), (yyvsp[-1].AST_EXPR_value));}
+                                            {(yyval.AST_EXPR_value) = new SizeofExpr((yyvsp[-1].AST_EXPR_value));}
 #line 2305 "parser.cpp"
     break;
 
-  case 111: /* EXPR: EXPR ARROW IDENTIFER  */
+  case 111: /* EXPR: SIZEOF LPAREN TYPE RPAREN  */
 #line 348 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new MemAccessPtr((yyvsp[-2].AST_EXPR_value), *(yyvsp[0].IDENTIFER_value));}
+                                            {(yyval.AST_EXPR_value) = new SizeofType((yyvsp[-1].AST_TYPE_value));}
 #line 2311 "parser.cpp"
     break;
 
-  case 112: /* EXPR: EXPR DOT IDENTIFER  */
+  case 112: /* EXPR: EXPR CONDITION EXPR COLON EXPR  */
 #line 349 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new MemAccessObj((yyvsp[-2].AST_EXPR_value), *(yyvsp[0].IDENTIFER_value));}
+                                             {(yyval.AST_EXPR_value) = new TernaryCondition((yyvsp[-4].AST_EXPR_value), (yyvsp[-2].AST_EXPR_value), (yyvsp[0].AST_EXPR_value));}
 #line 2317 "parser.cpp"
     break;
 
-  case 113: /* UNAOP: INC  */
-#line 352 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+  case 113: /* EXPR: LPAREN TYPE RPAREN EXPR  */
+#line 350 "parser.y"
+                                            {(yyval.AST_EXPR_value) = new TypeCast((yyvsp[-2].AST_TYPE_value), (yyvsp[0].AST_EXPR_value));}
 #line 2323 "parser.cpp"
     break;
 
-  case 114: /* UNAOP: DEC  */
-#line 353 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+  case 114: /* EXPR: EXPR LBRACKET EXPR RBRACKET  */
+#line 351 "parser.y"
+                                            {(yyval.AST_EXPR_value) = new Subscript((yyvsp[-3].AST_EXPR_value), (yyvsp[-1].AST_EXPR_value));}
 #line 2329 "parser.cpp"
     break;
 
-  case 115: /* UNAOP: NOT  */
-#line 354 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+  case 115: /* EXPR: EXPR ARROW IDENTIFER  */
+#line 352 "parser.y"
+                                            {(yyval.AST_EXPR_value) = new MemAccessPtr((yyvsp[-2].AST_EXPR_value), *(yyvsp[0].IDENTIFER_value));}
 #line 2335 "parser.cpp"
     break;
 
-  case 116: /* UNAOP: BNOT  */
-#line 355 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+  case 116: /* EXPR: EXPR DOT IDENTIFER  */
+#line 353 "parser.y"
+                                            {(yyval.AST_EXPR_value) = new MemAccessObj((yyvsp[-2].AST_EXPR_value), *(yyvsp[0].IDENTIFER_value));}
 #line 2341 "parser.cpp"
     break;
 
-  case 117: /* UNAOP: MUL  */
+  case 117: /* UNAOP: INC  */
 #line 356 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2347 "parser.cpp"
     break;
 
-  case 118: /* UNAOP: BAND  */
+  case 118: /* UNAOP: DEC  */
 #line 357 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2353 "parser.cpp"
     break;
 
-  case 119: /* UNAOP: ADD  */
+  case 119: /* UNAOP: NOT  */
 #line 358 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2359 "parser.cpp"
     break;
 
-  case 120: /* UNAOP: SUB  */
+  case 120: /* UNAOP: BNOT  */
 #line 359 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2365 "parser.cpp"
     break;
 
-  case 121: /* SUFOP: INC  */
-#line 362 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+  case 121: /* UNAOP: MUL  */
+#line 360 "parser.y"
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2371 "parser.cpp"
     break;
 
-  case 122: /* SUFOP: DEC  */
-#line 363 "parser.y"
+  case 122: /* UNAOP: BAND  */
+#line 361 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2377 "parser.cpp"
     break;
 
-  case 123: /* BINOP: ADD  */
-#line 366 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+  case 123: /* UNAOP: ADD  */
+#line 362 "parser.y"
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2383 "parser.cpp"
     break;
 
-  case 124: /* BINOP: SUB  */
-#line 367 "parser.y"
+  case 124: /* UNAOP: SUB  */
+#line 363 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2389 "parser.cpp"
     break;
 
-  case 125: /* BINOP: MUL  */
-#line 368 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+  case 125: /* SUFOP: INC  */
+#line 366 "parser.y"
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2395 "parser.cpp"
     break;
 
-  case 126: /* BINOP: DIV  */
-#line 369 "parser.y"
+  case 126: /* SUFOP: DEC  */
+#line 367 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2401 "parser.cpp"
     break;
 
-  case 127: /* BINOP: MOD  */
+  case 127: /* BINOP: ADD  */
 #line 370 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2407 "parser.cpp"
     break;
 
-  case 128: /* BINOP: EQ  */
+  case 128: /* BINOP: SUB  */
 #line 371 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2413 "parser.cpp"
     break;
 
-  case 129: /* BINOP: NE  */
+  case 129: /* BINOP: MUL  */
 #line 372 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2419 "parser.cpp"
     break;
 
-  case 130: /* BINOP: GT  */
+  case 130: /* BINOP: DIV  */
 #line 373 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2425 "parser.cpp"
     break;
 
-  case 131: /* BINOP: LT  */
+  case 131: /* BINOP: MOD  */
 #line 374 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2431 "parser.cpp"
     break;
 
-  case 132: /* BINOP: GE  */
+  case 132: /* BINOP: EQ  */
 #line 375 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2437 "parser.cpp"
     break;
 
-  case 133: /* BINOP: LE  */
+  case 133: /* BINOP: NE  */
 #line 376 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2443 "parser.cpp"
     break;
 
-  case 134: /* BINOP: AND  */
+  case 134: /* BINOP: GT  */
 #line 377 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2449 "parser.cpp"
     break;
 
-  case 135: /* BINOP: OR  */
+  case 135: /* BINOP: LT  */
 #line 378 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2455 "parser.cpp"
     break;
 
-  case 136: /* BINOP: BAND  */
+  case 136: /* BINOP: GE  */
 #line 379 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2461 "parser.cpp"
     break;
 
-  case 137: /* BINOP: BOR  */
+  case 137: /* BINOP: LE  */
 #line 380 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2467 "parser.cpp"
     break;
 
-  case 138: /* BINOP: BXOR  */
+  case 138: /* BINOP: AND  */
 #line 381 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2473 "parser.cpp"
     break;
 
-  case 139: /* BINOP: SHL  */
+  case 139: /* BINOP: OR  */
 #line 382 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2479 "parser.cpp"
     break;
 
-  case 140: /* BINOP: SHR  */
+  case 140: /* BINOP: BAND  */
 #line 383 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2485 "parser.cpp"
     break;
 
-  case 141: /* BINOP: ASSIGN  */
+  case 141: /* BINOP: BOR  */
 #line 384 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2491 "parser.cpp"
     break;
 
-  case 142: /* BINOP: ADDAS  */
+  case 142: /* BINOP: BXOR  */
 #line 385 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2497 "parser.cpp"
     break;
 
-  case 143: /* BINOP: SUBAS  */
+  case 143: /* BINOP: SHL  */
 #line 386 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2503 "parser.cpp"
     break;
 
-  case 144: /* BINOP: MULAS  */
+  case 144: /* BINOP: SHR  */
 #line 387 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2509 "parser.cpp"
     break;
 
-  case 145: /* BINOP: DIVAS  */
+  case 145: /* BINOP: ASSIGN  */
 #line 388 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2515 "parser.cpp"
     break;
 
-  case 146: /* BINOP: MODAS  */
+  case 146: /* BINOP: ADDAS  */
 #line 389 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2521 "parser.cpp"
     break;
 
-  case 147: /* BINOP: BANDAS  */
+  case 147: /* BINOP: SUBAS  */
 #line 390 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2527 "parser.cpp"
     break;
 
-  case 148: /* BINOP: BORAS  */
+  case 148: /* BINOP: MULAS  */
 #line 391 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2533 "parser.cpp"
     break;
 
-  case 149: /* BINOP: BXORAS  */
+  case 149: /* BINOP: DIVAS  */
 #line 392 "parser.y"
-                     {(yyval.int_value) = (yyvsp[0].token);}
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2539 "parser.cpp"
     break;
 
-  case 150: /* BINOP: SHLAS  */
+  case 150: /* BINOP: MODAS  */
 #line 393 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2545 "parser.cpp"
     break;
 
-  case 151: /* BINOP: SHRAS  */
+  case 151: /* BINOP: BANDAS  */
 #line 394 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2551 "parser.cpp"
     break;
 
-  case 152: /* BINOP: COMMA  */
+  case 152: /* BINOP: BORAS  */
 #line 395 "parser.y"
                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2557 "parser.cpp"
     break;
 
-  case 153: /* FUNCALL: IDENTIFER LPAREN CallArgLIST RPAREN  */
-#line 399 "parser.y"
-                {(yyval.AST_FUNCALL_value) = new FuncCall(*((yyvsp[-3].IDENTIFER_value)), (yyvsp[-1].AST_CALLARGLIST_value));}
+  case 153: /* BINOP: BXORAS  */
+#line 396 "parser.y"
+                     {(yyval.int_value) = (yyvsp[0].token);}
 #line 2563 "parser.cpp"
     break;
 
-  case 154: /* CallArgLIST: _CallArgLIST COMMA EXPR  */
-#line 402 "parser.y"
-                                            {(yyval.AST_CALLARGLIST_value) = (yyvsp[-2].AST_CALLARGLIST_value); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
+  case 154: /* BINOP: SHLAS  */
+#line 397 "parser.y"
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2569 "parser.cpp"
     break;
 
-  case 155: /* CallArgLIST: EXPR  */
-#line 403 "parser.y"
-                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList(); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
+  case 155: /* BINOP: SHRAS  */
+#line 398 "parser.y"
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2575 "parser.cpp"
     break;
 
-  case 156: /* CallArgLIST: %empty  */
-#line 404 "parser.y"
-                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList();}
+  case 156: /* BINOP: COMMA  */
+#line 399 "parser.y"
+                    {(yyval.int_value) = (yyvsp[0].token);}
 #line 2581 "parser.cpp"
     break;
 
-  case 157: /* _CallArgLIST: _CallArgLIST COMMA EXPR  */
-#line 407 "parser.y"
-                                            {(yyval.AST_CALLARGLIST_value) = (yyvsp[-2].AST_CALLARGLIST_value); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
+  case 157: /* FUNCALL: IDENTIFER LPAREN CallArgLIST RPAREN  */
+#line 403 "parser.y"
+                {(yyval.AST_FUNCALL_value) = new FuncCall(*((yyvsp[-3].IDENTIFER_value)), (yyvsp[-1].AST_CALLARGLIST_value));}
 #line 2587 "parser.cpp"
     break;
 
-  case 158: /* _CallArgLIST: EXPR  */
-#line 408 "parser.y"
-                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList(); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
+  case 158: /* CallArgLIST: _CallArgLIST COMMA EXPR  */
+#line 406 "parser.y"
+                                            {(yyval.AST_CALLARGLIST_value) = (yyvsp[-2].AST_CALLARGLIST_value); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
 #line 2593 "parser.cpp"
     break;
 
-  case 159: /* CONSTANT: TRUE  */
-#line 411 "parser.y"
-                            {enum Csttype t=cstty_bool; (yyval.AST_CONSTANT_value)=new Constant(true,t);}
+  case 159: /* CallArgLIST: EXPR  */
+#line 407 "parser.y"
+                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList(); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
 #line 2599 "parser.cpp"
     break;
 
-  case 160: /* CONSTANT: FALSE  */
-#line 412 "parser.y"
-                            {enum Csttype t=cstty_bool; (yyval.AST_CONSTANT_value)=new Constant(false,t);}
+  case 160: /* CallArgLIST: %empty  */
+#line 408 "parser.y"
+                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList();}
 #line 2605 "parser.cpp"
     break;
 
-  case 161: /* CONSTANT: CHAR_VAR  */
-#line 413 "parser.y"
-                            {enum Csttype t=cstty_char; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].CHAR_value),t);}
+  case 161: /* _CallArgLIST: _CallArgLIST COMMA EXPR  */
+#line 411 "parser.y"
+                                            {(yyval.AST_CALLARGLIST_value) = (yyvsp[-2].AST_CALLARGLIST_value); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
 #line 2611 "parser.cpp"
     break;
 
-  case 162: /* CONSTANT: INTEGER_VAR  */
-#line 414 "parser.y"
-                            {enum Csttype t=cstty_int; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].INT_value),t);}
+  case 162: /* _CallArgLIST: EXPR  */
+#line 412 "parser.y"
+                                            {(yyval.AST_CALLARGLIST_value) = new CallArgList(); (yyval.AST_CALLARGLIST_value)->push_back((yyvsp[0].AST_EXPR_value));}
 #line 2617 "parser.cpp"
     break;
 
-  case 163: /* CONSTANT: REAL_VAR  */
+  case 163: /* CONSTANT: TRUE  */
 #line 415 "parser.y"
-                            {enum Csttype t=cstty_real; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].REAL_value),t);}
+                            {enum Csttype t=cstty_bool; (yyval.AST_CONSTANT_value)=new Constant(true,t);}
 #line 2623 "parser.cpp"
     break;
 
-  case 164: /* CONSTANT: STRING_VAR  */
+  case 164: /* CONSTANT: FALSE  */
 #line 416 "parser.y"
-                            {enum Csttype t=cstty_str; (yyval.AST_CONSTANT_value)=new Constant(*((yyvsp[0].STRING_value)),t);}
+                            {enum Csttype t=cstty_bool; (yyval.AST_CONSTANT_value)=new Constant(false,t);}
 #line 2629 "parser.cpp"
     break;
 
+  case 165: /* CONSTANT: CHAR_VAR  */
+#line 417 "parser.y"
+                            {enum Csttype t=cstty_char; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].CHAR_value),t);}
+#line 2635 "parser.cpp"
+    break;
 
-#line 2633 "parser.cpp"
+  case 166: /* CONSTANT: INTEGER_VAR  */
+#line 418 "parser.y"
+                            {enum Csttype t=cstty_int; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].INT_value),t);}
+#line 2641 "parser.cpp"
+    break;
+
+  case 167: /* CONSTANT: REAL_VAR  */
+#line 419 "parser.y"
+                            {enum Csttype t=cstty_real; (yyval.AST_CONSTANT_value)=new Constant((yyvsp[0].REAL_value),t);}
+#line 2647 "parser.cpp"
+    break;
+
+  case 168: /* CONSTANT: STRING_VAR  */
+#line 420 "parser.y"
+                            {enum Csttype t=cstty_str; (yyval.AST_CONSTANT_value)=new Constant(*((yyvsp[0].STRING_value)),t);}
+#line 2653 "parser.cpp"
+    break;
+
+
+#line 2657 "parser.cpp"
 
       default: break;
     }
@@ -2822,4 +2846,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 420 "parser.y"
+#line 424 "parser.y"
