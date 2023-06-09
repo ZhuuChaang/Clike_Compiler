@@ -688,8 +688,26 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
 }
 
 
+llvm::Value* Ifflow::CodeGen(CodeGenerator &Gen){
+
+}
+
+llvm::Value* Elseflow::CodeGen(CodeGenerator &Gen){
+
+}
+
+llvm::Value* Elseifflow::CodeGen(CodeGenerator &Gen){
+
+}
 
 
+llvm::Value* Whileflow::CodeGen(CodeGenerator &Gen){
+
+}
+
+llvm::Value* Dowhileflow::CodeGen(CodeGenerator &Gen){
+
+}
 
 llvm::Value* Returnstmt::CodeGen(CodeGenerator &Gen){
     llvm::Function* FUN=Gen.curf;
