@@ -26,6 +26,40 @@ llvm::Value* CodeGen_TypeCast(llvm::Value* v, llvm::Type* toty, CodeGenerator& G
     }
 }
 
+//int to double
+//int16 to int32 to int64
+bool AutoTypeUpgrade(llvm::Value*& lhs, llvm::Value*& rhs, CodeGenerator& Gen){
+    llvm::Type* lhs_type = lhs->getType();
+    llvm::Type* rhs_type = rhs->getType();
+    if(lhs_type->isIntegerTy() && rhs_type->isIntegerTy()){
+        size_t width_l = ((llvm::IntegerType*)lhs_type)->getBitWidth();
+        size_t width_r = ((llvm::IntegerType*)rhs_type)->getBitWidth();
+        if(width_l < width_r)
+            lhs = Gen.TheBuilder.CreateIntCast(lhs, rhs_type, width_l != 1);
+        else if(width_l > width_r)
+            rhs = Gen.TheBuilder.CreateIntCast(rhs, lhs_type, width_r != 1);
+        return true;
+    }
+    else if(lhs_type->isFloatingPointTy() && rhs_type->isFloatingPointTy()){
+        if(lhs_type->isFloatTy() && rhs_type->isDoubleTy())
+            lhs = Gen.TheBuilder.CreateFPCast(lhs, Gen.TheBuilder.getDoubleTy());
+        else if(rhs_type->isFloatTy() && lhs_type->isDoubleTy())
+            rhs = Gen.TheBuilder.CreateFPCast(rhs, Gen.TheBuilder.getDoubleTy());
+        return true;
+    }
+    else if(lhs_type->isIntegerTy() && rhs_type->isFloatingPointTy()){
+        lhs = lhs_type->isIntegerTy(1) ?
+            Gen.TheBuilder.CreateUIToFP(lhs, rhs_type) : Gen.TheBuilder.CreateSIToFP(lhs, rhs_type);
+        return true;
+    }
+    else if(rhs_type->isIntegerTy() && lhs_type->isFloatingPointTy()){
+        rhs = rhs_type->isIntegerTy(1) ?
+            Gen.TheBuilder.CreateUIToFP(rhs, lhs_type) : Gen.TheBuilder.CreateSIToFP(rhs, lhs_type);
+        return true;
+    }
+    else return false;
+}
+
 
 void Indentation(int ind){
     for(int i = 0; i < ind; i++){
@@ -904,10 +938,40 @@ llvm::Value* FuncCall::CodeGen(CodeGenerator &Gen){
 
 llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
     switch (this->_op){
+    llvm::Value* lhs;
+    llvm::Value* rhs;
     case ASSIGN:
         return Gen.TheBuilder.CreateLoad(
             this->LeftValueGen(Gen)->getType()->getNonOpaquePointerElementType(),
             this->LeftValueGen(Gen));
+    case ADD:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy())
+                return Gen.TheBuilder.CreateAdd(lhs, rhs);
+            else
+                return Gen.TheBuilder.CreateFAdd(lhs, rhs);
+        }
+        else{
+            cout << "fail to auto type cast in addition" << endl;
+            return NULL;
+        }
+    case SUB:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy())
+                return Gen.TheBuilder.CreateSub(lhs, rhs);
+            else
+                return Gen.TheBuilder.CreateFSub(lhs, rhs);
+        }
+        else{
+            cout << "fail to auto type cast in subtraction" << endl;
+            return NULL;
+        }
+    case MUL:
+
     default:
         break;
     }
@@ -915,6 +979,14 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
+    switch (this->_op){
+    case /* constant-expression */:
+        /* code */
+        break;
+    
+    default:
+        break;
+    }
     return NULL;
 }
 
@@ -997,7 +1069,18 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
         }
         Gen.TheBuilder.CreateStore(rhs, lhs);
         return lhs;
-    
+    case ADD:
+        cout << "addition cannot be leftvalue." << endl;
+        return NULL;
+    case SUB:
+        cout << "subtraction cannot be leftvalue." << endl;
+        return NULL;
+    case MUL:
+        cout << "multiplication cannot be leftvalue." << endl;
+        return NULL;
+    case DIV:
+        cout << "division cannot be leftvalue." << endl;
+        return NULL;
     default:
         break;
     }
