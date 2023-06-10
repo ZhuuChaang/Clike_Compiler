@@ -88,6 +88,7 @@
 "]"                 {printf("RBRACKET\n");}
 "{"                 {printf("LBRACE\n");}
 "}"                 {printf("RBRACE\n");}
+"#"                 {printf("HASHTAG\n");}
 
 [ \t\n]             {;}
 \/\/[^\n]*          {printf("comment %s\n",yytext);}

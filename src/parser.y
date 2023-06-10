@@ -67,6 +67,7 @@ Program* Root;
        STATIC CONST SIZEOF TYPEDEF 
        CONDITION DOT ARROW SEMICOLON COLON 
        LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE
+       HASHTAG ARRAYTAG
 
 %token <token> ADD SUB MUL DIV MOD INC DEC
                 EQ NE GT LT GE LE AND OR NOT 
@@ -129,7 +130,7 @@ Program* Root;
 %left   SHL SHR
 %left   ADD SUB
 %left   MUL DIV MOD
-%left   INC DEC NOT BNOT SIZEOF
+%right   INC DEC NOT BNOT SIZEOF
 %left   DOT ARROW
 
 %start PROGRAM
@@ -184,7 +185,7 @@ BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
 PTR:        MUL {;}
             ;
 
-ARRAY:      LBRACKET INTEGER_VAR RBRACKET {$$=$2;}
+ARRAY:      ARRAYTAG INTEGER_VAR {$$=$2;}
             ;
 
 
@@ -337,7 +338,8 @@ SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
 
 //expr            
 
-EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
+EXPR:       EXPR LBRACKET EXPR RBRACKET %prec ARROW   {$$ = new Subscript($1, $3);}
+            | IDENTIFER                       {$$ = new Variable(*($1));}
             | FUNCALL                       {$$ = $1;}
             | CONSTANT                      {$$ = $1;}
             | EXPR BINOP EXPR               {$$ = new BinopExpr($2, $1, $3);}
@@ -347,18 +349,17 @@ EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
             | SIZEOF LPAREN EXPR RPAREN     {$$ = new SizeofExpr($3);}
             | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofType($3);}
             | EXPR CONDITION EXPR COLON EXPR {$$ = new TernaryCondition($1, $3, $5);}
-            | LPAREN TYPE RPAREN EXPR       {$$ = new TypeCast($2, $4);}
-            | EXPR LBRACKET EXPR RBRACKET %prec ARROW   {$$ = new Subscript($1, $3);}
+            | LPAREN TYPE RPAREN EXPR   %prec NOT     {$$ = new TypeCast($2, $4);}
             | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, *$3);}
             | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, *$3);}
             ;  
 
-UNAOP:       INC     {$$ = $1;}
-            | DEC   {$$ = $1;}
+UNAOP:       INC    %prec NOT {$$ = $1;}
+            | DEC   %prec NOT {$$ = $1;}
             | NOT   {$$ = $1;}
             | BNOT  {$$ = $1;}
-            | MUL   {$$ = $1;}
-            | BAND  {$$ = $1;}
+            | MUL   %prec NOT {$$ = $1;}
+            | BAND  %prec NOT {$$ = $1;}
             | ADD   {$$ = $1;}
             | SUB   {$$ = $1;}
             ;

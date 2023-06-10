@@ -101,46 +101,48 @@ extern int yydebug;
     RBRACKET = 294,                /* RBRACKET  */
     LBRACE = 295,                  /* LBRACE  */
     RBRACE = 296,                  /* RBRACE  */
-    ADD = 297,                     /* ADD  */
-    SUB = 298,                     /* SUB  */
-    MUL = 299,                     /* MUL  */
-    DIV = 300,                     /* DIV  */
-    MOD = 301,                     /* MOD  */
-    INC = 302,                     /* INC  */
-    DEC = 303,                     /* DEC  */
-    EQ = 304,                      /* EQ  */
-    NE = 305,                      /* NE  */
-    GT = 306,                      /* GT  */
-    LT = 307,                      /* LT  */
-    GE = 308,                      /* GE  */
-    LE = 309,                      /* LE  */
-    AND = 310,                     /* AND  */
-    OR = 311,                      /* OR  */
-    NOT = 312,                     /* NOT  */
-    BAND = 313,                    /* BAND  */
-    BOR = 314,                     /* BOR  */
-    BXOR = 315,                    /* BXOR  */
-    BNOT = 316,                    /* BNOT  */
-    SHL = 317,                     /* SHL  */
-    SHR = 318,                     /* SHR  */
-    ASSIGN = 319,                  /* ASSIGN  */
-    ADDAS = 320,                   /* ADDAS  */
-    SUBAS = 321,                   /* SUBAS  */
-    MULAS = 322,                   /* MULAS  */
-    DIVAS = 323,                   /* DIVAS  */
-    MODAS = 324,                   /* MODAS  */
-    BANDAS = 325,                  /* BANDAS  */
-    BORAS = 326,                   /* BORAS  */
-    BXORAS = 327,                  /* BXORAS  */
-    SHLAS = 328,                   /* SHLAS  */
-    SHRAS = 329,                   /* SHRAS  */
-    COMMA = 330,                   /* COMMA  */
-    INTEGER_VAR = 331,             /* INTEGER_VAR  */
-    REAL_VAR = 332,                /* REAL_VAR  */
-    STRING_VAR = 333,              /* STRING_VAR  */
-    CHAR_VAR = 334,                /* CHAR_VAR  */
-    IDENTIFER = 335,               /* IDENTIFER  */
-    FUNC_CALL_ARG_LIST = 336       /* FUNC_CALL_ARG_LIST  */
+    HASHTAG = 297,                 /* HASHTAG  */
+    ARRAYTAG = 298,                /* ARRAYTAG  */
+    ADD = 299,                     /* ADD  */
+    SUB = 300,                     /* SUB  */
+    MUL = 301,                     /* MUL  */
+    DIV = 302,                     /* DIV  */
+    MOD = 303,                     /* MOD  */
+    INC = 304,                     /* INC  */
+    DEC = 305,                     /* DEC  */
+    EQ = 306,                      /* EQ  */
+    NE = 307,                      /* NE  */
+    GT = 308,                      /* GT  */
+    LT = 309,                      /* LT  */
+    GE = 310,                      /* GE  */
+    LE = 311,                      /* LE  */
+    AND = 312,                     /* AND  */
+    OR = 313,                      /* OR  */
+    NOT = 314,                     /* NOT  */
+    BAND = 315,                    /* BAND  */
+    BOR = 316,                     /* BOR  */
+    BXOR = 317,                    /* BXOR  */
+    BNOT = 318,                    /* BNOT  */
+    SHL = 319,                     /* SHL  */
+    SHR = 320,                     /* SHR  */
+    ASSIGN = 321,                  /* ASSIGN  */
+    ADDAS = 322,                   /* ADDAS  */
+    SUBAS = 323,                   /* SUBAS  */
+    MULAS = 324,                   /* MULAS  */
+    DIVAS = 325,                   /* DIVAS  */
+    MODAS = 326,                   /* MODAS  */
+    BANDAS = 327,                  /* BANDAS  */
+    BORAS = 328,                   /* BORAS  */
+    BXORAS = 329,                  /* BXORAS  */
+    SHLAS = 330,                   /* SHLAS  */
+    SHRAS = 331,                   /* SHRAS  */
+    COMMA = 332,                   /* COMMA  */
+    INTEGER_VAR = 333,             /* INTEGER_VAR  */
+    REAL_VAR = 334,                /* REAL_VAR  */
+    STRING_VAR = 335,              /* STRING_VAR  */
+    CHAR_VAR = 336,                /* CHAR_VAR  */
+    IDENTIFER = 337,               /* IDENTIFER  */
+    FUNC_CALL_ARG_LIST = 338       /* FUNC_CALL_ARG_LIST  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -187,7 +189,7 @@ union YYSTYPE
     FuncCall* AST_FUNCALL_value;
     int token;
 
-#line 191 "parser.hpp"
+#line 193 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

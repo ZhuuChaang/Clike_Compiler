@@ -39,6 +39,7 @@
 "const"             {return CONST;}
 "sizeof"            {return SIZEOF;}
 "typedef"           {return TYPEDEF;}
+"arraytag"          {return ARRAYTAG;}
 
 "+"                 {return yylval.token = ADD;}
 "-"                 {return yylval.token = SUB;}
@@ -89,6 +90,7 @@
 "]"                 {return RBRACKET;}
 "{"                 {return LBRACE;}
 "}"                 {return RBRACE;}
+"#"                 {return HASHTAG;}
 
 [ \t\n]             {;}
 \/\/[^\n]*          {;}
@@ -120,7 +122,7 @@
                         return IDENTIFER;
                     }
 
-[0-9]+\.[0=9]+       {
+[0-9]+\.[0-9]+       {
                         double tmp=0;
                         sscanf(yytext,"%lf",&tmp);
                         yylval.REAL_value=tmp;
