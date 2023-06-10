@@ -852,6 +852,10 @@ llvm::Value* Forflow::CodeGen(CodeGenerator &Gen){
     llvm::BasicBlock* forend=llvm::BasicBlock::Create(Gen.CodeContent,"leave");
 
     this->init->CodeGen(Gen);
+    if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+        Gen.TheBuilder.CreateBr(forcon);
+    }
+
     FUN->getBasicBlockList().push_back(forcon);
     Gen.TheBuilder.SetInsertPoint(forcon);
 
@@ -1021,7 +1025,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
     llvm::Value* lhs;
     llvm::Value* rhs;
     case ASSIGN:
-        lhs = this->_lhs->LeftValueGen(Gen);
+        lhs = this->LeftValueGen(Gen);
         if(lhs->getType()->getNonOpaquePointerElementType()->isArrayTy()){
             return Gen.TheBuilder.CreatePointerCast(lhs,
                 lhs->getType()->getNonOpaquePointerElementType()->getArrayElementType()->getPointerTo());

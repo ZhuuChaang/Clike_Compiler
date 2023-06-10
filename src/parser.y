@@ -67,7 +67,7 @@ Program* Root;
        STATIC CONST SIZEOF TYPEDEF 
        CONDITION DOT ARROW SEMICOLON COLON 
        LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE
-       HASHTAG ARRAYTAG
+       PTRDEC ARRAYTAG
 
 %token <token> ADD SUB MUL DIV MOD INC DEC
                 EQ NE GT LT GE LE AND OR NOT 
@@ -157,7 +157,7 @@ TYPE:       _TYPE           {$$=$1;}
 
 _TYPE:      BuiltinTYPE         {$$=$1;}
             | FieldTYPE         {$$=$1;}
-            | _TYPE PTR         {$$=new Pointertype($1);}
+            | _TYPE PTRDEC       {$$=new Pointertype($1);}
             | _TYPE ARRAY       {$$=new Arraytype($1,$2);}
             | IDENTIFER         {$$=new Definedtype(*$1);}
             | STRUCT IDENTIFER  {$$=new Definedtype(*$2);}  
@@ -182,8 +182,8 @@ BuiltinTYPE: CHAR   {$$=new Builtintype();$$->set_char();}
 
 
 //ptr and array
-PTR:        MUL {;}
-            ;
+// PTR:        MUL {;}
+//             ;
 
 ARRAY:      ARRAYTAG INTEGER_VAR {$$=$2;}
             ;

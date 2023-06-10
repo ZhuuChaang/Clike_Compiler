@@ -101,7 +101,7 @@ extern int yydebug;
     RBRACKET = 294,                /* RBRACKET  */
     LBRACE = 295,                  /* LBRACE  */
     RBRACE = 296,                  /* RBRACE  */
-    HASHTAG = 297,                 /* HASHTAG  */
+    PTRDEC = 297,                  /* PTRDEC  */
     ARRAYTAG = 298,                /* ARRAYTAG  */
     ADD = 299,                     /* ADD  */
     SUB = 300,                     /* SUB  */

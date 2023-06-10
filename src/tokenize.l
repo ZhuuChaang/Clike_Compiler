@@ -39,7 +39,7 @@
 "const"             {return CONST;}
 "sizeof"            {return SIZEOF;}
 "typedef"           {return TYPEDEF;}
-"arraytag"          {return ARRAYTAG;}
+
 
 "+"                 {return yylval.token = ADD;}
 "-"                 {return yylval.token = SUB;}
@@ -90,7 +90,8 @@
 "]"                 {return RBRACKET;}
 "{"                 {return LBRACE;}
 "}"                 {return RBRACE;}
-"#"                 {return HASHTAG;}
+"#"                 {return ARRAYTAG;}
+"ptr"               {return PTRDEC;}
 
 [ \t\n]             {;}
 \/\/[^\n]*          {;}
