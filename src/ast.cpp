@@ -5,6 +5,27 @@
 #include "CodeGen.hpp"
 using namespace std;
 
+//provide: 
+//int to bool
+//int between different size
+// float to int
+llvm::Value* CodeGen_TypeCast(llvm::Value* v, llvm::Type* toty, CodeGenerator& Gen){
+    llvm::Type* fromty=v->getType();
+    if(fromty==toty){
+        return v;
+    }else if(toty==Gen.TheBuilder.getInt1Ty()){
+        if(fromty->isIntegerTy()){
+            return Gen.TheBuilder.CreateICmpNE(v,llvm::ConstantInt::get((llvm::IntegerType*)v->getType(), 0, true));
+        }else{
+            return NULL;
+        }
+    }else if(fromty->isFloatingPointTy()&&toty->isIntegerTy()){
+        return Gen.TheBuilder.CreateFPToSI(v,toty);
+    }else{
+        return NULL;
+    }
+}
+
 
 void Indentation(int ind){
     for(int i = 0; i < ind; i++){
@@ -30,6 +51,8 @@ int Globalstmt::DrawNode(int depth) {
 }
 
 int Stmt::DrawNode(int depth){
+
+
     vector<Basestmt*>::iterator iter;
     for(iter = stmtlist.begin(); iter != stmtlist.end(); iter++){
         (*iter)->DrawNode(depth);
@@ -611,10 +634,14 @@ llvm::Value* Fundefine::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value * TypeDefine::CodeGen(CodeGenerator &Gen){
+    Gen.symTable.newValue(this->defined_type->getname(),TYPE_type,this->defined_type->getoriginty());
     return NULL;
 }
 
 llvm::Value* Fielddeclare::CodeGen(CodeGenerator &Gen){
+    llvm::Type* ty=this->type->TypeGen(Gen);
+    std::string name=type->getname();
+    Gen.symTable.newValue(name,TYPE_type,this->type);
     return NULL;
 }
 
@@ -626,13 +653,12 @@ llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
         if(Gen.curf==NULL){//global
             Gen.TheModule->getOrInsertGlobal(it->getname(),ty);
             llvm::GlobalVariable* gvar=Gen.TheModule->getNamedGlobal(it->getname());
+            gvar->setLinkage(llvm::GlobalValue::PrivateLinkage);
             Gen.addVarSymtable(it->getname(),gvar);
-
             if(it->hasinit()){
                 llvm::Value* inite=it->getexpr()->CodeGen(Gen);
                 Gen.TheBuilder.CreateStore(inite,gvar);
             }
-
         }else{
             llvm::Function* FUN=Gen.curf;
             llvm::IRBuilder<> tmp(&FUN->getEntryBlock(),FUN->getEntryBlock().begin());
@@ -690,24 +716,95 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
 
 
 llvm::Value* Ifflow::CodeGen(CodeGenerator &Gen){
+    llvm::Value* condition=this->condition->CodeGen(Gen);
+     condition=CodeGen_TypeCast(condition,Gen.TheBuilder.getInt1Ty(),Gen);
 
+    llvm::Function* FUN=Gen.curf;
+    llvm::BasicBlock* ifbegin=llvm::BasicBlock::Create(Gen.CodeContent,"ifbegin");
+    llvm::BasicBlock* elsebegin=llvm::BasicBlock::Create(Gen.CodeContent,"elsebegin");
+    llvm::BasicBlock* ifend=llvm::BasicBlock::Create(Gen.CodeContent,"ifend");
+    
+    Gen.TheBuilder.CreateCondBr(condition,ifbegin,elsebegin);
+
+    FUN->getBasicBlockList().push_back(ifbegin);
+    Gen.TheBuilder.SetInsertPoint(ifbegin);
+    if(has_body){
+        this->ifbody->CodeGen(Gen);
+    }
+    if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+        Gen.TheBuilder.CreateBr(ifend);
+    }
+
+    FUN->getBasicBlockList().push_back(elsebegin);
+    Gen.TheBuilder.SetInsertPoint(elsebegin);
+
+    if(this->Elseif!=NULL){
+        this->Elseif->CodeGen(Gen);
+    }
+    if(this->Else!=NULL){
+        this->Else->CodeGen(Gen);
+    }
+    if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+        Gen.TheBuilder.CreateBr(ifend);
+    }
+
+    if(ifend->hasNPredecessorsOrMore(1)){
+        FUN->getBasicBlockList().push_back(ifend);
+        Gen.TheBuilder.SetInsertPoint(ifend);
+    }
+    return NULL;
 }
 
 llvm::Value* Elseflow::CodeGen(CodeGenerator &Gen){
-
+    return NULL;
 }
 
 llvm::Value* Elseifflow::CodeGen(CodeGenerator &Gen){
+    return NULL;
+}
 
+
+llvm::Value* Forflow::CodeGen(CodeGenerator &Gen){
+    
+    return NULL;
 }
 
 
 llvm::Value* Whileflow::CodeGen(CodeGenerator &Gen){
+    llvm::Value* condition=this->limit->CodeGen(Gen);
+     condition=CodeGen_TypeCast(condition,Gen.TheBuilder.getInt1Ty(),Gen);
 
+    llvm::Function* FUN=Gen.curf;
+    llvm::BasicBlock* con=llvm::BasicBlock::Create(Gen.CodeContent,"con");
+    llvm::BasicBlock* whilebegin=llvm::BasicBlock::Create(Gen.CodeContent,"whilebegin");
+    llvm::BasicBlock* whileend=llvm::BasicBlock::Create(Gen.CodeContent,"whileend");
+
+    Gen.TheBuilder.CreateBr(con);
+    FUN->getBasicBlockList().push_back(con);
+    Gen.TheBuilder.SetInsertPoint(con);
+
+    Gen.TheBuilder.CreateCondBr(condition,whilebegin,whileend);
+    FUN->getBasicBlockList().push_back(whilebegin);
+    Gen.TheBuilder.SetInsertPoint(whilebegin);
+    if(this->has_body){
+        Gen.nextblockstack.push_back(con);
+        Gen.endblockstack.push_back(whileend);
+        this->whilebody->CodeGen(Gen);
+        Gen.nextblockstack.pop_back();
+        Gen.endblockstack.pop_back();
+    }
+
+    if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+        Gen.TheBuilder.CreateBr(con);
+    }
+    
+    FUN->getBasicBlockList().push_back(whileend);
+    Gen.TheBuilder.SetInsertPoint(whileend);
+    return NULL;
 }
 
 llvm::Value* Dowhileflow::CodeGen(CodeGenerator &Gen){
-
+    return NULL;
 }
 
 llvm::Value* Returnstmt::CodeGen(CodeGenerator &Gen){
@@ -719,16 +816,24 @@ llvm::Value* Returnstmt::CodeGen(CodeGenerator &Gen){
     }else{
         //remember to add typecast
         llvm::Value* ret=this->ret->CodeGen(Gen);
+        if(ret->getType()!=FUN->getReturnType()){
+            ret=CodeGen_TypeCast(ret,FUN->getReturnType(),Gen);
+        }
         Gen.TheBuilder.CreateRet(ret);
     }
+    return NULL;
 }
 
 llvm::Value* Breakstmt::CodeGen(CodeGenerator &Gen){
-    
+    llvm::BasicBlock* toblock=Gen.endblockstack.back();
+    Gen.TheBuilder.CreateBr(toblock);
+    return NULL;
 }
 
 llvm::Value* Continuestmt::CodeGen(CodeGenerator &Gen){
-
+    llvm::BasicBlock* toblock=Gen.nextblockstack.back();
+    Gen.TheBuilder.CreateBr(toblock);
+    return NULL;
 }
 
 

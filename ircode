@@ -1,0 +1,10 @@
+; ModuleID = 'program'
+source_filename = "program"
+
+@b = external global i32
+
+define i32 @main() {
+entry:
+  %a = alloca i32, align 4
+  ret i32 undef
+}

@@ -86,6 +86,10 @@ class Expr;
     class MemAccessPtr;
     class MemAccessObj;
 
+
+
+
+
 class Node{
 public:
     Node(void) {}
@@ -133,7 +137,7 @@ public:
         is_const=true;
     }
 
-    llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;};
+    virtual std::string getname(){return std::string("");}
     virtual int DrawNode(int depth)=0;
     virtual llvm::Type* TypeGen(CodeGenerator &Gen)=0;
 };
@@ -192,6 +196,7 @@ public:
     }
     ~Structtype(){}
 
+    std::string getname(){return this->structName;}
     int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -214,6 +219,7 @@ public:
     void findMaxtype(CodeGenerator &Gen);
     llvm::Type* getMaxtype(){return maxtype;}
 
+    std::string getname(){return this->UnionName;}
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen); 
 };
@@ -249,6 +255,7 @@ public:
 
     ~Enumtype(){}
 
+    std::string getname(){return this->enumname;}
     virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
@@ -266,6 +273,8 @@ public:
     ~Definedtype(){}
 
     void gettype(CodeGenerator &Gen);
+    Type* getoriginty(){return this->type;}
+    std::string getname(){return this->deftypeName;}
 
 	llvm::Value * CodeGen(CodeGenerator &Gen){return NULL;}
 	virtual int DrawNode(int depth);
@@ -367,6 +376,7 @@ public:
 class TypeDefine: public Basestmt{
 public:
     Definedtype* defined_type;
+
     TypeDefine(Definedtype* defined_type): defined_type(defined_type) {}
     ~TypeDefine() {}
 
@@ -510,7 +520,7 @@ public:
 
     ~Ifflow(){}
 
-    //llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -527,7 +537,7 @@ public:
         bodies.push_back(b);
     }
 
-    //llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth);
 };
 
@@ -540,7 +550,7 @@ public:
     Elseflow(Scope* b):has_body(true), Elsebody(b){}
     ~Elseflow(){}
 
-    //llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     bool test_body(){return has_body;}
     virtual int DrawNode(int depth);
 };
@@ -558,6 +568,7 @@ public:
     Forflow(Expr* i,Expr* l,Expr* s, Scope* b):init(i),limit(l),step(s){Forbody=b;has_body=true;}
     ~Forflow(){}
 
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     bool test_body(){return has_body;}
     virtual int DrawNode(int depth);  
 };
@@ -574,7 +585,7 @@ public:
 
     bool test_body(){return has_body;}
 
-    //llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 
@@ -586,7 +597,7 @@ public:
     Dowhileflow(Expr* l, Scope* w):limit(l),whilebody(w){}
     ~Dowhileflow(){}
 
-    //llvm::Value * CodeGen(CodeGenerator &Gen);
+    llvm::Value * CodeGen(CodeGenerator &Gen);
     virtual int DrawNode(int depth); 
 };
 
