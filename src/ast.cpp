@@ -1021,9 +1021,13 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
     llvm::Value* lhs;
     llvm::Value* rhs;
     case ASSIGN:
-        return Gen.TheBuilder.CreateLoad(
-            this->LeftValueGen(Gen)->getType()->getNonOpaquePointerElementType(),
-            this->LeftValueGen(Gen));
+        lhs = this->_lhs->LeftValueGen(Gen);
+        if(lhs->getType()->getNonOpaquePointerElementType()->isArrayTy()){
+            return Gen.TheBuilder.CreatePointerCast(lhs,
+                lhs->getType()->getNonOpaquePointerElementType()->getArrayElementType()->getPointerTo());
+        }
+        else
+            return Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
     case ADD:
         lhs = this->_lhs->CodeGen(Gen);
         rhs = this->_rhs->CodeGen(Gen);
@@ -1034,7 +1038,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
                 return Gen.TheBuilder.CreateFAdd(lhs, rhs);
         }
         else{
-            cout << "fail to auto type cast in addition" << endl;
+            cout << "fail to auto type cast in addition." << endl;
             return NULL;
         }
     case SUB:
@@ -1047,11 +1051,55 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
                 return Gen.TheBuilder.CreateFSub(lhs, rhs);
         }
         else{
-            cout << "fail to auto type cast in subtraction" << endl;
+            cout << "fail to auto type cast in subtraction." << endl;
             return NULL;
         }
     case MUL:
-
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy())
+                return Gen.TheBuilder.CreateMul(lhs, rhs);
+            else
+                return Gen.TheBuilder.CreateFMul(lhs, rhs);
+        }
+        else{
+            cout << "fail to auto type cast in multiplication." << endl;
+            return NULL;
+        }
+    case DIV:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy())
+                return Gen.TheBuilder.CreateSDiv(lhs, rhs);
+            else
+                return Gen.TheBuilder.CreateFDiv(lhs, rhs);
+        }
+        else{
+            cout << "fail to auto type cast in division." << endl;
+            return NULL;
+        }
+    case MOD:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !lhs->getType()->isIntegerTy()){
+            cout << "modulo apply only to integer." << endl;
+            return NULL;
+        }
+        AutoTypeUpgrade(lhs, rhs, Gen);
+        return Gen.TheBuilder.CreateSRem(lhs, rhs);
+    case EQ:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpEQ(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpOEQ(lhs, rhs);
+            }
+        }
     default:
         break;
     }
@@ -1160,6 +1208,9 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
         return NULL;
     case DIV:
         cout << "division cannot be leftvalue." << endl;
+        return NULL;
+    case MOD:
+        cout << "modulo cannot be leftvalue." << endl;
         return NULL;
     default:
         break;
