@@ -348,7 +348,7 @@ EXPR:       IDENTIFER                       {$$ = new Variable(*($1));}
             | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofType($3);}
             | EXPR CONDITION EXPR COLON EXPR {$$ = new TernaryCondition($1, $3, $5);}
             | LPAREN TYPE RPAREN EXPR       {$$ = new TypeCast($2, $4);}
-            | EXPR LBRACKET EXPR RBRACKET   {$$ = new Subscript($1, $3);}
+            | EXPR LBRACKET EXPR RBRACKET %prec ARROW   {$$ = new Subscript($1, $3);}
             | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, *$3);}
             | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, *$3);}
             ;  

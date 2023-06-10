@@ -477,6 +477,29 @@ int MemAccessObj::DrawNode(int depth){
 
 
 /////////////////////////////////////////////////////////////////////////////
+//provide: 
+//int to bool
+//int between different size
+// float to int
+llvm::Value* CodeGen_TypeCast(llvm::Value* v, llvm::Type* toty, CodeGenerator& Gen){
+    llvm::Type* fromty=v->getType();
+    if(fromty==toty){
+        return v;
+    }else if(toty==Gen.TheBuilder.getInt1Ty()){
+        if(fromty->isIntegerTy()){
+            return Gen.TheBuilder.CreateICmpNE(v,llvm::ConstantInt::get((llvm::IntegerType*)v->getType(), 0, true));
+        }else{
+            return NULL;
+        }
+    }else if(fromty->isFloatingPointTy()&&toty->isIntegerTy()){
+        return Gen.TheBuilder.CreateFPToSI(v,toty);
+    }else{
+        return NULL;
+    }
+}
+
+
+
 llvm::Value* Program::CodeGen(CodeGenerator &Gen){
     this->Stmtlist->CodeGen(Gen);
     return NULL;
@@ -863,17 +886,52 @@ llvm::Value* Constant::CodeGen(CodeGenerator& Gen){
 
 
 llvm::Value* Variable::CodeGen(CodeGenerator &Gen){
-    // llvm::Value* var_ptr = Gen.findIDSymtable(this->_name);
-
+    llvm::Value* var_ptr = (llvm::Value*) Gen.symTable.findValue(this->_name);
+    if(var_ptr){
+        return Gen.TheBuilder.CreateLoad(var_ptr->getType()->getPointerElementType(), var_ptr);
+    }
+    else std::cout << "Variable not define." << std::endl;
     return NULL;
 }
 
 
 llvm::Value* FuncCall::CodeGen(CodeGenerator &Gen){
+    llvm::Function* func = (llvm::Function*) Gen.symTable.findValue(this->_func_name);
+    if(!func){
+        cout << "func have not been define." << endl;
+        return NULL;
+    }
+    //number of args
+    if(func->isVarArg() && this->_arg_list->size() < func->arg_size() ||
+    !func->isVarArg() && this->_arg_list->size() != func->arg_size()){
+        cout << "func args do not match define." << endl;
+        return NULL;
+    }
+    //type of args
+    std::vector<llvm::Value*> arg_list;
+    int index = 0;
+    for(auto iter = func->arg_begin(); iter < func->arg_end();iter++, index++){
+        llvm::Value* arg = this->_arg_list->at(index)->CodeGen(Gen);
+        arg = CodeGen_TypeCast(arg, iter->getType(), Gen);
+        if(arg == NULL){
+            cout << "arg type does not match." << endl;
+            return nullptr;
+        }
+        arg_list.push_back(arg);
+    }
+    return Gen.TheBuilder.CreateCall(func, arg_list);
     return NULL;
 }
 
 llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
+    switch (this->_op){
+    case ASSIGN:
+        return Gen.TheBuilder.CreateLoad(
+            this->LeftValueGen(Gen)->getType()->getNonOpaquePointerElementType(),
+            this->LeftValueGen(Gen));
+    default:
+        break;
+    }
     return NULL;
 }
 
@@ -898,11 +956,19 @@ llvm::Value* TernaryCondition::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* TypeCast::CodeGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Value* casted = CodeGen_TypeCast(this->_expr->CodeGen(Gen), this->_type->TypeGen(Gen), Gen);
+    if(!casted){
+        cout << "fail to cast type." << endl;
+        return nullptr;
+    }
+    return casted;
 }
 
 llvm::Value* Subscript::CodeGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Value* subscript_ptr = this->LeftValueGen(Gen);
+    return Gen.TheBuilder.CreateLoad(
+        subscript_ptr->getType()->getNonOpaquePointerElementType(), 
+        subscript_ptr);
 }
 
 llvm::Value* MemAccessPtr::CodeGen(CodeGenerator &Gen){
@@ -921,16 +987,39 @@ llvm::Value* Constant::LeftValueGen(CodeGenerator &Gen){
 
 
 llvm::Value* Variable::LeftValueGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Value* var_ptr = (llvm::Value*) Gen.symTable.findValue(this->_name);
+    if(var_ptr){
+        return var_ptr;
+    }
+    else{
+        cout << "Variable not define." << endl;
+        return NULL;
+    }
 }
 
 
 
 llvm::Value* FuncCall::LeftValueGen(CodeGenerator &Gen){
+    cout << "funccall cannot be leftvalue." << endl;
     return NULL;
 }
 
 llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
+    switch (this->_op){
+    case ASSIGN:
+        llvm::Value* lhs = this->_lhs->LeftValueGen(Gen);
+        llvm::Value* rhs = this->_rhs->CodeGen(Gen);
+        rhs = CodeGen_TypeCast(rhs, lhs->getType()->getNonOpaquePointerElementType(), Gen);
+        if(!rhs){
+            cout << "cannot cast value type in assignment." << endl;
+            return nullptr;
+        }
+        Gen.TheBuilder.CreateStore(rhs, lhs);
+        return lhs;
+    
+    default:
+        break;
+    }
     return NULL;
 }
 
@@ -955,11 +1044,23 @@ llvm::Value* TernaryCondition::LeftValueGen(CodeGenerator &Gen){
 }
 
 llvm::Value* TypeCast::LeftValueGen(CodeGenerator &Gen){
+    cout << "type cast cannot be leftvalue." << endl;
     return NULL;
 }
 
 llvm::Value* Subscript::LeftValueGen(CodeGenerator &Gen){
-    return NULL;
+    //array
+    llvm::Value* array_ptr = this->_array->CodeGen(Gen);
+    if(!array_ptr->getType()->isPointerTy()){
+        cout << "not a array type." << endl;
+    }
+    llvm::Value* index = this->_index->CodeGen(Gen);
+    if(!index->getType()->isIntegerTy()){
+        cout << "array index is supposed to be integer." << endl;
+    }
+    return Gen.TheBuilder.CreateGEP(
+        array_ptr->getType()->getNonOpaquePointerElementType(),
+        array_ptr, index);
 }
 
 llvm::Value* MemAccessPtr::LeftValueGen(CodeGenerator &Gen){
