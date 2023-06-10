@@ -13,9 +13,10 @@ int main(int argc, const char* argv[]){
     yyin = fopen(argv[2], "r");
     assert(yyin);
     yyparse();
-    // Root->DrawNode(0);
+    Root->DrawNode(0);
     CodeGenerator Gen("");
     Gen.CodeGenerate(*Root);
     Gen.OutputIRcode();
+    Gen.ObjGenerate();
     return 0;
 }

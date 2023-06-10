@@ -752,42 +752,87 @@ llvm::Value* Exprstmt::CodeGen(CodeGenerator &Gen){
 
 
 llvm::Value* Ifflow::CodeGen(CodeGenerator &Gen){
-    llvm::Value* condition=this->condition->CodeGen(Gen);
-     condition=CodeGen_TypeCast(condition,Gen.TheBuilder.getInt1Ty(),Gen);
+    std::vector<llvm::Value*> conlist;
+    std::vector<Scope*> scopelist;
+    conlist.push_back(CodeGen_TypeCast(this->condition->CodeGen(Gen),Gen.TheBuilder.getInt1Ty(),Gen));
+    scopelist.push_back(this->ifbody);
+    if(this->Elseif!=NULL&&this->Elseif->conditions.size()!=0){
+        for(int i=0;i<this->Elseif->conditions.size();i++){
+            llvm::Value* tmpcon=this->Elseif->conditions[i]->CodeGen(Gen);
+            conlist.push_back(CodeGen_TypeCast(tmpcon,Gen.TheBuilder.getInt1Ty(),Gen));
+            scopelist.push_back(this->Elseif->bodies[i]);
+        }
+    }
 
     llvm::Function* FUN=Gen.curf;
-    llvm::BasicBlock* ifbegin=llvm::BasicBlock::Create(Gen.CodeContent,"ifbegin");
-    llvm::BasicBlock* elsebegin=llvm::BasicBlock::Create(Gen.CodeContent,"elsebegin");
+
     llvm::BasicBlock* ifend=llvm::BasicBlock::Create(Gen.CodeContent,"ifend");
-    
-    Gen.TheBuilder.CreateCondBr(condition,ifbegin,elsebegin);
 
-    FUN->getBasicBlockList().push_back(ifbegin);
-    Gen.TheBuilder.SetInsertPoint(ifbegin);
-    if(has_body){
-        this->ifbody->CodeGen(Gen);
+    for(int i=0;i<conlist.size();i++){
+        llvm::BasicBlock* ifbeginI=llvm::BasicBlock::Create(Gen.CodeContent,std::string("ifbegin").append(std::to_string(i)));
+        llvm::BasicBlock* elsebeginI=llvm::BasicBlock::Create(Gen.CodeContent,std::string("elsebegin").append(std::to_string(i)));
+        Gen.TheBuilder.CreateCondBr(conlist[i],ifbeginI,elsebeginI);
+
+        FUN->getBasicBlockList().push_back(ifbeginI);
+        Gen.TheBuilder.SetInsertPoint(ifbeginI);
+
+        scopelist[i]->CodeGen(Gen);
+
+        if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+            Gen.TheBuilder.CreateBr(ifend);
+        }
+
+        FUN->getBasicBlockList().push_back(elsebeginI);
+        Gen.TheBuilder.SetInsertPoint(elsebeginI);        
+    }
+
+    if(this->Else!=NULL&&this->Else->has_body){
+        this->Else->Elsebody->CodeGen(Gen);
     }
     if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
         Gen.TheBuilder.CreateBr(ifend);
     }
 
-    FUN->getBasicBlockList().push_back(elsebegin);
-    Gen.TheBuilder.SetInsertPoint(elsebegin);
-
-    if(this->Elseif!=NULL){
-        this->Elseif->CodeGen(Gen);
-    }
-    if(this->Else!=NULL){
-        this->Else->CodeGen(Gen);
-    }
-    if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
-        Gen.TheBuilder.CreateBr(ifend);
-    }
 
     if(ifend->hasNPredecessorsOrMore(1)){
         FUN->getBasicBlockList().push_back(ifend);
         Gen.TheBuilder.SetInsertPoint(ifend);
     }
+
+//old version for reservation
+/////////////////////////////////////////
+    // llvm::Value* condition=this->condition->CodeGen(Gen);
+    //  condition=CodeGen_TypeCast(condition,Gen.TheBuilder.getInt1Ty(),Gen);
+
+    // llvm::Function* FUN=Gen.curf;
+    // llvm::BasicBlock* ifbegin=llvm::BasicBlock::Create(Gen.CodeContent,"ifbegin");
+    // llvm::BasicBlock* elsebegin=llvm::BasicBlock::Create(Gen.CodeContent,"elsebegin");
+    // llvm::BasicBlock* ifend=llvm::BasicBlock::Create(Gen.CodeContent,"ifend");
+    
+    // Gen.TheBuilder.CreateCondBr(condition,ifbegin,elsebegin);
+
+    // FUN->getBasicBlockList().push_back(ifbegin);
+    // Gen.TheBuilder.SetInsertPoint(ifbegin);
+    // if(has_body){
+    //     this->ifbody->CodeGen(Gen);
+    // }
+    // if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+    //     Gen.TheBuilder.CreateBr(ifend);
+    // }
+
+    // FUN->getBasicBlockList().push_back(elsebegin);
+    // Gen.TheBuilder.SetInsertPoint(elsebegin);
+    // if(this->Else!=NULL&&this->Else->has_body){
+    //     this->Else->Elsebody->CodeGen(Gen);
+    // }
+    // if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
+    //     Gen.TheBuilder.CreateBr(ifend);
+    // }
+
+    // if(ifend->hasNPredecessorsOrMore(1)){
+    //     FUN->getBasicBlockList().push_back(ifend);
+    //     Gen.TheBuilder.SetInsertPoint(ifend);
+    // }
     return NULL;
 }
 
@@ -801,7 +846,36 @@ llvm::Value* Elseifflow::CodeGen(CodeGenerator &Gen){
 
 
 llvm::Value* Forflow::CodeGen(CodeGenerator &Gen){
-    
+    llvm::Function* FUN=Gen.curf;
+    llvm::BasicBlock* forcon=llvm::BasicBlock::Create(Gen.CodeContent,"condition");
+    llvm::BasicBlock* forscope=llvm::BasicBlock::Create(Gen.CodeContent,"body");
+    llvm::BasicBlock* forend=llvm::BasicBlock::Create(Gen.CodeContent,"leave");
+
+    this->init->CodeGen(Gen);
+    FUN->getBasicBlockList().push_back(forcon);
+    Gen.TheBuilder.SetInsertPoint(forcon);
+
+    llvm::Value* condvalue=this->limit->CodeGen(Gen);
+    condvalue=CodeGen_TypeCast(condvalue,Gen.TheBuilder.getInt1Ty(),Gen);
+    Gen.TheBuilder.CreateCondBr(condvalue,forscope,forend);
+
+    FUN->getBasicBlockList().push_back(forscope);
+    Gen.TheBuilder.SetInsertPoint(forscope);
+
+    if(this->has_body){
+        this->Forbody->CodeGen(Gen);
+    }
+
+    this->step->CodeGen(Gen);
+
+    Gen.TheBuilder.CreateBr(forcon);
+
+    if(forend->hasNPredecessorsOrMore(1)){
+        FUN->getBasicBlockList().push_back(forend);
+        Gen.TheBuilder.SetInsertPoint(forend);
+    }
+
+
     return NULL;
 }
 
@@ -932,8 +1006,14 @@ llvm::Value* FuncCall::CodeGen(CodeGenerator &Gen){
         }
         arg_list.push_back(arg);
     }
+
+    if(func->isVarArg()){
+        for(int i=index;i<this->_arg_list->size();i++){
+            llvm::Value* arg=this->_arg_list->at(i)->CodeGen(Gen);
+            arg_list.push_back(arg);
+        }
+    }
     return Gen.TheBuilder.CreateCall(func, arg_list);
-    return NULL;
 }
 
 llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
@@ -980,7 +1060,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
 
 llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
     switch (this->_op){
-    case /* constant-expression */:
+    case 1 :
         /* code */
         break;
     

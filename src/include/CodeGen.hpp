@@ -27,7 +27,7 @@ public:
     CodeGenerator(std::string o);
     ~CodeGenerator(){}
     void CodeGenerate(Node& root);
-    void ObjGenerate(){}
+    void ObjGenerate();
     void OutputIRcode();
 
     void addStruct(llvm::StructType* lt, Structtype* at);

@@ -529,6 +529,8 @@ class Elseifflow: public Basestmt{
     std::vector<Scope*> bodies;
 
 public:
+    friend class Ifflow;
+
     Elseifflow(){}
     ~Elseifflow(){}
 
@@ -544,6 +546,8 @@ public:
 class Elseflow: public Basestmt{
     bool has_body;
     Scope* Elsebody;
+
+    friend class Ifflow;
 
 public:
     Elseflow():has_body(false), Elsebody(NULL){}
@@ -659,7 +663,27 @@ public:
 
     Constant(int v, enum Csttype t) : _integer(v), type(t){}
     Constant(double v, enum Csttype t) : _double(v), type(t){}
-    Constant(std::string v, enum Csttype t) : _str(v), type(t){}
+    Constant(std::string v, enum Csttype t) : _str(v), type(t){
+        std::string newv;
+        bool virgin=true;
+        for(int i=0;i<v.size();i++){
+            if(v[i]=='\\'){
+                virgin=false;
+                switch(v[i+1]){
+                    case 'n': newv.push_back('\n'); break;
+                    case 't': newv.push_back('\t'); break;
+                    case 'r': newv.push_back('\r'); break;
+                }
+            }else{
+                if(virgin){
+                    newv.push_back(v[i]);
+                }else{
+                    continue;
+                }
+            }
+        }
+        _str=newv;
+    }
     Constant(char v, enum Csttype t) : c(v), type(t){}
     Constant(bool v, enum Csttype t) : b(v), type(t){}
     ~Constant(){}

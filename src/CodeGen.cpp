@@ -85,9 +85,34 @@ void CodeGenerator::CodeGenerate(Node& root){
     }
 }
 
+void CodeGenerator::ObjGenerate(){
+	std::string target3s = llvm::sys::getDefaultTargetTriple();
+	llvm::InitializeAllTargetInfos();
+	llvm::InitializeAllTargets();
+	llvm::InitializeAllTargetMCs();
+	llvm::InitializeAllAsmParsers();
+	llvm::InitializeAllAsmPrinters();
+
+	std::string e;
+	const llvm::Target* Target = llvm::TargetRegistry::lookupTarget(target3s, e);
+	llvm::TargetOptions option;
+	auto RM = llvm::Optional<llvm::Reloc::Model>();
+	llvm::TargetMachine* TargetMachine = Target->createTargetMachine(target3s,"generic", "",option, RM);
+	this->TheModule->setDataLayout(TargetMachine->createDataLayout());
+	this->TheModule->setTargetTriple(target3s);
+	std::error_code ecode;
+	llvm::raw_fd_ostream outputfile("a.o", ecode, llvm::sys::fs::OF_None);
+	llvm::CodeGenFileType filety = llvm::CGFT_ObjectFile;
+	llvm::legacy::PassManager passmng;
+    TargetMachine->addPassesToEmitFile(passmng, outputfile, NULL, filety);
+	passmng.run(*(this->TheModule));
+	outputfile.flush();
+}
+
 void CodeGenerator::OutputIRcode(){
     std::string filename="ircode.txt";
     std::error_code ecode;
     llvm::raw_fd_ostream outf(filename,ecode);
     this->TheModule->print(outf,NULL);
 }
+
