@@ -2324,7 +2324,7 @@ yyreduce:
 
   case 114: /* EXPR: EXPR LBRACKET EXPR RBRACKET  */
 #line 351 "parser.y"
-                                            {(yyval.AST_EXPR_value) = new Subscript((yyvsp[-3].AST_EXPR_value), (yyvsp[-1].AST_EXPR_value));}
+                                                        {(yyval.AST_EXPR_value) = new Subscript((yyvsp[-3].AST_EXPR_value), (yyvsp[-1].AST_EXPR_value));}
 #line 2329 "parser.cpp"
     break;
 

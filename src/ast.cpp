@@ -476,27 +476,6 @@ int MemAccessObj::DrawNode(int depth){
 }
 
 
-/////////////////////////////////////////////////////////////////////////////
-//provide: 
-//int to bool
-//int between different size
-// float to int
-llvm::Value* CodeGen_TypeCast(llvm::Value* v, llvm::Type* toty, CodeGenerator& Gen){
-    llvm::Type* fromty=v->getType();
-    if(fromty==toty){
-        return v;
-    }else if(toty==Gen.TheBuilder.getInt1Ty()){
-        if(fromty->isIntegerTy()){
-            return Gen.TheBuilder.CreateICmpNE(v,llvm::ConstantInt::get((llvm::IntegerType*)v->getType(), 0, true));
-        }else{
-            return NULL;
-        }
-    }else if(fromty->isFloatingPointTy()&&toty->isIntegerTy()){
-        return Gen.TheBuilder.CreateFPToSI(v,toty);
-    }else{
-        return NULL;
-    }
-}
 
 
 
@@ -1006,9 +985,11 @@ llvm::Value* FuncCall::LeftValueGen(CodeGenerator &Gen){
 
 llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
     switch (this->_op){
+        llvm::Value* lhs;
+        llvm::Value* rhs;
     case ASSIGN:
-        llvm::Value* lhs = this->_lhs->LeftValueGen(Gen);
-        llvm::Value* rhs = this->_rhs->CodeGen(Gen);
+        lhs = this->_lhs->LeftValueGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
         rhs = CodeGen_TypeCast(rhs, lhs->getType()->getNonOpaquePointerElementType(), Gen);
         if(!rhs){
             cout << "cannot cast value type in assignment." << endl;
