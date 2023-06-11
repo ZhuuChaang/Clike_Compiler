@@ -1251,7 +1251,7 @@ llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
         }
         return val;
     case BAND://get address
-
+        return this->_operand->LeftValueGen(Gen);
     default:
         break;
     }
@@ -1394,12 +1394,13 @@ llvm::Value* UnaopExpr::LeftValueGen(CodeGenerator &Gen){
     case MUL:
         ptr = this->_operand->CodeGen(Gen);
         if(!ptr->getType()->isPointerTy()){
-            cout << "find address operator must apply to pointers." << endl;
+            cout << "find value operator must apply to pointers." << endl;
             return NULL;
         }
         return ptr;
     case BAND:
-    
+        cout << "get address operator cannot return leftvalue." << endl;
+        return NULL;
     default:
         break;
     }
