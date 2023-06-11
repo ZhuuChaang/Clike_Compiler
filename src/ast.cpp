@@ -17,12 +17,14 @@ llvm::Value* CodeGen_TypeCast(llvm::Value* v, llvm::Type* toty, CodeGenerator& G
         if(fromty->isIntegerTy()){
             return Gen.TheBuilder.CreateICmpNE(v,llvm::ConstantInt::get((llvm::IntegerType*)v->getType(), 0, true));
         }else{
-            return NULL;
+            return v;
         }
     }else if(fromty->isFloatingPointTy()&&toty->isIntegerTy()){
         return Gen.TheBuilder.CreateFPToSI(v,toty);
+    }else if(fromty->isPointerTy()&&toty->isPointerTy()){
+        return v;
     }else{
-        return NULL;
+        return v;
     }
 }
 
@@ -537,6 +539,9 @@ llvm::Type* Builtintype::TypeGen(CodeGenerator &Gen){
 }
 
 llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
+    if(this->_type!=NULL){
+        return this->_type;
+    }
     llvm::StructType* sty=llvm::StructType::create(Gen.CodeContent,"struct." + this->structName);
     Gen.addStruct(sty,this);
     std::vector<llvm::Type*> Mems;
@@ -545,10 +550,14 @@ llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
     }
     sty->setBody(Mems);
     llvm::Type* ret=sty;
+    this->_type=ret;
     return ret;
 }
 
 llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
+    if(this->_type!=NULL){
+        return this->_type;
+    }
     llvm::StructType* uty=llvm::StructType::create(Gen.CodeContent,"union." + this->UnionName);
     Gen.addUnion(uty,this);
     llvm::Type* maxty=this->getMaxtype();
@@ -558,6 +567,7 @@ llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
     }
     uty->setBody(std::vector<llvm::Type*>{maxty});
     llvm::Type* ret=uty;
+    this->_type=ret;
     return ret;
 
 }
@@ -577,6 +587,13 @@ void Uniontype::findMaxtype(CodeGenerator &Gen){
 
 //types 
 llvm::Type* Enumtype::TypeGen(CodeGenerator &Gen){
+    for(auto it:this->enumMembers){
+        Gen.TheModule->getOrInsertGlobal(it.first,Gen.TheBuilder.getInt32Ty());
+        llvm::GlobalVariable* gvar=Gen.TheModule->getNamedGlobal(it.first);
+        gvar->setConstant(true);
+        gvar->setInitializer(Gen.TheBuilder.getInt32(it.second));
+        Gen.addVarSymtable(it.first,gvar);
+    }
     return llvm::IntegerType::getInt32Ty(Gen.CodeContent);
 }
 
@@ -1316,13 +1333,13 @@ llvm::Value* Subscript::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* MemAccessPtr::CodeGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Value* lhs = this->LeftValueGen(Gen);
+    return Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
 }
 
 llvm::Value* MemAccessObj::CodeGen(CodeGenerator &Gen){
     llvm::Value* lhs = this->LeftValueGen(Gen);
-    Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
-    return NULL;
+    return Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
 }
 
 //////////////////
@@ -1475,7 +1492,26 @@ llvm::Value* Subscript::LeftValueGen(CodeGenerator &Gen){
 }
 
 llvm::Value* MemAccessPtr::LeftValueGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Value* struct_ptr=this->_struct_ptr->CodeGen(Gen);
+    llvm::Value* struct_vle=this->_struct_ptr->LeftValueGen(Gen);
+    if(!struct_ptr->getType()->isPointerTy()){
+        cout << "member access operator must be apply to struct of unions." << endl;
+        return nullptr;
+    }
+    
+    std::string varname=struct_vle->getName().data();
+    std::string suname=Gen.suelist[varname];
+    Structtype* struct_type=(Structtype*)Gen.symTable.findValue(suname);
+    int index=0;
+    for(auto it:struct_type->structMembers){
+        if(it.first==this->_member){
+            break;
+        }
+        index++;
+    }
+    
+    llvm::Value* ret=Gen.TheBuilder.CreateGEP(struct_ptr->getType()->getNonOpaquePointerElementType(),struct_ptr,{Gen.TheBuilder.getInt32(0),Gen.TheBuilder.getInt32(index)});
+    return ret;
 }
 
 llvm::Value* MemAccessObj::LeftValueGen(CodeGenerator &Gen){
@@ -1485,7 +1521,18 @@ llvm::Value* MemAccessObj::LeftValueGen(CodeGenerator &Gen){
         cout << "member access operator must be apply to struct of unions." << endl;
         return nullptr;
     }
-    Structtype* struct_type;
-    int i = 0;
-    return NULL;
+    
+    std::string varname=struct_ptr->getName().data();
+    std::string suname=Gen.suelist[varname];
+    Structtype* struct_type=(Structtype*)Gen.symTable.findValue(suname);
+    int index=0;
+    for(auto it:struct_type->structMembers){
+        if(it.first==this->_member){
+            break;
+        }
+        index++;
+    }
+
+    llvm::Value* ret=Gen.TheBuilder.CreateGEP(struct_ptr->getType()->getNonOpaquePointerElementType(),struct_ptr,{Gen.TheBuilder.getInt32(0),Gen.TheBuilder.getInt32(index)});
+    return ret;
 }

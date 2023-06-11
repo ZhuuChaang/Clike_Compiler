@@ -184,6 +184,10 @@ class Structtype: public Type{
     std::string structName;
     std::map<std::string,Type*> structMembers;
 public:
+    llvm::Type* _type=NULL;
+
+    friend class MemAccessObj;
+    friend class MemAccessPtr;
     Structtype(std::string s,std::vector<SUmemdec*> *list): structName(s){
         int size=list->size();
         for(int i=0;i<size;i++){
@@ -206,6 +210,11 @@ class Uniontype: public Type{
     std::map<std::string,Type*> unionMembers;
     llvm::Type* maxtype=NULL;
 public:
+    llvm::Type* _type=NULL;
+
+    friend class MemAccessObj;
+    friend class MemAccessPtr;
+
     Uniontype(std::string s,std::vector<SUmemdec*> *list): UnionName(s){
         int size=list->size();
         for(int i=0;i<size;i++){
@@ -288,6 +297,7 @@ public:
     Pointertype(Type* t): basetype(t){}
     ~Pointertype(){};
 
+    std::string getname(){return this->basetype->getname();}
 	virtual int DrawNode(int depth);
     virtual llvm::Type* TypeGen(CodeGenerator &Gen);
 };
