@@ -978,8 +978,16 @@ llvm::Value* Constant::CodeGen(CodeGenerator& Gen){
 
 llvm::Value* Variable::CodeGen(CodeGenerator &Gen){
     llvm::Value* var_ptr = (llvm::Value*) Gen.symTable.findValue(this->_name);
+    llvm::Value* value;
     if(var_ptr){
-        return Gen.TheBuilder.CreateLoad(var_ptr->getType()->getPointerElementType(), var_ptr);
+        if(var_ptr->getType()->getNonOpaquePointerElementType()->isArrayTy()){
+            llvm::PointerType* ty=var_ptr->getType()->getNonOpaquePointerElementType()->getArrayElementType()->getPointerTo();
+            value=Gen.TheBuilder.CreatePointerCast(var_ptr,ty);
+        }else{
+            value=Gen.TheBuilder.CreateLoad(var_ptr->getType()->getPointerElementType(), var_ptr);
+        }   
+
+        return value;
     }
     else std::cout << "Variable not define." << std::endl;
     return NULL;

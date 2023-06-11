@@ -15,9 +15,13 @@ void Symbol_Table::newValueSym(std::string varName, symValue s){
         int toplevel=this->Table[varName][end].getmark();
         if(toplevel<s.getmark()){
             Table[varName].push_back(s);
+        }else{
+            std::string errormsg="redefine of some identifier: ";
+            errormsg=errormsg.append(varName);
+            errormsg=errormsg.append("\n");
+            std::__throw_logic_error(errormsg.data());
         }
     }
-    
 }
 
 void Symbol_Table::enterScope(){
