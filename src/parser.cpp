@@ -2379,13 +2379,13 @@ yyreduce:
 
   case 122: /* UNAOP: ADD  */
 #line 363 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                              {(yyval.int_value) = (yyvsp[0].token);}
 #line 2384 "parser.cpp"
     break;
 
   case 123: /* UNAOP: SUB  */
 #line 364 "parser.y"
-                    {(yyval.int_value) = (yyvsp[0].token);}
+                              {(yyval.int_value) = (yyvsp[0].token);}
 #line 2390 "parser.cpp"
     break;
 

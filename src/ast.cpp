@@ -677,7 +677,7 @@ llvm::Value * TypeDefine::CodeGen(CodeGenerator &Gen){
 llvm::Value* Fielddeclare::CodeGen(CodeGenerator &Gen){
     llvm::Type* ty=this->type->TypeGen(Gen);
     std::string name=type->getname();
-    Gen.symTable.newValue(name,TYPE_type,this->type);
+    Gen.symTable.newValue(name,SUE_type,this->type);
     return NULL;
 }
 
@@ -867,7 +867,11 @@ llvm::Value* Forflow::CodeGen(CodeGenerator &Gen){
     Gen.TheBuilder.SetInsertPoint(forscope);
 
     if(this->has_body){
+        Gen.nextblockstack.push_back(forcon);
+        Gen.endblockstack.push_back(forend);
         this->Forbody->CodeGen(Gen);
+        Gen.nextblockstack.pop_back();
+        Gen.endblockstack.pop_back();
     }
 
     this->step->CodeGen(Gen);

@@ -360,8 +360,8 @@ UNAOP:       INC    %prec NOT {$$ = $1;}
             | BNOT  {$$ = $1;}
             | MUL   %prec NOT {$$ = $1;}
             | BAND  %prec NOT {$$ = $1;}
-            | ADD   {$$ = $1;}
-            | SUB   {$$ = $1;}
+            | ADD   %prec NOT {$$ = $1;}
+            | SUB   %prec NOT {$$ = $1;}
             ;
 
 SUFOP:       INC     {$$ = $1;}

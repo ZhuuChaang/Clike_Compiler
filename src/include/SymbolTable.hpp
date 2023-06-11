@@ -12,7 +12,8 @@ enum ValueTypes{
     TYPE_type,
     VAR_type,
     CONST_type,
-    UNDEF_type
+    UNDEF_type,
+    SUE_type
 };
 
 class symValue{
