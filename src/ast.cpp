@@ -684,6 +684,9 @@ llvm::Value* Fielddeclare::CodeGen(CodeGenerator &Gen){
 
 llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
     llvm::Type* ty=this->type->TypeGen(Gen);
+    std::string SUEtypename=this->type->getname();
+
+
     
     for(auto it: *(this->list)){
         if(Gen.curf==NULL){//global
@@ -691,6 +694,9 @@ llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
             llvm::GlobalVariable* gvar=Gen.TheModule->getNamedGlobal(it->getname());
             gvar->setLinkage(llvm::GlobalValue::PrivateLinkage);
             Gen.addVarSymtable(it->getname(),gvar);
+            if(SUEtypename!=""){
+                Gen.suelist[it->getname()]=SUEtypename;
+            }
             if(it->hasinit()){
                 llvm::Value* inite=it->getexpr()->CodeGen(Gen);
                 Gen.TheBuilder.CreateStore(inite,gvar);
@@ -701,6 +707,9 @@ llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
             llvm::AllocaInst* def=tmp.CreateAlloca(ty,0,it->getname());
             Gen.addVarSymtable(it->getname(),def);
 
+            if(SUEtypename!=""){
+                Gen.suelist[it->getname()]=SUEtypename;
+            }
             if(it->hasinit()){
                 llvm::Value* inite=it->getexpr()->CodeGen(Gen);
                 Gen.TheBuilder.CreateStore(inite,def);

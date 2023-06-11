@@ -130,7 +130,8 @@ Program* Root;
 %left   SHL SHR
 %left   ADD SUB
 %left   MUL DIV MOD
-%right   INC DEC NOT BNOT SIZEOF
+%left   UMINUS
+%right  INC DEC NOT BNOT SIZEOF
 %left   DOT ARROW
 
 %start PROGRAM
@@ -339,37 +340,64 @@ SUSTMT:     SUSTMT SUVarDEF SEMICOLON   {$$=$1;$$->push_back($2);}
 //expr            
 
 EXPR:       EXPR LBRACKET EXPR RBRACKET %prec ARROW   {$$ = new Subscript($1, $3);}
-            | IDENTIFER                       {$$ = new Variable(*($1));}
+            | IDENTIFER                     {$$ = new Variable(*($1));}
             | FUNCALL                       {$$ = $1;}
             | CONSTANT                      {$$ = $1;}
-            | EXPR BINOP EXPR               {$$ = new BinopExpr($2, $1, $3);}
-            | UNAOP EXPR                    {$$ = new UnaopExpr($1, $2);}
+            | EXPR ADD EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR SUB EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR MUL EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR DIV EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR MOD EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR EQ EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR NE EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR GT EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR LT EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR GE EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR LE EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR AND EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR OR EXPR                  {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR BAND EXPR                {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR BOR EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR BXOR EXPR                {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR SHL EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR SHR EXPR                 {$$ = new BinopExpr($2, $1, $3);}
+            | EXPR ASSIGN EXPR              {$$ = new BinopExpr($2, $1, $3);}            
+            // | EXPR BINOP EXPR               {$$ = new BinopExpr($2, $1, $3);}
+            | INC EXPR %prec UMINUS                    {$$ = new UnaopExpr($1, $2);}
+            | DEC EXPR  %prec UMINUS                  {$$ = new UnaopExpr($1, $2);}
+            | NOT EXPR                    {$$ = new UnaopExpr($1, $2);}
+            | BNOT EXPR                    {$$ = new UnaopExpr($1, $2);}
+            | MUL EXPR   %prec UMINUS                 {$$ = new UnaopExpr($1, $2);}
+            | BAND EXPR  %prec UMINUS                  {$$ = new UnaopExpr($1, $2);}
+            | ADD EXPR   %prec UMINUS                 {$$ = new UnaopExpr($1, $2);}
+            | SUB EXPR   %prec UMINUS                 {$$ = new UnaopExpr($1, $2);}
+            // | UNAOP EXPR                    {$$ = new UnaopExpr($1, $2);}
             | EXPR SUFOP                    {$$ = new SufopExpr($2, $1);}
             | LPAREN EXPR RPAREN            {$$ = $2;}
             | SIZEOF LPAREN EXPR RPAREN     {$$ = new SizeofExpr($3);}
             | SIZEOF LPAREN TYPE RPAREN     {$$ = new SizeofType($3);}
             | EXPR CONDITION EXPR COLON EXPR {$$ = new TernaryCondition($1, $3, $5);}
-            | LPAREN TYPE RPAREN EXPR   %prec NOT     {$$ = new TypeCast($2, $4);}
+            | LPAREN TYPE RPAREN EXPR   %prec UMINUS     {$$ = new TypeCast($2, $4);}
             | EXPR ARROW IDENTIFER          {$$ = new MemAccessPtr($1, *$3);}
             | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, *$3);}
             ;  
 
-UNAOP:       INC    %prec NOT {$$ = $1;}
-            | DEC   %prec NOT {$$ = $1;}
+UNAOP:       INC    %prec UMINUS {$$ = $1;}
+            | DEC   %prec UMINUS {$$ = $1;}
             | NOT   {$$ = $1;}
             | BNOT  {$$ = $1;}
-            | MUL   %prec NOT {$$ = $1;}
-            | BAND  %prec NOT {$$ = $1;}
-            | ADD   %prec NOT    {$$ = $1;}
-            | SUB   %prec NOT    {$$ = $1;}
+            | MUL   %prec UMINUS {$$ = $1;}
+            | BAND  %prec UMINUS {$$ = $1;}
+            | ADD   %prec UMINUS    {$$ = $1;}
+            | SUB   %prec UMINUS    {$$ = $1;}
             ;
 
 SUFOP:       INC     {$$ = $1;}
             | DEC   {$$ = $1;}
             ;
 
-BINOP:       ADD     {$$ = $1;}
-            | SUB   {$$ = $1;}
+BINOP:       ADD    {$$ = $1;}
+            // | SUB   {$$ = $1;}
             | MUL   {$$ = $1;}
             | DIV   {$$ = $1;}
             | MOD   {$$ = $1;}

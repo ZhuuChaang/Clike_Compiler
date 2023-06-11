@@ -23,6 +23,8 @@ public:
     std::vector<llvm::BasicBlock*> endblockstack;
     std::string Opt;
 
+    std::map<std::string,std::string> suelist;
+
 
     CodeGenerator(std::string o);
     ~CodeGenerator(){}
