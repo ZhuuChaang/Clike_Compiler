@@ -1228,7 +1228,8 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
         }
         return Gen.TheBuilder.CreateLogicalOr(lhs, rhs);
     case COMMA:
-        
+        this->_lhs->CodeGen(Gen);
+        return this->CodeGen(Gen);
     default:
         break;
     }
@@ -1236,11 +1237,21 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
+    llvm::Value* ptr;
+    llvm::Value* val;
     switch (this->_op){
-    case 1 :
-        /* code */
-        break;
-    
+    case MUL://get value
+        ptr = this->LeftValueGen(Gen);
+        if(ptr->getType()->getNonOpaquePointerElementType()->isArrayTy()){
+            llvm::PointerType* ty = ptr->getType()->getNonOpaquePointerElementType()->getArrayElementType()->getPointerTo();
+            val = Gen.TheBuilder.CreatePointerCast(ptr, ty);
+        }
+        else{
+            val = Gen.TheBuilder.CreateLoad(ptr->getType()->getPointerElementType(), ptr);
+        }
+        return val;
+    case BAND://get address
+
     default:
         break;
     }
@@ -1284,6 +1295,8 @@ llvm::Value* MemAccessPtr::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* MemAccessObj::CodeGen(CodeGenerator &Gen){
+    llvm::Value* lhs = this->LeftValueGen(Gen);
+    Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
     return NULL;
 }
 
@@ -1365,6 +1378,9 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
     case OR:
         cout << "logical or cannot be leftvalue." << endl;
         return NULL;
+    case COMMA:
+        this->_lhs->CodeGen(Gen);
+        return this->_rhs->LeftValueGen(Gen);
     default:
         break;
     }
@@ -1372,6 +1388,21 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
 }
 
 llvm::Value* UnaopExpr::LeftValueGen(CodeGenerator &Gen){
+    llvm::Value* ptr;
+    switch (this->_op)
+    {
+    case MUL:
+        ptr = this->_operand->CodeGen(Gen);
+        if(!ptr->getType()->isPointerTy()){
+            cout << "find address operator must apply to pointers." << endl;
+            return NULL;
+        }
+        return ptr;
+    case BAND:
+    
+    default:
+        break;
+    }
     return NULL;
 }
 
@@ -1416,5 +1447,13 @@ llvm::Value* MemAccessPtr::LeftValueGen(CodeGenerator &Gen){
 }
 
 llvm::Value* MemAccessObj::LeftValueGen(CodeGenerator &Gen){
+    llvm::Value* struct_ptr = this->_struct->LeftValueGen(Gen);
+    if(!struct_ptr->getType()->isPointerTy() ||
+        !struct_ptr->getType()->getNonOpaquePointerElementType()->isStructTy()){
+        cout << "member access operator must be apply to struct of unions." << endl;
+        return nullptr;
+    }
+    Structtype* struct_type;
+    int i = 0;
     return NULL;
 }

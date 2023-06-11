@@ -360,8 +360,13 @@ UNAOP:       INC    %prec NOT {$$ = $1;}
             | BNOT  {$$ = $1;}
             | MUL   %prec NOT {$$ = $1;}
             | BAND  %prec NOT {$$ = $1;}
+<<<<<<< Updated upstream
             | ADD   %prec NOT {$$ = $1;}
             | SUB   %prec NOT {$$ = $1;}
+=======
+            | ADD   %prec NOT    {$$ = $1;}
+            | SUB   %prec NOT    {$$ = $1;}
+>>>>>>> Stashed changes
             ;
 
 SUFOP:       INC     {$$ = $1;}
