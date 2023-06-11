@@ -1112,6 +1112,119 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
                 return Gen.TheBuilder.CreateFCmpOEQ(lhs, rhs);
             }
         }
+        cout << "typecast error in logical equal." << endl;
+        return NULL;
+    case NE:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpNE(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpONE(lhs, rhs);
+            }
+        }
+        cout << "typecast error in logical not equal." << endl;
+        return NULL;
+    case GT:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpSGT(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpOGT(lhs, rhs);
+            }
+        }
+        cout << "typecast error in logical greater than." << endl;
+        return NULL;
+    case LT:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpSLT(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpOLT(lhs, rhs);
+            }
+        }
+        cout << "typecast error in logical less than." << endl;
+        return NULL;
+    case GE:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpSGE(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpOGE(lhs, rhs);
+            }
+        }
+        cout << "typecast error in logical greater equal." << endl;
+        return NULL;
+    case LE:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(AutoTypeUpgrade(lhs, rhs, Gen)){
+            if(lhs->getType()->isIntegerTy()){
+                return Gen.TheBuilder.CreateICmpSLE(lhs, rhs);
+            }
+            else{
+                return Gen.TheBuilder.CreateFCmpOLE(lhs, rhs);
+            }
+        }
+        cout << "typecast error in logical less equal." << endl;
+        return NULL;
+    case AND:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(lhs->getType() != Gen.TheBuilder.getInt1Ty()){
+            if(lhs->getType()->isIntegerTy()){
+                lhs = Gen.TheBuilder.CreateICmpNE(lhs, llvm::ConstantInt::get((llvm::IntegerType*)lhs->getType(), 0, true));
+            }
+            else{
+                cout << "operators of logical and must be boolean." << endl;
+                return NULL;
+            }
+        }
+        if(rhs->getType() != Gen.TheBuilder.getInt1Ty()){
+            if(rhs->getType()->isIntegerTy()){
+                rhs = Gen.TheBuilder.CreateICmpNE(rhs, llvm::ConstantInt::get((llvm::IntegerType*)rhs->getType(), 0, true));
+            }
+            else{
+                cout << "operators of logical and must be boolean." << endl;
+                return NULL;
+            }
+        }
+        return Gen.TheBuilder.CreateLogicalAnd(lhs, rhs);
+    case OR:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(lhs->getType() != Gen.TheBuilder.getInt1Ty()){
+            if(lhs->getType()->isIntegerTy()){
+                lhs = Gen.TheBuilder.CreateICmpNE(lhs, llvm::ConstantInt::get((llvm::IntegerType*)lhs->getType(), 0, true));
+            }
+            else{
+                cout << "operators of logical and must be boolean." << endl;
+                return NULL;
+            }
+        }
+        if(rhs->getType() != Gen.TheBuilder.getInt1Ty()){
+            if(rhs->getType()->isIntegerTy()){
+                rhs = Gen.TheBuilder.CreateICmpNE(rhs, llvm::ConstantInt::get((llvm::IntegerType*)rhs->getType(), 0, true));
+            }
+            else{
+                cout << "operators of logical and must be boolean." << endl;
+                return NULL;
+            }
+        }
+        return Gen.TheBuilder.CreateLogicalOr(lhs, rhs);
+    case COMMA:
+        
     default:
         break;
     }
@@ -1223,6 +1336,30 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
         return NULL;
     case MOD:
         cout << "modulo cannot be leftvalue." << endl;
+        return NULL;
+    case EQ:
+        cout << "logical eq cannot be leftvalue." << endl;
+        return NULL;
+    case NE:
+        cout << "logical ne cannot be leftvalue." << endl;
+        return NULL;
+    case GT:
+        cout << "logical GT cannot be leftvalue." << endl;
+        return NULL;
+    case LT:
+        cout << "logical LT cannot be leftvalue." << endl;
+        return NULL;
+    case GE:
+        cout << "logical GE cannot be leftvalue." << endl;
+        return NULL;
+    case LE:
+        cout << "logical le cannot be leftvalue." << endl;
+        return NULL;
+    case AND:
+        cout << "logical and cannot be leftvalue." << endl;
+        return NULL;
+    case OR:
+        cout << "logical or cannot be leftvalue." << endl;
         return NULL;
     default:
         break;
