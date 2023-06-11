@@ -1252,6 +1252,22 @@ llvm::Value* UnaopExpr::CodeGen(CodeGenerator &Gen){
         return val;
     case BAND://get address
         return this->_operand->LeftValueGen(Gen);
+    case ADD:
+        val = this->_operand->CodeGen(Gen);
+        if(!val->getType()->isIntegerTy() && !val->getType()->isFloatingPointTy()){
+            cout << "positive operator must apply to integers r floatingpoint number." << endl;
+            return NULL;
+        }
+        return val;
+    case SUB:
+        val = this->_operand->CodeGen(Gen);
+        if(!val->getType()->isIntegerTy() && !val->getType()->isFloatingPointTy()){
+            cout << "negative operator must apply to integers r floatingpoint number." << endl;
+            return NULL;
+        }
+        if(val->getType()->isIntegerTy())
+            return Gen.TheBuilder.CreateNeg(val);
+        else return Gen.TheBuilder.CreateFNeg(val);
     default:
         break;
     }
@@ -1400,6 +1416,12 @@ llvm::Value* UnaopExpr::LeftValueGen(CodeGenerator &Gen){
         return ptr;
     case BAND:
         cout << "get address operator cannot return leftvalue." << endl;
+        return NULL;
+    case ADD:
+        cout << "positive operator cannot return leftvalue." << endl;
+        return NULL;
+    case SUB:
+        cout << "negative operator cannot return leftvalue." << endl;
         return NULL;
     default:
         break;
