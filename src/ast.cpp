@@ -543,7 +543,6 @@ llvm::Type* Structtype::TypeGen(CodeGenerator &Gen){
         return this->_type;
     }
     llvm::StructType* sty=llvm::StructType::create(Gen.CodeContent,"struct." + this->structName);
-    Gen.addStruct(sty,this);
     std::vector<llvm::Type*> Mems;
     for(auto it: this->structMembers){
         Mems.push_back(it.second->TypeGen(Gen));
@@ -559,7 +558,6 @@ llvm::Type* Uniontype::TypeGen(CodeGenerator &Gen){
         return this->_type;
     }
     llvm::StructType* uty=llvm::StructType::create(Gen.CodeContent,"union." + this->UnionName);
-    Gen.addUnion(uty,this);
     llvm::Type* maxty=this->getMaxtype();
     if(maxty==NULL){
         this->findMaxtype(Gen);
@@ -703,20 +701,21 @@ llvm::Value* Vardefine::CodeGen(CodeGenerator &Gen){
     llvm::Type* ty=this->type->TypeGen(Gen);
     std::string SUEtypename=this->type->getname();
 
-
-    
     for(auto it: *(this->list)){
         if(Gen.curf==NULL){//global
             Gen.TheModule->getOrInsertGlobal(it->getname(),ty);
             llvm::GlobalVariable* gvar=Gen.TheModule->getNamedGlobal(it->getname());
-            gvar->setLinkage(llvm::GlobalValue::PrivateLinkage);
+            // gvar->setLinkage(llvm::GlobalValue::PrivateLinkage);
             Gen.addVarSymtable(it->getname(),gvar);
             if(SUEtypename!=""){
                 Gen.suelist[it->getname()]=SUEtypename;
             }
             if(it->hasinit()){
                 llvm::Value* inite=it->getexpr()->CodeGen(Gen);
-                Gen.TheBuilder.CreateStore(inite,gvar);
+                // Gen.TheBuilder.CreateStore(inite,gvar);
+                gvar->setInitializer((llvm::Constant*)inite);
+            }else{
+                std::logic_error("global variable must be inited");
             }
         }else{
             llvm::Function* FUN=Gen.curf;
@@ -824,41 +823,6 @@ llvm::Value* Ifflow::CodeGen(CodeGenerator &Gen){
         FUN->getBasicBlockList().push_back(ifend);
         Gen.TheBuilder.SetInsertPoint(ifend);
     }
-
-//old version for reservation
-/////////////////////////////////////////
-    // llvm::Value* condition=this->condition->CodeGen(Gen);
-    //  condition=CodeGen_TypeCast(condition,Gen.TheBuilder.getInt1Ty(),Gen);
-
-    // llvm::Function* FUN=Gen.curf;
-    // llvm::BasicBlock* ifbegin=llvm::BasicBlock::Create(Gen.CodeContent,"ifbegin");
-    // llvm::BasicBlock* elsebegin=llvm::BasicBlock::Create(Gen.CodeContent,"elsebegin");
-    // llvm::BasicBlock* ifend=llvm::BasicBlock::Create(Gen.CodeContent,"ifend");
-    
-    // Gen.TheBuilder.CreateCondBr(condition,ifbegin,elsebegin);
-
-    // FUN->getBasicBlockList().push_back(ifbegin);
-    // Gen.TheBuilder.SetInsertPoint(ifbegin);
-    // if(has_body){
-    //     this->ifbody->CodeGen(Gen);
-    // }
-    // if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
-    //     Gen.TheBuilder.CreateBr(ifend);
-    // }
-
-    // FUN->getBasicBlockList().push_back(elsebegin);
-    // Gen.TheBuilder.SetInsertPoint(elsebegin);
-    // if(this->Else!=NULL&&this->Else->has_body){
-    //     this->Else->Elsebody->CodeGen(Gen);
-    // }
-    // if(Gen.TheBuilder.GetInsertBlock()->getTerminator()==NULL){
-    //     Gen.TheBuilder.CreateBr(ifend);
-    // }
-
-    // if(ifend->hasNPredecessorsOrMore(1)){
-    //     FUN->getBasicBlockList().push_back(ifend);
-    //     Gen.TheBuilder.SetInsertPoint(ifend);
-    // }
     return NULL;
 }
 
@@ -1280,6 +1244,22 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
             return NULL;
         }
         return Gen.TheBuilder.CreateXor(lhs, rhs);
+    case SHR:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !rhs->getType()->isIntegerTy()){
+            cout << "operators of bxor must be integer." << endl;
+            return NULL;
+        }
+        return Gen.TheBuilder.CreateAShr(lhs, rhs);
+    case SHL:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !rhs->getType()->isIntegerTy()){
+            cout << "operators of bxor must be integer." << endl;
+            return NULL;
+        }
+        return Gen.TheBuilder.CreateShl(lhs, rhs);
     default:
         break;
     }
@@ -1329,11 +1309,15 @@ llvm::Value* SufopExpr::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* SizeofExpr::CodeGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Type* ty=this->_expr->CodeGen(Gen)->getType();
+    llvm::TypeSize tysize=Gen.thedatalayout->getTypeAllocSize(ty);
+    return Gen.TheBuilder.getInt32(tysize);
 }
 
 llvm::Value* SizeofType::CodeGen(CodeGenerator &Gen){
-    return NULL;
+    llvm::Type* ty=this->_type->TypeGen(Gen);
+    llvm::TypeSize tysize=Gen.thedatalayout->getTypeAllocSize(ty);
+    return Gen.TheBuilder.getInt32(tysize);
 }
 
 llvm::Value* TernaryCondition::CodeGen(CodeGenerator &Gen){
@@ -1493,10 +1477,12 @@ llvm::Value* SufopExpr::LeftValueGen(CodeGenerator &Gen){
 }
 
 llvm::Value* SizeofExpr::LeftValueGen(CodeGenerator &Gen){
+    cout << "sizeof cannot return leftvalue" << endl;
     return NULL;
 }
 
 llvm::Value* SizeofType::LeftValueGen(CodeGenerator &Gen){
+    cout << "sizeof cannot return leftvalue" << endl;
     return NULL;
 }
 

@@ -12,9 +12,11 @@ extern Program* Root;
 int main(int argc, const char* argv[]){
     bool print_ast=false;
     std::string optlevel;
-    if(argc==1){
+    std::string fname;
+    if(argc==2){
         yyin=fopen(argv[1], "r");
-    }else if(argc==2){
+        fname=(std::string)argv[1];
+    }else if(argc==3){
         std::string s1(argv[1]);
         if(s1=="-p"){
             print_ast=true;
@@ -22,7 +24,9 @@ int main(int argc, const char* argv[]){
             optlevel=s1;
         }
         yyin = fopen(argv[2], "r");
-    }else if(argc==3){
+        fname=(std::string)argv[2];
+
+    }else if(argc==4){
         std::string s1(argv[1]);
         std::string s2(argv[2]);
         if(s1=="-p"){
@@ -31,10 +35,13 @@ int main(int argc, const char* argv[]){
         if(s2.find("-O")==0){
             optlevel=s2;
         }
-        yyin = fopen(argv[2], "r");
+        yyin = fopen(argv[3], "r");
+        fname=(std::string)argv[3];
     }else{
         std::cout<<"wrong number of value"<<std::endl;
     }
+
+    fname=fname.substr(0,fname.find("."));
     assert(yyin);
     yyparse();
     if(print_ast){
@@ -43,6 +50,6 @@ int main(int argc, const char* argv[]){
     CodeGenerator Gen(optlevel);
     Gen.CodeGenerate(*Root);
     Gen.OutputIRcode();
-    Gen.ObjGenerate();
+    Gen.ObjGenerate(fname);
     return 0;
 }

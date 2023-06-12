@@ -3,15 +3,6 @@ _CODEGEN_H_
 
 
 
-void CodeGenerator::addStruct(llvm::StructType* lt, Structtype* at){
-    // if(this->structTable.find(lt)!=this->structTable.end()){
-        this->structTable[lt]=at;
-    // }
-}
-
-void CodeGenerator::addUnion(llvm::StructType* lt, Uniontype* at){
-    this->unionTable[lt]=at;
-}
 
 llvm::TypeSize CodeGenerator::getTypesize(llvm::Type* t){
     return this->thedatalayout->getTypeAllocSize(t);
@@ -85,7 +76,7 @@ void CodeGenerator::CodeGenerate(Node& root){
     }
 }
 
-void CodeGenerator::ObjGenerate(){
+void CodeGenerator::ObjGenerate(std::string outname){
 	std::string target3s = llvm::sys::getDefaultTargetTriple();
 	llvm::InitializeAllTargetInfos();
 	llvm::InitializeAllTargets();
@@ -101,7 +92,7 @@ void CodeGenerator::ObjGenerate(){
 	this->TheModule->setDataLayout(TargetMachine->createDataLayout());
 	this->TheModule->setTargetTriple(target3s);
 	std::error_code ecode;
-	llvm::raw_fd_ostream outputfile("a.o", ecode, llvm::sys::fs::OF_None);
+	llvm::raw_fd_ostream outputfile(outname.append(".o"), ecode, llvm::sys::fs::OF_None);
 	llvm::CodeGenFileType filety = llvm::CGFT_ObjectFile;
 	llvm::legacy::PassManager passmng;
     TargetMachine->addPassesToEmitFile(passmng, outputfile, NULL, filety);
