@@ -18,7 +18,7 @@ enum ValueTypes{
 
 class symValue{
     ValueTypes type;
-    void* value; //make sure the value is newed from the heap
+    void* value;                //make sure the value is newed from the heap
     int mark=0; 
 
 public:
