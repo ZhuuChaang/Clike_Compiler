@@ -1256,6 +1256,30 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
     case COMMA:
         this->_lhs->CodeGen(Gen);
         return this->CodeGen(Gen);
+    case BAND:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !rhs->getType()->isIntegerTy()){
+            cout << "operators of band must be integer." << endl;
+            return NULL;
+        }
+        return Gen.TheBuilder.CreateAnd(lhs, rhs);
+    case BOR:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !rhs->getType()->isIntegerTy()){
+            cout << "operators of bor must be integer." << endl;
+            return NULL;
+        }
+        return Gen.TheBuilder.CreateOr(lhs, rhs);
+    case BXOR:
+        lhs = this->_lhs->CodeGen(Gen);
+        rhs = this->_rhs->CodeGen(Gen);
+        if(!lhs->getType()->isIntegerTy() || !rhs->getType()->isIntegerTy()){
+            cout << "operators of bxor must be integer." << endl;
+            return NULL;
+        }
+        return Gen.TheBuilder.CreateXor(lhs, rhs);
     default:
         break;
     }
@@ -1419,6 +1443,15 @@ llvm::Value* BinopExpr::LeftValueGen(CodeGenerator &Gen){
         return NULL;
     case OR:
         cout << "logical or cannot be leftvalue." << endl;
+        return NULL;
+    case BAND:
+        cout << "band cannot be leftvalue." << endl;
+        return NULL;
+    case BOR:
+        cout << "bor cannot be leftvalue." << endl;
+        return NULL;
+    case BXOR:
+        cout << "BXOR cannot be leftvalue."  << endl;
         return NULL;
     case COMMA:
         this->_lhs->CodeGen(Gen);
