@@ -77,13 +77,13 @@ void CodeGenerator::CodeGenerate(Node& root){
 }
 
 void CodeGenerator::ObjGenerate(std::string outname){
-	std::string target3s = llvm::sys::getDefaultTargetTriple();
 	llvm::InitializeAllTargetInfos();
 	llvm::InitializeAllTargets();
 	llvm::InitializeAllTargetMCs();
 	llvm::InitializeAllAsmParsers();
 	llvm::InitializeAllAsmPrinters();
 
+	std::string target3s = llvm::sys::getDefaultTargetTriple();
 	std::string e;
 	const llvm::Target* Target = llvm::TargetRegistry::lookupTarget(target3s, e);
 	llvm::TargetOptions option;

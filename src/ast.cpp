@@ -628,6 +628,13 @@ llvm::Value* Globalstmt::CodeGen(CodeGenerator &Gen){
 }
 
 llvm::Value* Fundeclare::CodeGen(CodeGenerator &Gen){
+    if(Gen.symTable.findhave(this->Funname)){
+        std::string e_msg("redeclare of some function");
+        e_msg=e_msg.append(this->Funname);
+        std::logic_error(e_msg.append("\n"));
+    }
+
+
     std::vector<llvm::Type*> ArgTY;
     for(auto it:this->Arglist){
         llvm::Type* ty=it.second->TypeGen(Gen);
@@ -1034,6 +1041,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
         }
         else
             return Gen.TheBuilder.CreateLoad(lhs->getType()->getNonOpaquePointerElementType(), lhs);
+        break;
     case ADD:
         lhs = this->_lhs->CodeGen(Gen);
         rhs = this->_rhs->CodeGen(Gen);
@@ -1047,6 +1055,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
             cout << "fail to auto type cast in addition." << endl;
             return NULL;
         }
+        break;
     case SUB:
         lhs = this->_lhs->CodeGen(Gen);
         rhs = this->_rhs->CodeGen(Gen);
@@ -1057,7 +1066,7 @@ llvm::Value* BinopExpr::CodeGen(CodeGenerator &Gen){
                 return Gen.TheBuilder.CreateFSub(lhs, rhs);
         }
         else{
-            cout << "fail to auto type cast in subtraction." << endl;
+            std::logic_error("fail to auto type cast in subtraction.\n" );
             return NULL;
         }
     case MUL:

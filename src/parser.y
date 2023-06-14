@@ -110,7 +110,7 @@ Program* Root;
 %type <AST_EXPR_value> EXPR
 %type <AST_CONSTANT_value> CONSTANT
 %type <AST_FUNCALL_value> FUNCALL
-%type <int_value> BINOP UNAOP SUFOP
+%type <int_value> SUFOP
 %type <AST_CALLARGLIST_value> CallArgLIST _CallArgLIST
 
 %nonassoc IF
@@ -382,51 +382,51 @@ EXPR:       EXPR LBRACKET EXPR RBRACKET %prec ARROW   {$$ = new Subscript($1, $3
             | EXPR DOT IDENTIFER            {$$ = new MemAccessObj($1, *$3);}
             ;  
 
-UNAOP:       INC    %prec UMINUS {$$ = $1;}
-            | DEC   %prec UMINUS {$$ = $1;}
-            | NOT   {$$ = $1;}
-            | BNOT  {$$ = $1;}
-            | MUL   %prec UMINUS {$$ = $1;}
-            | BAND  %prec UMINUS {$$ = $1;}
-            | ADD   %prec UMINUS    {$$ = $1;}
-            | SUB   %prec UMINUS    {$$ = $1;}
-            ;
+// UNAOP:       INC    %prec UMINUS {$$ = $1;}
+//             | DEC   %prec UMINUS {$$ = $1;}
+//             | NOT   {$$ = $1;}
+//             | BNOT  {$$ = $1;}
+//             | MUL   %prec UMINUS {$$ = $1;}
+//             | BAND  %prec UMINUS {$$ = $1;}
+//             | ADD   %prec UMINUS    {$$ = $1;}
+//             | SUB   %prec UMINUS    {$$ = $1;}
+//             ;
 
 SUFOP:       INC     {$$ = $1;}
             | DEC   {$$ = $1;}
             ;
 
-BINOP:       ADD    {$$ = $1;}
-            // | SUB   {$$ = $1;}
-            | MUL   {$$ = $1;}
-            | DIV   {$$ = $1;}
-            | MOD   {$$ = $1;}
-            | EQ    {$$ = $1;}
-            | NE    {$$ = $1;}
-            | GT    {$$ = $1;}
-            | LT    {$$ = $1;}
-            | GE    {$$ = $1;}
-            | LE    {$$ = $1;}
-            | AND   {$$ = $1;}
-            | OR    {$$ = $1;}
-            | BAND  {$$ = $1;}
-            | BOR   {$$ = $1;}
-            | BXOR  {$$ = $1;}
-            | SHL   {$$ = $1;}
-            | SHR   {$$ = $1;}
-            | ASSIGN {$$ = $1;}
-            | ADDAS {$$ = $1;}
-            | SUBAS {$$ = $1;}
-            | MULAS {$$ = $1;}
-            | DIVAS {$$ = $1;}
-            | MODAS {$$ = $1;}
-            | BANDAS {$$ = $1;}
-            | BORAS {$$ = $1;}
-            | BXORAS {$$ = $1;}
-            | SHLAS {$$ = $1;}
-            | SHRAS {$$ = $1;}
-            | COMMA {$$ = $1;}
-            ;
+// BINOP:       ADD    {$$ = $1;}
+//             // | SUB   {$$ = $1;}
+//             | MUL   {$$ = $1;}
+//             | DIV   {$$ = $1;}
+//             | MOD   {$$ = $1;}
+//             | EQ    {$$ = $1;}
+//             | NE    {$$ = $1;}
+//             | GT    {$$ = $1;}
+//             | LT    {$$ = $1;}
+//             | GE    {$$ = $1;}
+//             | LE    {$$ = $1;}
+//             | AND   {$$ = $1;}
+//             | OR    {$$ = $1;}
+//             | BAND  {$$ = $1;}
+//             | BOR   {$$ = $1;}
+//             | BXOR  {$$ = $1;}
+//             | SHL   {$$ = $1;}
+//             | SHR   {$$ = $1;}
+//             | ASSIGN {$$ = $1;}
+//             | ADDAS {$$ = $1;}
+//             | SUBAS {$$ = $1;}
+//             | MULAS {$$ = $1;}
+//             | DIVAS {$$ = $1;}
+//             | MODAS {$$ = $1;}
+//             | BANDAS {$$ = $1;}
+//             | BORAS {$$ = $1;}
+//             | BXORAS {$$ = $1;}
+//             | SHLAS {$$ = $1;}
+//             | SHRAS {$$ = $1;}
+//             | COMMA {$$ = $1;}
+//             ;
 
 FUNCALL:    IDENTIFER LPAREN CallArgLIST RPAREN
                 {$$ = new FuncCall(*($1), $3);}
