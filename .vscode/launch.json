@@ -8,7 +8,7 @@
             "request": "launch",
             // "program": "${fileDirname}/${fileBasenameNoExtension}",
             "program": "${workspaceFolder}/build/clike",//change to real executable file name
-            "args": ["-p","build/test.c"],//change to real execute arguments
+            "args": ["-p","./test/Finaltest/test1.c"],//change to real execute arguments
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

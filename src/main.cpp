@@ -40,6 +40,11 @@ int main(int argc, const char* argv[]){
     }else{
         std::cout<<"wrong number of value"<<std::endl;
     }
+    int start=fname.rfind("/");
+    if(start!=-1){
+        fname=fname.substr(start+1,fname.size());
+    }
+
 
     fname=fname.substr(0,fname.find("."));
     assert(yyin);
