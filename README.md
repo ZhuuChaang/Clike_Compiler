@@ -1,5 +1,5 @@
 ## Clike_Compiler
-a C like compiler for ZJU compile principle course
+a C like compiler for compile principle course，please do not use it in your lecture without any refine, all rights reserved
 
 
 # goals:
